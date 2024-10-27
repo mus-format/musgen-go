@@ -10,21 +10,21 @@ example of how Protobuf format can be implemented using the mus-go libarary and
 # Contents
 - [musgen-go](#musgen-go)
 - [Contents](#contents)
-	- [How to use](#how-to-use)
-	- [Generate DTS](#generate-dts)
-	- [Oneof Feature](#oneof-feature)
-	- [Defaults](#defaults)
-	- [Custom Serialization](#custom-serialization)
-		- [Prefix](#prefix)
-		- [Metadata](#metadata)
-			- [Alias Metadata](#alias-metadata)
-			- [Struct Metadata](#struct-metadata)
-				- [Struct Prefix](#struct-prefix)
-				- [Ignore a Field](#ignore-a-field)
-		- [Validation](#validation)
-	- [Unsafe Code](#unsafe-code)
-	- [Streaming](#streaming)
-	- [Imports](#imports)
+  - [How to use](#how-to-use)
+  - [Generate DTS](#generate-dts)
+  - [Oneof Feature](#oneof-feature)
+  - [Defaults](#defaults)
+  - [Custom Serialization](#custom-serialization)
+    - [Prefix](#prefix)
+    - [Metadata](#metadata)
+      - [Alias Metadata](#alias-metadata)
+      - [Struct Metadata](#struct-metadata)
+        - [Struct Prefix](#struct-prefix)
+        - [Ignore a Field](#ignore-a-field)
+    - [Validation](#validation)
+  - [Unsafe Code](#unsafe-code)
+  - [Streaming](#streaming)
+  - [Imports](#imports)
 
 ## How to use
 First, you should download and install Go, version 1.18 or later.
@@ -45,9 +45,9 @@ package foo
 type IntAlias int
 
 type Foo struct {
-	fld0 string
-	fld3 bool
-	fld1 IntAlias
+  fld0 string
+  fld3 bool
+  fld1 IntAlias
 }
 ```
 
@@ -56,36 +56,36 @@ __gen/main.go__
 package main
 
 import (
-	"os"
-	"reflect"
+  "os"
+  "reflect"
 
-	"foo"
+  "foo"
 
-	"github.com/mus-format/musgen-go/basegen"
-	musgen "github.com/mus-format/musgen-go/mus"
+  "github.com/mus-format/musgen-go/basegen"
+  musgen "github.com/mus-format/musgen-go/mus"
 )
 
 func main() {
-	g, err := musgen.NewFileGenerator(basegen.Conf{Package: "foo"})
-	if err != nil {
-		panic(err)
-	}
-	err = g.AddAlias(reflect.TypeFor[foo.IntAlias]())
-	if err != nil {
-		panic(err)
-	}
-	err = g.AddStruct(reflect.TypeFor[foo.Foo]())
-	if err != nil {
-		panic(err)
-	}
-	bs, err := g.Generate()
-	if err != nil {
-		panic(err)
-	}
-	err = os.WriteFile("./mus-format.gen.go", bs, 0755)
-	if err != nil {
-		panic(err)
-	}
+  g, err := musgen.NewFileGenerator(basegen.Conf{Package: "foo"})
+  if err != nil {
+    panic(err)
+  }
+  err = g.AddAlias(reflect.TypeFor[foo.IntAlias]())
+  if err != nil {
+    panic(err)
+  }
+  err = g.AddStruct(reflect.TypeFor[foo.Foo]())
+  if err != nil {
+    panic(err)
+  }
+  bs, err := g.Generate()
+  if err != nil {
+    panic(err)
+  }
+  err = os.WriteFile("./mus-format.gen.go", bs, 0755)
+  if err != nil {
+    panic(err)
+  }
 }
 ```
 
@@ -110,27 +110,27 @@ foo/
 __foo_test.go__
 ```go
 import (
-	"reflect"
-	"testing"
+  "reflect"
+  "testing"
 )
 
 func TestFooSerialization(t *testing.T) {
-	var (
-		foo = Foo{
-			fld0: "hello world",
-			fld1: true,
-			fld2: IntAlias(5),
-		}
-		bs = make([]byte, SizeFooMUS(foo))
-	)
-	MarshalFooMUS(foo, bs)
-	afoo, _, err := UnmarshalFooMUS(bs)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !reflect.DeepEqual(foo, afoo) {
-		t.Fatal("something went wrong")
-	}
+  var (
+    foo = Foo{
+      fld0: "hello world",
+      fld1: true,
+      fld2: IntAlias(5),
+    }
+    bs = make([]byte, SizeFooMUS(foo))
+  )
+  MarshalFooMUS(foo, bs)
+  afoo, _, err := UnmarshalFooMUS(bs)
+  if err != nil {
+    t.Fatal(err)
+  }
+  if !reflect.DeepEqual(foo, afoo) {
+    t.Fatal("something went wrong")
+  }
 }
 ```
 ## Generate DTS
@@ -142,7 +142,7 @@ to handle both of these cases.
 To add DTS generation, we need to define a DTM:
 ```go
 const (
-	IntAliasDTM = 1
+  IntAliasDTM = 1
 )
 ```
 and 
@@ -162,10 +162,10 @@ which must contain one or more interface implementation types.
 ```go
 // ...
 meta := basegen.InterfaceMetadata{
-	OneOf: []reflect.Type{
-		reflect.TypeFor[Copy](),
-		reflect.TypeFor[Insert](),
-	},
+  OneOf: []reflect.Type{
+    reflect.TypeFor[Copy](),
+    reflect.TypeFor[Insert](),
+  },
 }
 err = g.AddInterface(reflect.TypeFor[Instruction](), meta)
 // ...
@@ -174,8 +174,8 @@ err = g.AddInterface(reflect.TypeFor[Instruction](), meta)
 the latter must have DTMs:
 ```go
 const (
-	CopyDTM = 1
-	InsertDTM  = 2
+  CopyDTM = 1
+  InsertDTM  = 2
 )
 ```
 and DTSs:
@@ -208,7 +208,7 @@ prefix.
 prefix := "Awesome"
 err = g.AddAliasWith(reflect.TypeFor[IntAlias](), prefix, nil)
 if err != nil {
-	panic(err)
+  panic(err)
 }
 // ...
 ```
@@ -221,11 +221,11 @@ Let's look at an example:
 ```go
 // ...
 meta := basegen.NumMetadata{
-	Encoding: basegen.Raw, // The IntAlias will be serialized using Raw encoding.
+  Encoding: basegen.Raw, // The IntAlias will be serialized using Raw encoding.
 }
 err = g.AddAliasWith(reflect.TypeFor[IntAlias](), "", meta)
 if err != nil {
-	panic(err)
+  panic(err)
 }
 // ...
 ```
@@ -250,15 +250,15 @@ types), etc. all ending in `FieldMetadata`. Let's look at an example:
 // ...
 meta := basegen.StructMetadata{ // basegen.StructMetadata is a slice whose 
 // elements must correspond to struct fields.
-	basegen.NumFieldMetadata{ // Corresponds to Foo.fld0.
-		NumMetadata: basegen.NumMetadata{
-			Encoding: basegen.VarintPositive, // Sets a VarintPositive encoding fot this field.
-		},
-	},
-	nil, // Corresponds to Foo.fld1. There is no metadata for this field.
-	basegen.CustomTypeFieldMetadata{ // Corresponds to Foo.fld2.
-		Prefix: "Awesome",
-	},
+  basegen.NumFieldMetadata{ // Corresponds to Foo.fld0.
+    NumMetadata: basegen.NumMetadata{
+      Encoding: basegen.VarintPositive, // Sets a VarintPositive encoding fot this field.
+    },
+  },
+  nil, // Corresponds to Foo.fld1. There is no metadata for this field.
+  basegen.CustomTypeFieldMetadata{ // Corresponds to Foo.fld2.
+    Prefix: "Awesome",
+  },
 }
 err = g.AddStructWith(reflect.TypeFor[Foo](), "", meta)
 // ...
@@ -277,13 +277,13 @@ In this case, for example, `MarshalAwesomeIntAlias()` will be used to marshal
 `fld2` field. This common prefix can be ignored by the field:
 ```go
 basegen.CustomTypeFieldMetadata {
-	Prefix: basegen.EmptyPrefix,
+  Prefix: basegen.EmptyPrefix,
 }
 ```
 or can be overridden:
 ```go
 basegen.CustomTypeFieldMetadata {
-	Prefix: "OwnPrefix",
+  Prefix: "OwnPrefix",
 }
 ```
 
@@ -291,7 +291,7 @@ basegen.CustomTypeFieldMetadata {
 The field also can be ignored:
 ```go
 basegen.NumFieldMetadata {
-	Ignore: true,
+  Ignore: true,
 }
 ```
 All `FieldMetadata` types have an `Ignore` flag.
@@ -304,23 +304,23 @@ which the validator is applied. To set a validator for an alias or struct
 field, use the `Validator` metadata property. For example:
 ```go
 func NotZero[T comparable](t T) (err error) { // Validator.
-	if t == *new(T) {
-		err = ErrZeroValue
-	}
-	return
+  if t == *new(T) {
+    err = ErrZeroValue
+  }
+  return
 }
 // ...
 meta := basegen.StructMetadata{
-	basegen.NumFieldMetadata{
-		NumMetadata: basegen.NumMetadata{
-			Validator: "NotZero", // After unmarshalling the Foo.fld0 field, its 
-		// value will be checked by the NotZero validator. In general, we should 
-		// write “packageName.ValidatorName” or just “ValidatorName” if the 
-		// validator is from the same package.
-		},
-	},
-	nil,
-	nil,
+  basegen.NumFieldMetadata{
+    NumMetadata: basegen.NumMetadata{
+      Validator: "NotZero", // After unmarshalling the Foo.fld0 field, its 
+    // value will be checked by the NotZero validator. In general, we should 
+    // write “packageName.ValidatorName” or just “ValidatorName” if the 
+    // validator is from the same package.
+    },
+  },
+  nil,
+  nil,
 }
 err = g.AddStructWith(reflect.TypeFor[Foo], "", meta)
 // ...
@@ -332,8 +332,8 @@ If the validator returns an error, it will be returned immediately by the
 To generate an unsafe code just set the `Conf.Unsafe` flag:
 ```go
 g, err := musgen.NewFileGenerator(basegen.Conf{
-	Unsafe: true,
-	// ...
+  Unsafe: true,
+  // ...
 })
 ```
 
@@ -341,8 +341,8 @@ g, err := musgen.NewFileGenerator(basegen.Conf{
 mesgen-go can also produce a streaming code:
 ```go
 g, err := musgen.NewFileGenerator(basegen.Conf{
-	Stream: true,
-	// ...
+  Stream: true,
+  // ...
 })
 ```
 In this case mus-stream-go library will be used.
@@ -352,11 +352,11 @@ In some cases import statement of the generated file can miss one or more
 packages. To fix this use `Conf.Imports`:
 ```go
 g, err := musgen.NewFileGenerator(basegen.Conf{
-	Imports: []string{
-		"first import path",
-		"second import path",
-	},
-	// ...
+  Imports: []string{
+    "first import path",
+    "second import path",
+  },
+  // ...
 })
 ```
 
