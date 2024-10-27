@@ -1,0 +1,3 @@
+{{- $f := index .Fields 0 }}
+{{- $r := Receiver .Name }}
+return {{ GenerateFnCall .Conf (print .AliasOf "(" $r ")") "Marshal" $f.Type .Prefix $f.Metadata }}

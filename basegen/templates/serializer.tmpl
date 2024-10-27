@@ -1,0 +1,39 @@
+func Marshal{{ .Prefix }}{{ .Name }}MUS({{ Receiver .Name }} {{ .Name }}, {{ .Conf.MarshalParamSignature }}) (n int {{ if .Conf.Stream }} , err error {{ end }}) {
+	{{- if ne .AliasOf "" }}
+		{{- include "alias_marshal.tmpl" . }}
+	{{- else if gt (len .OneOf) 0 }}
+		{{- include "interface_marshal.tmpl" . }}
+	{{- else }}
+		{{- include "struct_marshal.tmpl" . }}
+	{{- end }}
+}
+
+func Unmarshal{{ .Prefix }}{{ .Name }}MUS({{ .Conf.UnmarshalParamSignature }}) ({{ Receiver .Name }} {{ .Name }}, n int, err error) {
+	{{- if ne .AliasOf "" }}
+		{{- include "alias_unmarshal.tmpl" . }}
+	{{- else if gt (len .OneOf) 0 }}
+		{{- include "interface_unmarshal.tmpl" . }}
+	{{- else }}
+		{{- include "struct_unmarshal.tmpl" . }}
+	{{- end }}
+}
+
+func Size{{ .Prefix }}{{ .Name }}MUS({{ Receiver .Name }} {{ .Name }}) (size int) {
+	{{- if ne .AliasOf "" }}
+		{{- include "alias_size.tmpl" . }}
+	{{- else if gt (len .OneOf) 0 }}
+		{{- include "interface_size.tmpl" . }}
+	{{- else }}
+		{{- include "struct_size.tmpl" . }}
+	{{- end }}
+}
+
+func Skip{{ .Prefix }}{{ .Name }}MUS({{ .Conf.SkipParamSignature }}) (n int, err error) {
+	{{- if ne .AliasOf "" }}
+		{{- include "alias_skip.tmpl" . }}
+	{{- else if gt (len .OneOf) 0 }}
+		{{- include "interface_skip.tmpl" . }}
+	{{- else }}
+		{{- include "struct_skip.tmpl" . }}
+	{{- end }}
+}

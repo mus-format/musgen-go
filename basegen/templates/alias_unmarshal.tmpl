@@ -1,0 +1,14 @@
+{{- $f := index .Fields 0 }}
+{{- $r := Receiver .Name }}
+{{- $v := print $r "a" }}
+{{ $v }}, n, err := {{ GenerateFnCall .Conf "" "Unmarshal" $f.Type .Prefix $f.Metadata }}
+if err != nil {
+	return
+}
+{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
+	if err = {{ $f.Metadata.Validator }}({{ $v }}); err != nil {
+		return
+	}
+{{- end }}
+{{ $r }} = {{ .Name }}({{ $v }})
+return

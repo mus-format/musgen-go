@@ -1,0 +1,10 @@
+{{- $c := .Conf}}
+{{- $p := .Prefix }}
+switch tp := {{ Receiver .Name }}.(type) {
+	{{- range $i, $oneOf := .OneOf }}
+		case {{ $oneOf }}:
+			return {{ $p }}{{ $oneOf }}DTS.Marshal(tp, {{ $c.MarshalParam }})
+	{{- end }}
+		default:
+			panic(fmt.Errorf("unexpected %v type", tp))
+}

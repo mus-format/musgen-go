@@ -1,0 +1,7 @@
+{{ include "serializer.tmpl" . }}
+{{- $n := print .Prefix .Name }}
+var {{ $n }}DTS = dts.New[{{ .Name }}]({{ .Name }}DTM, 
+	{{ .Conf.ModImportName }}.MarshallerFn[{{ .Name }}](Marshal{{ $n }}MUS),  
+	{{ .Conf.ModImportName }}.UnmarshallerFn[{{ .Name }}](Unmarshal{{ $n }}MUS), 
+	{{ .Conf.ModImportName }}.SizerFn[{{ .Name }}](Size{{ $n }}MUS),
+	{{ .Conf.ModImportName }}.SkipperFn(Skip{{ $n }}MUS))

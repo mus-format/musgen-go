@@ -1,0 +1,18 @@
+{{- $c := .Conf }}
+{{- $p := .Prefix }}
+dtm, n, err := dts.UnmarshalDTM({{ $c.UnmarshalParam }})
+if err != nil {
+	return
+}
+var n1 int
+switch dtm {
+{{- range $index, $oneOf := .OneOf }}
+	case {{ $oneOf }}DTM:
+		n1, err = {{ $p }}{{ $oneOf }}DTS.SkipData({{ $c.UnmarshalParam }})
+{{- end }}
+	default:
+		err = fmt.Errorf("unexpected %v DTM", dtm)
+		return
+}
+n += n1
+return

@@ -1,0 +1,53 @@
+{{- $l := FieldsLen . }}
+{{- $r := Receiver .Name }}
+{{- $p := .Prefix }}
+{{- if eq $l 0 }}
+	return
+{{- else }}
+	{{- $c := .Conf }}
+	{{- range $i, $f := Fields . }}
+		{{- $fnCall := GenerateFnCall $c (print $r "." $f.Name) "Unmarshal" $f.Type $p $f.Metadata }}
+		{{- if or (not $f.Metadata) (not $f.Metadata.Ignore) }}
+			{{- if eq $l 1 }}
+				{{ $r }}.{{ $f.Name }}, n, err = {{ $fnCall }}
+				{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
+					if err != nil {
+						return
+					}
+					err = {{ $f.Metadata.Validator }}({{ $r }}.{{ $f.Name }})
+				{{- end }}			
+				return
+			{{- else }}
+				{{- if eq $i 0 }}
+					{{ $r }}.{{ $f.Name }}, n, err = {{ $fnCall }}
+				{{- end }}
+				{{- if eq $i 1 }}
+					var n1 int
+				{{- end }}
+				{{- if ge $i 1 }}
+					{{ $r }}.{{ $f.Name }}, n1, err = {{ $fnCall }}
+					n += n1
+				{{- end }}
+				{{- if lt $i (minus $l 1) }}
+					if err != nil {
+						return
+					}
+					{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
+						if err = {{ $f.Metadata.Validator }}({{ $r }}.{{ $f.Name }}); err != nil {
+							return
+						}
+					{{- end }}
+				{{- end }}
+				{{- if eq $i (minus $l 1) }}
+					{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
+						if err != nil {
+							return
+						}
+						err = {{ $f.Metadata.Validator }}({{ $r }}.{{ $f.Name }})
+					{{- end }}
+					return
+				{{- end }}
+			{{- end }}
+		{{- end }}
+	{{- end }}
+{{- end }}	

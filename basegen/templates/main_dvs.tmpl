@@ -1,0 +1,19 @@
+var registry = com.NewRegistry(
+	[]com.TypeVersion{
+	{{- range $index, $tp := . }}
+		{{- $ctp := CurrentTypeOf $tp }}
+		dvs.Version[{{ $tp }}, {{ $ctp }}]{
+			DTS: {{ $tp }}DTS,
+			MigrateOld: Migrate{{ $tp }},
+			MigrateCurrent: MigrateTo{{ $tp }},
+		},
+	{{- end }}
+	},
+)
+
+var (
+	{{- range $index, $tp := . }}
+		{{- $ctp := CurrentTypeOf $tp}}
+		{{ $ctp }}DVS = dvs.New[{{ $ctp }}](registry)
+	{{- end }}
+)
