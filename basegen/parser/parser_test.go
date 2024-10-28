@@ -7,8 +7,6 @@ import (
 	"testing"
 )
 
-// TODO Test intr, _, _, err := Parse()
-
 func TestParsePrimitiveType(t *testing.T) {
 	var (
 		v    int
