@@ -4,7 +4,7 @@ It uses serialization primitives from the [mus-go](https://github.com/mus-format
 library, and for now supports only the [MUS](https://medium.com/p/21d7be309e8d) 
 format, hovewer other formats can be added quite easily 
 ([here](https://github.com/mus-format/mus-examples-go/tree/main/protobuf) is an
-example of how Protobuf format can be implemented using the mus-go libarary and 
+example of how Protobuf format can be implemented using mus-go and 
 [here](https://github.com/ymz-ncnk/go-serialization-benchmarks) are the corresponding benchmarks).
 
 # Contents
