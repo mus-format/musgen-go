@@ -7,6 +7,9 @@ format, hovewer other formats can be added quite easily
 example of how Protobuf format can be implemented using mus-go and 
 [here](https://github.com/ymz-ncnk/go-serialization-benchmarks) are the corresponding benchmarks).
 
+Also it supports unsafe code, streaming code and validation during 
+deserialization feature.
+
 # Contents
 - [musgen-go](#musgen-go)
 - [Contents](#contents)
