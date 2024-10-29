@@ -7,7 +7,7 @@ can be added quite easily ([here](https://github.com/mus-format/mus-examples-go/
 is an example of how Protobuf format can be implemented using mus-go and 
 [here](https://github.com/ymz-ncnk/go-serialization-benchmarks) are the benchmarks).
 
-For the supported formats, musgen-go can generate unsafe and streaming code. In 
+For all supported formats, musgen-go can generate unsafe and streaming code. In 
 addition, it has flexible customization options.
 
 # Contents
