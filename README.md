@@ -241,6 +241,7 @@ There are other metadata types, such as:
 - `MapMetadata` - In addition to length encoding and length validator, allows to
   customize the serialization of keys and values.
 - `PtrMetadata`
+  
 , each has own customization oprtions. It should also be noted that if an 
 incorrect metadata is set for a type (for example, `BoolMetadata` for a `string`
 type), the worst that can happen is that some settings will not be applied.
