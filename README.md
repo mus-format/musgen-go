@@ -1,14 +1,15 @@
 # musgen-go
-musgen-go is a Golang code generator for various binary serialization formats.
-It uses serialization primitives from the [mus-go](https://github.com/mus-format/mus-go) 
-library, and for now supports only the [MUS](https://medium.com/p/21d7be309e8d) 
-format, hovewer other formats can be added quite easily 
-([here](https://github.com/mus-format/mus-examples-go/tree/main/protobuf) is an
-example of how Protobuf format can be implemented using mus-go and 
-[here](https://github.com/ymz-ncnk/go-serialization-benchmarks) are the corresponding benchmarks).
+musgen-go is a Golang code generator that can produce code for various 
+serialization formats. Under the hood it uses serialization primitives from the 
+[mus-go](https://github.com/mus-format/mus-go) library, and for now supports 
+only the [MUS](https://medium.com/p/21d7be309e8d) format. Hovewer other formats 
+can be added quite easily ([here](https://github.com/mus-format/mus-examples-go/tree/main/protobuf) 
+is an example of how Protobuf format can be implemented using mus-go and 
+[here](https://github.com/ymz-ncnk/go-serialization-benchmarks) are the 
+corresponding benchmarks).
 
-Also it supports unsafe code, streaming code and validation during 
-deserialization feature.
+For the supported formats, musgen-go can generate unsafe and streaming code. In 
+addition, it has flexible customization options.
 
 # Contents
 - [musgen-go](#musgen-go)
