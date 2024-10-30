@@ -150,7 +150,11 @@ func (b *FileGenerator) AddAliasDTS(tp reflect.Type) (err error) {
 // Returns basegen.ErrNotAlias if type is not an alias.
 func (b *FileGenerator) AddAliasDTSWith(tp reflect.Type, prefix string,
 	meta basegen.TypeMetadataBuilder) (err error) {
-	bs, err := b.bg.GenerateAliasDTS(tp, prefix, meta.BuildTypeMetadata())
+	var m *basegen.Metadata
+	if meta != nil {
+		m = meta.BuildTypeMetadata()
+	}
+	bs, err := b.bg.GenerateAliasDTS(tp, prefix, m)
 	if err != nil {
 		return
 	}
