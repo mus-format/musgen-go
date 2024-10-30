@@ -14,9 +14,6 @@ addition, it has flexible customization options.
 - [musgen-go](#musgen-go)
 - [Contents](#contents)
   - [How to use](#how-to-use)
-  - [Generate DTS](#generate-dts)
-  - [Oneof Feature](#oneof-feature)
-  - [Defaults](#defaults)
   - [Custom Serialization](#custom-serialization)
     - [Prefix](#prefix)
     - [Metadata](#metadata)
@@ -28,6 +25,10 @@ addition, it has flexible customization options.
   - [Unsafe Code](#unsafe-code)
   - [Streaming](#streaming)
   - [Imports](#imports)
+  - [MUS Format](#mus-format)
+    - [Defaults](#defaults)
+    - [Generate DTS](#generate-dts)
+    - [Oneof Feature](#oneof-feature)
 
 ## How to use
 First, you should download and install Go, version 1.18 or later.
@@ -102,8 +103,8 @@ $ go mod tidy
 ```
 
 Now you can see `mus-format.gen.go` file in the `foo` folder with the
-`Marshal/Unmarshal/Size/Skip` functions for `IntAlias` and `Foo` types. Let's
-write some tests. Create a `foo_test.go` file:
+`Marshal/Unmarshal/Size/Skip` MUS functions for `IntAlias` and `Foo` types. 
+Let's write some tests. Create a `foo_test.go` file:
 ```
 foo/
  |‒‒‒...
@@ -138,66 +139,6 @@ func TestFooSerialization(t *testing.T) {
   }
 }
 ```
-## Generate DTS
-In addition to alias and struct, we can add DTS to the `FileGenerator`. DTSs are
-useful when we need to deserialize data, but we don't know in advance what type 
-it has. For example, it could be `Foo` or `Bar`, we just don't know..., but want
-to handle both of these cases.
-
-To add DTS generation, we need to define a DTM:
-```go
-const (
-  IntAliasDTM = 1
-)
-```
-and 
-```go
-// ...
-err = g.AddAliasDTS(reflect.TypeFor[IntAlias]()) // Marshal/Unmarshal/Size/Skip
-// functions and IntAliasDTS will be generated for the IntAlias type.
-// ...
-```
-There is also `FileGenerator.AddStructDTS()` method that behaves in a similar 
-way. More information about DTS can be found [here](https://github.com/mus-format/mus-dts-go).
-
-## Oneof Feature
-Oneof feature is implemented using interfaces. Adding an interface to the 
-`FileGenerator` requires `InterfaceMetadata` with a non-empty `OneOf` property, 
-which must contain one or more interface implementation types.
-```go
-// ...
-meta := basegen.InterfaceMetadata{
-  OneOf: []reflect.Type{
-    reflect.TypeFor[Copy](),
-    reflect.TypeFor[Insert](),
-  },
-}
-err = g.AddInterface(reflect.TypeFor[Instruction](), meta)
-// ...
-```
-, where `Instruction` is an interface implemented by `Copy` and `Insert`. Also, 
-the latter must have DTMs:
-```go
-const (
-  CopyDTM = 1
-  InsertDTM  = 2
-)
-```
-and DTSs:
-```go
-err = g.AddStructDTS(reflect.TypeFor[Copy]())
-// ...
-err = g.AddStructDTS(reflect.TypeFor[Insert]())
-// ...
-```
-
-## Defaults
-By default generated code:
-- Uses Varint encoding for numbers.
-- The length of variable length data types (such as `string`, `slice` or `map`) 
-  is encoded using Varint Postitive.
-- DTMs also encoded using Varint Positive.
-- There is no validation.
 
 ## Custom Serialization
 musgen-go provides flexible options for customizing the serialization process.
@@ -366,3 +307,64 @@ g, err := musgen.NewFileGenerator(basegen.Conf{
 })
 ```
 
+## MUS Format
+### Defaults
+By default generated code:
+- Uses Varint encoding for numbers.
+- The length of variable length data types (such as `string`, `slice` or `map`) 
+  is encoded using Varint Postitive.
+- DTMs also encoded using Varint Positive.
+- There is no validation.
+
+### Generate DTS
+In addition to alias and struct, we can add DTS to the `FileGenerator`. DTSs are
+useful when we need to deserialize data, but we don't know in advance what type 
+it has. For example, it could be `Foo` or `Bar`, we just don't know..., but want
+to handle both of these cases.
+
+To add DTS generation, we need to define a DTM:
+```go
+const (
+  IntAliasDTM = 1
+)
+```
+and 
+```go
+// ...
+err = g.AddAliasDTS(reflect.TypeFor[IntAlias]()) // Marshal/Unmarshal/Size/Skip
+// functions and IntAliasDTS will be generated for the IntAlias type.
+// ...
+```
+There is also `FileGenerator.AddStructDTS()` method that behaves in a similar 
+way. More information about DTS can be found [here](https://github.com/mus-format/mus-dts-go).
+
+### Oneof Feature
+Oneof feature is implemented using interfaces. Adding an interface to the 
+`FileGenerator` requires `InterfaceMetadata` with a non-empty `OneOf` property, 
+which must contain one or more interface implementation types.
+```go
+// ...
+meta := basegen.InterfaceMetadata{
+  OneOf: []reflect.Type{
+    reflect.TypeFor[Copy](),
+    reflect.TypeFor[Insert](),
+  },
+}
+err = g.AddInterface(reflect.TypeFor[Instruction](), meta)
+// ...
+```
+, where `Instruction` is an interface implemented by `Copy` and `Insert`. Also, 
+the latter must have DTMs:
+```go
+const (
+  CopyDTM = 1
+  InsertDTM  = 2
+)
+```
+and DTSs:
+```go
+err = g.AddStructDTS(reflect.TypeFor[Copy]())
+// ...
+err = g.AddStructDTS(reflect.TypeFor[Insert]())
+// ...
+```
