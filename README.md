@@ -49,8 +49,8 @@ type IntAlias int
 
 type Foo struct {
   fld0 string
-  fld3 bool
-  fld1 IntAlias
+  fld1 bool
+  fld2 IntAlias
 }
 ```
 
@@ -96,9 +96,9 @@ Run from the command line:
 ```bash
 $ cd ~/foo
 $ go mod init foo
-$ go get github.com/mus-format/musgen-go
-$ go get github.com/mus-format/mus-go
+$ go mod tidy
 $ go generate
+$ go mod tidy
 ```
 
 Now you can see `mus-format.gen.go` file in the `foo` folder with the
@@ -112,6 +112,8 @@ foo/
 
 __foo_test.go__
 ```go
+package foo
+
 import (
   "reflect"
   "testing"
