@@ -308,6 +308,9 @@ g, err := musgen.NewFileGenerator(basegen.Conf{
 ```
 
 ## MUS Format
+To generate the MUS format code, use the `github.com/mus-format/musgen-go/mus` 
+package.
+
 ### Defaults
 By default generated code:
 - Uses Varint encoding for numbers.
