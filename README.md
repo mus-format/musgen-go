@@ -1,6 +1,6 @@
 # musgen-go
 musgen-go is a Golang code generator that can produce code for various binary
-serialization formats. Under the hood, it uses serialization primitives from the 
+serialization formats. It uses serialization primitives from the 
 [mus-go](https://github.com/mus-format/mus-go) library, and for now supports 
 only the [MUS](https://medium.com/p/21d7be309e8d) format. However, other formats 
 can be added quite easily ([here](https://github.com/mus-format/mus-examples-go/tree/main/protobuf) 
