@@ -28,6 +28,9 @@ addition, it has flexible customization options.
     - [Oneof Feature](#oneof-feature)
 
 ## How to use
+Here we will generate the `Marshal/Unmarshal/Size/Skip` functions of the MUS 
+format.
+
 First, you should download and install Go, version 1.18 or later.
 
 Create in your home directory a `foo` folder with the following structure:
@@ -142,10 +145,9 @@ musgen-go provides flexible options for customizing the serialization process.
 It is done by `FileGenerator.Add...With()` methods.
 
 ### Prefix
-Using the prefix allows to have several `Marshal/Unmarshal/Size/Skip` functions 
-for one type. For example, at the same time we can have both 
-`MarshalIntAliasMUS()` and `MarshalAwesomeIntAliasMUS()`, where `Awesome` is the
-prefix.
+Prefix allows to have several `Marshal/Unmarshal/Size/Skip` functions for one 
+type. For example, at the same time we can have both `MarshalIntAliasMUS()` and 
+`MarshalAwesomeIntAliasMUS()`, where `Awesome` is the prefix.
 ```go
 // ...
 prefix := "Awesome"
@@ -182,14 +184,14 @@ There are other metadata types, such as:
   customize the serialization of keys and values.
 - `PtrMetadata`
   
-, each has own customization oprtions. It should also be noted that if an 
-incorrect metadata is set for a type (for example, `BoolMetadata` for a `string`
-type), the worst that can happen is that some settings will not be applied.
+, each has own customization options. It should be noted that if an incorrect 
+metadata is set for a type (for example, `BoolMetadata` for a `string` type), 
+the worst that can happen is that some settings will not be applied.
 
 #### Struct Metadata
 For struct fields there are `BoolFieldMetadata`, `NumFieldMetadata`, 
 `CustomTypeFieldMetadata` (can be used for alias, struct, interface or DTS 
-types), etc. all ending in `FieldMetadata`. Let's look at an example:
+types), etc., all ending in `FieldMetadata`. Let's look at an example:
 ```go
 // ...
 meta := basegen.StructMetadata{ // basegen.StructMetadata is a slice whose 
