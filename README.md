@@ -180,6 +180,7 @@ There are other metadata types, such as:
   protect against too long strings.
 - `SliceMetadata` - In addition to length encoding and length validator, allows
   to customize the serialization of elements.
+- `ArrayMetadata` - Alias of `SliceMetadata`.
 - `MapMetadata` - In addition to length encoding and length validator, allows to
   customize the serialization of keys and values.
 - `PtrMetadata`
