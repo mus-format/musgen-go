@@ -78,3 +78,8 @@ func Prefix(prefix string, meta *Metadata) string {
 	}
 	return ""
 }
+
+func ArrayType(t string) bool {
+	_, _, ok := ParseArrayType(t)
+	return ok
+}

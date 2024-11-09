@@ -1,6 +1,7 @@
 {{- $f := index .Fields 0 }}
 {{- $r := Receiver .Name }}
 {{- $v := print $r "a" }}
+{{- $a := ArrayType $f.Type }}
 {{ $v }}, n, err := {{ GenerateFnCall .Conf "" "Unmarshal" $f.Type .Prefix $f.Metadata }}
 if err != nil {
 	return
@@ -10,5 +11,9 @@ if err != nil {
 		return
 	}
 {{- end }}
-{{ $r }} = {{ .Name }}({{ $v }})
+{{- if $a }}
+	{{ $r }} = {{ .Name }}(({{ .AliasOf }})({{ $v }}))
+{{- else }}
+	{{ $r }} = {{ .Name }}({{ $v }})
+{{- end }}
 return

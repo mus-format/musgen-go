@@ -6,7 +6,9 @@
 {{- else }}
 	{{- $c := .Conf }}
 	{{- range $i, $f := Fields . }}
-		{{- $fnCall := GenerateFnCall $c (print $r "." $f.Name) "Marshal" $f.Type $p $f.Metadata }}
+		{{- $v := print $r "." $f.Name }}
+		{{- if ArrayType $f.Type }}{{ $v = print $v "[:]"}}{{ end }}
+		{{- $fnCall := GenerateFnCall $c $v "Marshal" $f.Type $p $f.Metadata }}
 		{{- if or (not $f.Metadata) (not $f.Metadata.Ignore) }}
 			{{- if eq $l 1 }}
 				return {{ $fnCall }}

@@ -8,14 +8,28 @@ func init() {
 	templates = make(map[string]string)
 	templates["alias_marshal.tmpl"] = `{{- $f := index .Fields 0 }}
 {{- $r := Receiver .Name }}
-return {{ GenerateFnCall .Conf (print .AliasOf "(" $r ")") "Marshal" $f.Type .Prefix $f.Metadata }}`
+{{- $a := ArrayType $f.Type }}
+{{- $v := print .AliasOf "(" $r ")" }}
+{{- if $a }}
+	{{ $r }}a := {{ $v }}
+	{{- $v = print $r "a" "[:]" }}
+{{- end }}
+return {{ GenerateFnCall .Conf $v "Marshal" $f.Type .Prefix $f.Metadata }}`
 	templates["alias_size.tmpl"] = `{{- $f := index .Fields 0 }}
-return {{ GenerateFnCall .Conf (print .AliasOf "(" (Receiver .Name) ")") "Size" $f.Type .Prefix $f.Metadata }}`
+{{- $r := Receiver .Name }}
+{{- $a := ArrayType $f.Type }}
+{{- $v := print .AliasOf "(" $r ")" }}
+{{- if $a }}
+	{{ $r }}a := {{ $v }}
+	{{- $v = print $r "a" "[:]" }}
+{{- end }}
+return {{ GenerateFnCall .Conf $v "Size" $f.Type .Prefix $f.Metadata }}`
 	templates["alias_skip.tmpl"] = `{{- $f := index .Fields 0 }}
 return {{ GenerateFnCall .Conf "" "Skip" $f.Type .Prefix $f.Metadata }}`
 	templates["alias_unmarshal.tmpl"] = `{{- $f := index .Fields 0 }}
 {{- $r := Receiver .Name }}
 {{- $v := print $r "a" }}
+{{- $a := ArrayType $f.Type }}
 {{ $v }}, n, err := {{ GenerateFnCall .Conf "" "Unmarshal" $f.Type .Prefix $f.Metadata }}
 if err != nil {
 	return
@@ -25,7 +39,11 @@ if err != nil {
 		return
 	}
 {{- end }}
-{{ $r }} = {{ .Name }}({{ $v }})
+{{- if $a }}
+	{{ $r }} = {{ .Name }}(({{ .AliasOf }})({{ $v }}))
+{{- else }}
+	{{ $r }} = {{ .Name }}({{ $v }})
+{{- end }}
 return`
 	templates["interface_marshal.tmpl"] = `{{- $c := .Conf}}
 {{- $p := .Prefix }}
@@ -162,7 +180,9 @@ func Skip{{ .Prefix }}{{ .Name }}MUS({{ .Conf.SkipParamSignature }}) (n int, err
 {{- else }}
 	{{- $c := .Conf }}
 	{{- range $i, $f := Fields . }}
-		{{- $fnCall := GenerateFnCall $c (print $r "." $f.Name) "Marshal" $f.Type $p $f.Metadata }}
+		{{- $v := print $r "." $f.Name }}
+		{{- if ArrayType $f.Type }}{{ $v = print $v "[:]"}}{{ end }}
+		{{- $fnCall := GenerateFnCall $c $v "Marshal" $f.Type $p $f.Metadata }}
 		{{- if or (not $f.Metadata) (not $f.Metadata.Ignore) }}
 			{{- if eq $l 1 }}
 				return {{ $fnCall }}
@@ -170,7 +190,7 @@ func Skip{{ .Prefix }}{{ .Name }}MUS({{ .Conf.SkipParamSignature }}) (n int, err
 				{{- if $c.Stream }}
 
 					{{- if eq $i 0 }}
-						n, err = {{ $fnCall }}	
+						n, err = {{ $fnCall }}
 					{{- end }}
 					{{- if eq $i 1 }}
 						var n1 int
@@ -213,7 +233,9 @@ func Skip{{ .Prefix }}{{ .Name }}MUS({{ .Conf.SkipParamSignature }}) (n int, err
 {{- else }}
 	{{- $c := .Conf }}
 	{{- range $i, $f := Fields . }}
-		{{- $fnCall := GenerateFnCall $c (print $r "." $f.Name) "Size" $f.Type $p $f.Metadata }}
+		{{- $v := print $r "." $f.Name }}
+		{{- if ArrayType $f.Type }}{{ $v = print $v "[:]"}}{{ end }}
+		{{- $fnCall := GenerateFnCall $c $v "Size" $f.Type $p $f.Metadata }}
 		{{- if or (not $f.Metadata) (not $f.Metadata.Ignore) }}
 			{{- if eq $l 1 }}
 				return {{ $fnCall }}
@@ -273,49 +295,102 @@ func Skip{{ .Prefix }}{{ .Name }}MUS({{ .Conf.SkipParamSignature }}) (n int, err
 {{- else }}
 	{{- $c := .Conf }}
 	{{- range $i, $f := Fields . }}
-		{{- $fnCall := GenerateFnCall $c (print $r "." $f.Name) "Unmarshal" $f.Type $p $f.Metadata }}
+		{{- $a := ArrayType $f.Type}}
+		{{- $v := print $r "." $f.Name }}
+		{{- $fnCall := GenerateFnCall $c $v "Unmarshal" $f.Type $p $f.Metadata }}
 		{{- if or (not $f.Metadata) (not $f.Metadata.Ignore) }}
+
+{{- /* if only one field */}}
+
 			{{- if eq $l 1 }}
-				{{ $r }}.{{ $f.Name }}, n, err = {{ $fnCall }}
+				{{- if $a }}
+					{{ $r }}{{ $f.Name }}, n, err := {{ $fnCall }}
+					if err != nil {
+						return
+					}
+					{{ $v }} = ({{ $f.Type }})({{ $r }}{{ $f.Name }})
+				{{- else }}
+					{{ $v }}, n, err = {{ $fnCall }}
+				{{- end }}
+
 				{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
-					if err != nil {
-						return
-					}
-					err = {{ $f.Metadata.Validator }}({{ $r }}.{{ $f.Name }})
-				{{- end }}			
-				return
-			{{- else }}
-				{{- if eq $i 0 }}
-					{{ $r }}.{{ $f.Name }}, n, err = {{ $fnCall }}
-				{{- end }}
-				{{- if eq $i 1 }}
-					var n1 int
-				{{- end }}
-				{{- if ge $i 1 }}
-					{{ $r }}.{{ $f.Name }}, n1, err = {{ $fnCall }}
-					n += n1
-				{{- end }}
-				{{- if lt $i (minus $l 1) }}
-					if err != nil {
-						return
-					}
-					{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
-						if err = {{ $f.Metadata.Validator }}({{ $r }}.{{ $f.Name }}); err != nil {
-							return
-						}
-					{{- end }}
-				{{- end }}
-				{{- if eq $i (minus $l 1) }}
-					{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
+					{{- if not $a }}
 						if err != nil {
 							return
 						}
-						err = {{ $f.Metadata.Validator }}({{ $r }}.{{ $f.Name }})
+					{{- end }}
+					err = {{ $f.Metadata.Validator }}({{ $v }})
+				{{- end }}
+				return
+			{{- else }}
+
+{{- /* if first field */}}
+
+				{{- if eq $i 0 }}
+					{{- if $a }}
+						{{ $r }}{{ $f.Name }}, n, err := {{ $fnCall }}
+						if err != nil {
+							return
+						}
+						{{ $v }} = ({{ $f.Type }})({{ $r }}{{ $f.Name }})
+					{{- else }}
+						{{ $v }}, n, err = {{ $fnCall }}
+					{{- end }}
+				{{- end }}
+
+{{- /* if second field */}}
+
+				{{- if eq $i 1 }}
+					var n1 int
+				{{- end }}
+
+{{- /* if > second field */}}
+
+				{{- if ge $i 1 }}
+					{{- if $a }}
+						{{ $r }}{{ $f.Name }}, n1, err := {{ $fnCall }}
+						n += n1
+						if err != nil {
+							return
+						}
+						{{ $v }} = ({{ $f.Type }})({{ $r }}{{ $f.Name }})
+					{{- else }}
+						{{ $v }}, n1, err = {{ $fnCall }}
+						n += n1
+					{{- end}}
+				{{- end }}
+
+{{- /* if not the last one field */}}
+
+				{{- if lt $i (minus $l 1) }}
+					{{- if not $a }}
+						if err != nil {
+							return
+						}
+					{{- end }}
+					{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
+						if err = {{ $f.Metadata.Validator }}({{ $v }}); err != nil {
+							return
+						}
+					{{- end }}
+				{{- end }}
+
+{{- /* if the last one field */}}
+
+				{{- if eq $i (minus $l 1) }}
+					{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
+						{{- if not $a }}
+							if err != nil {
+								return
+							}
+						{{- end }}
+						err = {{ $f.Metadata.Validator }}({{ $v }})
 					{{- end }}
 					return
 				{{- end }}
+
 			{{- end }}
 		{{- end }}
 	{{- end }}
-{{- end }}	`
+{{- end }}`
 }

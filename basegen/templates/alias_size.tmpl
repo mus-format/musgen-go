@@ -1,2 +1,9 @@
 {{- $f := index .Fields 0 }}
-return {{ GenerateFnCall .Conf (print .AliasOf "(" (Receiver .Name) ")") "Size" $f.Type .Prefix $f.Metadata }}
+{{- $r := Receiver .Name }}
+{{- $a := ArrayType $f.Type }}
+{{- $v := print .AliasOf "(" $r ")" }}
+{{- if $a }}
+	{{ $r }}a := {{ $v }}
+	{{- $v = print $r "a" "[:]" }}
+{{- end }}
+return {{ GenerateFnCall .Conf $v "Size" $f.Type .Prefix $f.Metadata }}

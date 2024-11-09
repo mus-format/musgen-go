@@ -40,7 +40,7 @@ func BuildGenerateFnCall(factory GeneratorFactory) GenerateFnCall {
 		} else if _, _, ok := ParsePtrType(tp); ok {
 			g = factory.NewPtrGenerator(conf, tp, prefix, meta)
 		} else if _, _, ok := ParseArrayType(tp); ok {
-			panic(ErrUnsupportedArrayType)
+			g = factory.NewSliceGenerator(conf, tp, prefix, meta)
 		}
 		if g == nil {
 			g = factory.NewSAIGenerator(conf, tp, prefix, meta)
@@ -76,7 +76,7 @@ func BuildGenerateSubFn(factory GeneratorFactory) GenerateSubFn {
 		} else if _, _, ok := ParsePtrType(tp); ok {
 			g = factory.NewPtrGenerator(conf, tp, prefix, meta)
 		} else if _, _, ok := ParseArrayType(tp); ok {
-			panic("do not support array type")
+			g = factory.NewSliceGenerator(conf, tp, prefix, meta)
 		}
 		if g != nil {
 			switch fnType {

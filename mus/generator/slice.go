@@ -10,8 +10,12 @@ func NewSliceGenerator(conf basegen.Conf, tp, prefix string, meta *basegen.Metad
 	g SliceGenerator) {
 	elemType, ok := basegen.ParseSliceType(tp)
 	if !ok {
-		panic("not a slice type")
+		elemType, _, ok = basegen.ParseArrayType(tp)
+		if !ok {
+			panic("not a slice or array type")
+		}
 	}
+
 	g.conf = conf
 	g.meta = meta
 	g.lenM = "nil"

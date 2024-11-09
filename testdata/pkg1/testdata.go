@@ -24,6 +24,8 @@ type Float32Alias float32
 
 type SliceAlias []int
 
+type ArrayAlias [3]int
+
 type MapAlias map[string]int
 
 type Struct struct {
@@ -74,6 +76,8 @@ type ComplexStruct struct {
 
 	SliceByte   []byte
 	SliceStruct []Struct
+
+	Array [3]int
 
 	Map map[float32]map[IntAlias][]Struct
 }

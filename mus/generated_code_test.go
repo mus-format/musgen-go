@@ -147,6 +147,15 @@ func TestGeneratedCode(t *testing.T) {
 				t)
 		})
 
+		t.Run("ArrayAlias should be serializable", func(t *testing.T) {
+			v := pkg1.ArrayAlias([3]int{1, 2, 3})
+			testSerializability(v, pkg1.MarshalArrayAliasMUS,
+				pkg1.UnmarshalArrayAliasMUS,
+				pkg1.SizeArrayAliasMUS,
+				pkg1.SkipArrayAliasMUS,
+				t)
+		})
+
 		t.Run("MapAlias should be serializable", func(t *testing.T) {
 			v := pkg1.MapAlias(map[string]int{"some": 1, "another": 2})
 			testSerializability(v, pkg1.MarshalMapAliasMUS,
@@ -525,6 +534,8 @@ func makeCompplexStruct() pkg1.ComplexStruct {
 
 		SliceByte:   []byte{1, 2, 3, 4},
 		SliceStruct: []pkg1.Struct{{Int: 10}, {Int: 20}},
+
+		Array: [3]int{1, 2, 3},
 
 		Map: map[float32]map[pkg1.IntAlias][]pkg1.Struct{
 			40.8: {

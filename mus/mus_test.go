@@ -84,6 +84,10 @@ func TestFileGenerator(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		err = g.AddAlias(reflect.TypeFor[pkg1.ArrayAlias]())
+		if err != nil {
+			t.Fatal(err)
+		}
 		err = g.AddAlias(reflect.TypeFor[pkg1.MapAlias]())
 		if err != nil {
 			t.Fatal(err)

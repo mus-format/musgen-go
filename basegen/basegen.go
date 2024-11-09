@@ -95,6 +95,7 @@ func registerFuncs(tmpl *template.Template, fn GenerateFnCall) {
 	tmpl.Funcs(map[string]any{
 		"GenerateFnCall": fn,
 		"FieldsLen":      FieldsLen,
+		"ArrayType":      ArrayType,
 		"Fields":         Fields,
 		"Receiver":       Receiver,
 		"CurrentTypeOf":  CurrentTypeOf,
