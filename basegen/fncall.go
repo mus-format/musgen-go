@@ -135,7 +135,7 @@ func BuildGenerateSubFn(factory GeneratorFactory) GenerateSubFn {
 }
 
 func ParseSliceType(tp string) (elemType string, ok bool) {
-	re := regexp.MustCompile(`^\**\[\](.+$)`)
+	re := regexp.MustCompile(`^\[\](.+$)`)
 	match := re.FindStringSubmatch(tp)
 	if len(match) == 2 {
 		return match[1], true
