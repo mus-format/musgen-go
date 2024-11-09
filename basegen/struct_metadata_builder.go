@@ -67,6 +67,17 @@ func (m SliceFieldMetadata) BuildFieldMetadata() (meta *Metadata) {
 	return
 }
 
+type ArrayFieldMetadata struct {
+	ArrayMetadata
+	Ignore bool
+}
+
+func (m ArrayFieldMetadata) BuildFieldMetadata() (meta *Metadata) {
+	meta = m.ArrayMetadata.BuildTypeMetadata()
+	meta.Ignore = m.Ignore
+	return
+}
+
 type MapFieldMetadata struct {
 	MapMetadata
 	Ignore bool

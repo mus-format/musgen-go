@@ -54,6 +54,12 @@ func (m SliceMetadata) BuildTypeMetadata() *Metadata {
 	return tm
 }
 
+type ArrayMetadata SliceMetadata
+
+func (m ArrayMetadata) BuildTypeMetadata() *Metadata {
+	return SliceMetadata(m).BuildTypeMetadata()
+}
+
 type MapMetadata struct {
 	LenEncoding  NumEncoding
 	LenValidator string

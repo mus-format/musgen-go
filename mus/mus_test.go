@@ -88,6 +88,28 @@ func TestFileGenerator(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		err = g.AddAliasWith(reflect.TypeFor[pkg1.ArrayAlias](), "LenEncoding",
+			basegen.SliceMetadata{LenEncoding: basegen.Raw})
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddAliasWith(reflect.TypeFor[pkg1.ArrayAlias](), "LenValidator",
+			basegen.ArrayMetadata{LenValidator: "testdata.ValidateLength"})
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddAliasWith(reflect.TypeFor[pkg1.ArrayAlias](), "ElemEncoding",
+			basegen.ArrayMetadata{Elem: basegen.NumMetadata{Encoding: basegen.Raw}})
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddAliasWith(reflect.TypeFor[pkg1.ArrayAlias](), "ElemValidator",
+			basegen.ArrayMetadata{Elem: basegen.NumMetadata{
+				Validator: "testdata.ValidateZeroValue[int]"},
+			})
+		if err != nil {
+			t.Fatal(err)
+		}
 		err = g.AddAlias(reflect.TypeFor[pkg1.MapAlias]())
 		if err != nil {
 			t.Fatal(err)

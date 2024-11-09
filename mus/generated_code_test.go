@@ -156,6 +156,51 @@ func TestGeneratedCode(t *testing.T) {
 				t)
 		})
 
+		t.Run("We should be able to set LenEncoding for ArrayAlias", func(t *testing.T) {
+			v := pkg1.ArrayAlias([3]int{1, 2, 3})
+			testLenEncoding(v, pkg1.MarshalLenEncodingArrayAliasMUS,
+				varint.UnmarshalPositiveInt,
+				pkg1.SizeLenEncodingArrayAliasMUS,
+				len(v),
+				t)
+		})
+
+		t.Run("We should be able to set LenValidator for ArrayAlias", func(t *testing.T) {
+			testValidation(pkg1.ArrayAlias([3]int{1, 2, 3}),
+				pkg1.MarshalLenValidatorArrayAliasMUS,
+				pkg1.UnmarshalLenValidatorArrayAliasMUS,
+				pkg1.SizeLenValidatorArrayAliasMUS,
+				testdata.ErrTooLong,
+				[]int{1},
+				t,
+			)
+		})
+
+		t.Run("We should be able to set Elem.Encoding for ArrayAlias", func(t *testing.T) {
+			testSerializability(pkg1.ArrayAlias([3]int{1, 2, 3}),
+				pkg1.MarshalElemEncodingArrayAliasMUS,
+				func(bs []byte) (sla pkg1.ArrayAlias, n int, err error) {
+					sl, n, err := ord.UnmarshalSlice[int](nil,
+						mus.UnmarshallerFn[int](raw.UnmarshalInt), bs)
+					sla = pkg1.ArrayAlias(sl)
+					return
+				},
+				pkg1.SizeElemEncodingArrayAliasMUS,
+				pkg1.SkipElemEncodingArrayAliasMUS,
+				t)
+		})
+
+		t.Run("We should be able to set Elem.Validator for ArrayAlias", func(t *testing.T) {
+			testValidation(
+				pkg1.ArrayAlias([3]int{1, 0, 3}),
+				pkg1.MarshalElemValidatorArrayAliasMUS,
+				pkg1.UnmarshalElemValidatorArrayAliasMUS,
+				pkg1.SizeElemValidatorArrayAliasMUS,
+				testdata.ErrZeroValue,
+				[]int{3},
+				t)
+		})
+
 		t.Run("MapAlias should be serializable", func(t *testing.T) {
 			v := pkg1.MapAlias(map[string]int{"some": 1, "another": 2})
 			testSerializability(v, pkg1.MarshalMapAliasMUS,
