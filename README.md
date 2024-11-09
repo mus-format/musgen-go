@@ -31,7 +31,7 @@ addition, it has flexible customization options.
 Here we will generate the `Marshal/Unmarshal/Size/Skip` functions of the MUS 
 format.
 
-First, you should download and install Go, version 1.18 or later.
+First, you should download and install Go, version 1.17 or later.
 
 Create in your home directory a `foo` folder with the following structure:
 ```
