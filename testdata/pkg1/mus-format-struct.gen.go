@@ -23,8 +23,10 @@ func MarshalComplexStructMUS(v ComplexStruct, bs []byte) (n int) {
 	n += varint.MarshalFloat32(v.Float32, bs[n:])
 	n += varint.MarshalFloat64(v.Float64, bs[n:])
 	n += ord.MarshalString(v.String, nil, bs[n:])
+	n += ord.MarshalPtr[string](v.PtrString, mus.MarshallerFn[string](func(t string, bs []byte) (n int) { return ord.MarshalString(t, nil, bs[n:]) }), bs[n:])
 	n += MarshalSliceAliasMUS(v.Alias, bs[n:])
 	n += ord.MarshalPtr[Struct](v.Ptr, mus.MarshallerFn[Struct](MarshalStructMUS), bs[n:])
+	n += ord.MarshalPtr[string](v.NilPtr, mus.MarshallerFn[string](func(t string, bs []byte) (n int) { return ord.MarshalString(t, nil, bs[n:]) }), bs[n:])
 	n += pkg2.MarshalStructMUS(v.AnotherPkgStruct, bs[n:])
 	n += MarshalInterfaceMUS(v.Interface, bs[n:])
 	n += ord.MarshalSlice[uint8](v.SliceByte,
@@ -39,6 +41,12 @@ func MarshalComplexStructMUS(v ComplexStruct, bs []byte) (n int) {
 		nil,
 		mus.MarshallerFn[int](varint.MarshalInt),
 		bs[n:])
+	n += ord.MarshalPtr[[3]int](v.PtrArray, mus.MarshallerFn[[3]int](func(t [3]int, bs []byte) (n int) {
+		return ord.MarshalSlice[int](t[:],
+			nil,
+			mus.MarshallerFn[int](varint.MarshalInt),
+			bs[n:])
+	}), bs[n:])
 	return n + ord.MarshalMap[float32, map[IntAlias][]Struct](v.Map, nil,
 		mus.MarshallerFn[float32](varint.MarshalFloat32),
 		mus.MarshallerFn[map[IntAlias][]Struct](func(t map[IntAlias][]Struct, bs []byte) (n int) {
@@ -121,12 +129,22 @@ func UnmarshalComplexStructMUS(bs []byte) (v ComplexStruct, n int, err error) {
 	if err != nil {
 		return
 	}
+	v.PtrString, n1, err = ord.UnmarshalPtr[string](mus.UnmarshallerFn[string](func(bs []byte) (t string, n int, err error) { return ord.UnmarshalString(nil, bs[n:]) }), bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
 	v.Alias, n1, err = UnmarshalSliceAliasMUS(bs[n:])
 	n += n1
 	if err != nil {
 		return
 	}
 	v.Ptr, n1, err = ord.UnmarshalPtr[Struct](mus.UnmarshallerFn[Struct](UnmarshalStructMUS), bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	v.NilPtr, n1, err = ord.UnmarshalPtr[string](mus.UnmarshallerFn[string](func(bs []byte) (t string, n int, err error) { return ord.UnmarshalString(nil, bs[n:]) }), bs[n:])
 	n += n1
 	if err != nil {
 		return
@@ -163,6 +181,20 @@ func UnmarshalComplexStructMUS(bs []byte) (v ComplexStruct, n int, err error) {
 		return
 	}
 	v.Array = ([3]int)(vArray)
+	v.PtrArray, n1, err = ord.UnmarshalPtr[[3]int](mus.UnmarshallerFn[[3]int](func(bs []byte) (t [3]int, n int, err error) {
+		ta, n, err := ord.UnmarshalSlice[int](nil,
+			mus.UnmarshallerFn[int](varint.UnmarshalInt),
+			bs[n:])
+		if err != nil {
+			return
+		}
+		t = ([3]int)(ta)
+		return
+	}), bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
 	v.Map, n1, err = ord.UnmarshalMap[float32, map[IntAlias][]Struct](nil,
 		mus.UnmarshallerFn[float32](varint.UnmarshalFloat32),
 		mus.UnmarshallerFn[map[IntAlias][]Struct](func(bs []byte) (t map[IntAlias][]Struct, n int, err error) {
@@ -194,8 +226,10 @@ func SizeComplexStructMUS(v ComplexStruct) (size int) {
 	size += varint.SizeFloat32(v.Float32)
 	size += varint.SizeFloat64(v.Float64)
 	size += ord.SizeString(v.String, nil)
+	size += ord.SizePtr[string](v.PtrString, mus.SizerFn[string](func(t string) (size int) { return ord.SizeString(t, nil) }))
 	size += SizeSliceAliasMUS(v.Alias)
 	size += ord.SizePtr[Struct](v.Ptr, mus.SizerFn[Struct](SizeStructMUS))
+	size += ord.SizePtr[string](v.NilPtr, mus.SizerFn[string](func(t string) (size int) { return ord.SizeString(t, nil) }))
 	size += pkg2.SizeStructMUS(v.AnotherPkgStruct)
 	size += SizeInterfaceMUS(v.Interface)
 	size += ord.SizeSlice[uint8](v.SliceByte,
@@ -207,6 +241,11 @@ func SizeComplexStructMUS(v ComplexStruct) (size int) {
 	size += ord.SizeSlice[int](v.Array[:],
 		nil,
 		mus.SizerFn[int](varint.SizeInt))
+	size += ord.SizePtr[[3]int](v.PtrArray, mus.SizerFn[[3]int](func(t [3]int) (size int) {
+		return ord.SizeSlice[int](t[:],
+			nil,
+			mus.SizerFn[int](varint.SizeInt))
+	}))
 	return size + ord.SizeMap[float32, map[IntAlias][]Struct](v.Map, nil,
 		mus.SizerFn[float32](varint.SizeFloat32),
 		mus.SizerFn[map[IntAlias][]Struct](func(t map[IntAlias][]Struct) (size int) {
@@ -286,12 +325,22 @@ func SkipComplexStructMUS(bs []byte) (n int, err error) {
 	if err != nil {
 		return
 	}
+	n1, err = ord.SkipPtr(mus.SkipperFn(func(bs []byte) (n int, err error) { return ord.SkipString(nil, bs[n:]) }), bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
 	n1, err = SkipSliceAliasMUS(bs[n:])
 	n += n1
 	if err != nil {
 		return
 	}
 	n1, err = ord.SkipPtr(mus.SkipperFn(SkipStructMUS), bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	n1, err = ord.SkipPtr(mus.SkipperFn(func(bs []byte) (n int, err error) { return ord.SkipString(nil, bs[n:]) }), bs[n:])
 	n += n1
 	if err != nil {
 		return
@@ -323,6 +372,15 @@ func SkipComplexStructMUS(bs []byte) (n int, err error) {
 	n1, err = ord.SkipSlice(nil,
 		mus.SkipperFn(varint.SkipInt),
 		bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	n1, err = ord.SkipPtr(mus.SkipperFn(func(bs []byte) (n int, err error) {
+		return ord.SkipSlice(nil,
+			mus.SkipperFn(varint.SkipInt),
+			bs[n:])
+	}), bs[n:])
 	n += n1
 	if err != nil {
 		return

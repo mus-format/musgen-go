@@ -92,12 +92,22 @@ func MarshalStreamComplexStructMUS(v ComplexStruct, w muss.Writer) (n int, err e
 	if err != nil {
 		return
 	}
+	n1, err = ord.MarshalPtr[string](v.PtrString, muss.MarshallerFn[string](func(t string, w muss.Writer) (n int, err error) { return ord.MarshalString(t, nil, w) }), w)
+	n += n1
+	if err != nil {
+		return
+	}
 	n1, err = MarshalStreamSliceAliasMUS(v.Alias, w)
 	n += n1
 	if err != nil {
 		return
 	}
 	n1, err = ord.MarshalPtr[Struct](v.Ptr, muss.MarshallerFn[Struct](MarshalStreamStructMUS), w)
+	n += n1
+	if err != nil {
+		return
+	}
+	n1, err = ord.MarshalPtr[string](v.NilPtr, muss.MarshallerFn[string](func(t string, w muss.Writer) (n int, err error) { return ord.MarshalString(t, nil, w) }), w)
 	n += n1
 	if err != nil {
 		return
@@ -132,6 +142,16 @@ func MarshalStreamComplexStructMUS(v ComplexStruct, w muss.Writer) (n int, err e
 		nil,
 		muss.MarshallerFn[int](varint.MarshalInt),
 		w)
+	n += n1
+	if err != nil {
+		return
+	}
+	n1, err = ord.MarshalPtr[[3]int](v.PtrArray, muss.MarshallerFn[[3]int](func(t [3]int, w muss.Writer) (n int, err error) {
+		return ord.MarshalSlice[int](t[:],
+			nil,
+			muss.MarshallerFn[int](varint.MarshalInt),
+			w)
+	}), w)
 	n += n1
 	if err != nil {
 		return
@@ -220,12 +240,22 @@ func UnmarshalStreamComplexStructMUS(r muss.Reader) (v ComplexStruct, n int, err
 	if err != nil {
 		return
 	}
+	v.PtrString, n1, err = ord.UnmarshalPtr[string](muss.UnmarshallerFn[string](func(r muss.Reader) (t string, n int, err error) { return ord.UnmarshalString(nil, r) }), r)
+	n += n1
+	if err != nil {
+		return
+	}
 	v.Alias, n1, err = UnmarshalStreamSliceAliasMUS(r)
 	n += n1
 	if err != nil {
 		return
 	}
 	v.Ptr, n1, err = ord.UnmarshalPtr[Struct](muss.UnmarshallerFn[Struct](UnmarshalStreamStructMUS), r)
+	n += n1
+	if err != nil {
+		return
+	}
+	v.NilPtr, n1, err = ord.UnmarshalPtr[string](muss.UnmarshallerFn[string](func(r muss.Reader) (t string, n int, err error) { return ord.UnmarshalString(nil, r) }), r)
 	n += n1
 	if err != nil {
 		return
@@ -262,6 +292,20 @@ func UnmarshalStreamComplexStructMUS(r muss.Reader) (v ComplexStruct, n int, err
 		return
 	}
 	v.Array = ([3]int)(vArray)
+	v.PtrArray, n1, err = ord.UnmarshalPtr[[3]int](muss.UnmarshallerFn[[3]int](func(r muss.Reader) (t [3]int, n int, err error) {
+		ta, n, err := ord.UnmarshalSlice[int](nil,
+			muss.UnmarshallerFn[int](varint.UnmarshalInt),
+			r)
+		if err != nil {
+			return
+		}
+		t = ([3]int)(ta)
+		return
+	}), r)
+	n += n1
+	if err != nil {
+		return
+	}
 	v.Map, n1, err = ord.UnmarshalMap[float32, map[IntAlias][]Struct](nil,
 		muss.UnmarshallerFn[float32](varint.UnmarshalFloat32),
 		muss.UnmarshallerFn[map[IntAlias][]Struct](func(r muss.Reader) (t map[IntAlias][]Struct, n int, err error) {
@@ -293,8 +337,10 @@ func SizeStreamComplexStructMUS(v ComplexStruct) (size int) {
 	size += varint.SizeFloat32(v.Float32)
 	size += varint.SizeFloat64(v.Float64)
 	size += ord.SizeString(v.String, nil)
+	size += ord.SizePtr[string](v.PtrString, muss.SizerFn[string](func(t string) (size int) { return ord.SizeString(t, nil) }))
 	size += SizeStreamSliceAliasMUS(v.Alias)
 	size += ord.SizePtr[Struct](v.Ptr, muss.SizerFn[Struct](SizeStreamStructMUS))
+	size += ord.SizePtr[string](v.NilPtr, muss.SizerFn[string](func(t string) (size int) { return ord.SizeString(t, nil) }))
 	size += pkg2.SizeStreamStructMUS(v.AnotherPkgStruct)
 	size += SizeStreamInterfaceMUS(v.Interface)
 	size += ord.SizeSlice[uint8](v.SliceByte,
@@ -306,6 +352,11 @@ func SizeStreamComplexStructMUS(v ComplexStruct) (size int) {
 	size += ord.SizeSlice[int](v.Array[:],
 		nil,
 		muss.SizerFn[int](varint.SizeInt))
+	size += ord.SizePtr[[3]int](v.PtrArray, muss.SizerFn[[3]int](func(t [3]int) (size int) {
+		return ord.SizeSlice[int](t[:],
+			nil,
+			muss.SizerFn[int](varint.SizeInt))
+	}))
 	return size + ord.SizeMap[float32, map[IntAlias][]Struct](v.Map, nil,
 		muss.SizerFn[float32](varint.SizeFloat32),
 		muss.SizerFn[map[IntAlias][]Struct](func(t map[IntAlias][]Struct) (size int) {
@@ -385,12 +436,22 @@ func SkipStreamComplexStructMUS(r muss.Reader) (n int, err error) {
 	if err != nil {
 		return
 	}
+	n1, err = ord.SkipPtr(muss.SkipperFn(func(r muss.Reader) (n int, err error) { return ord.SkipString(nil, r) }), r)
+	n += n1
+	if err != nil {
+		return
+	}
 	n1, err = SkipStreamSliceAliasMUS(r)
 	n += n1
 	if err != nil {
 		return
 	}
 	n1, err = ord.SkipPtr(muss.SkipperFn(SkipStreamStructMUS), r)
+	n += n1
+	if err != nil {
+		return
+	}
+	n1, err = ord.SkipPtr(muss.SkipperFn(func(r muss.Reader) (n int, err error) { return ord.SkipString(nil, r) }), r)
 	n += n1
 	if err != nil {
 		return
@@ -422,6 +483,15 @@ func SkipStreamComplexStructMUS(r muss.Reader) (n int, err error) {
 	n1, err = ord.SkipSlice(nil,
 		muss.SkipperFn(varint.SkipInt),
 		r)
+	n += n1
+	if err != nil {
+		return
+	}
+	n1, err = ord.SkipPtr(muss.SkipperFn(func(r muss.Reader) (n int, err error) {
+		return ord.SkipSlice(nil,
+			muss.SkipperFn(varint.SkipInt),
+			r)
+	}), r)
 	n += n1
 	if err != nil {
 		return

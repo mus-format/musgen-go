@@ -64,8 +64,9 @@ func BuildGenerateSubFn(factory GeneratorFactory) GenerateSubFn {
 	return func(conf Conf, fnType FnType, tp, prefix string, meta *Metadata) (
 		m string) {
 		var (
-			vname = "t"
-			g     Generator
+			vname     = "t"
+			g         Generator
+			arrayType bool
 		)
 		if tp == "string" {
 			g = factory.NewStringGenerator(conf, meta)
@@ -76,24 +77,42 @@ func BuildGenerateSubFn(factory GeneratorFactory) GenerateSubFn {
 		} else if _, _, ok := ParsePtrType(tp); ok {
 			g = factory.NewPtrGenerator(conf, tp, prefix, meta)
 		} else if _, _, ok := ParseArrayType(tp); ok {
+			arrayType = true
 			g = factory.NewSliceGenerator(conf, tp, prefix, meta)
 		}
 		if g != nil {
 			switch fnType {
 			case Marshal:
+				vname1 := vname
+				if arrayType {
+					vname1 += "[:]"
+				}
 				return fmt.Sprintf("func(%s %s, %s) %s { return %s}", vname, tp,
 					conf.MarshalParamSignature(),
 					conf.MarshalReturnValues(),
-					g.GenerateMarshalCall(vname))
+					g.GenerateMarshalCall(vname1))
 			case Unmarshal:
-				return fmt.Sprintf("func(%s) (%s %s, n int, err error) { return %s }",
+				fnBody := fmt.Sprintf("return %s", g.GenerateUnmarshalCall())
+				if arrayType {
+					tmp := vname + "a"
+					fnBody = fmt.Sprintf("%s, n, err := %s\n"+
+						"if err != nil { return }\n"+
+						"%s = (%s)(%s)\n"+
+						"return",
+						tmp, g.GenerateUnmarshalCall(), vname, tp, tmp)
+				}
+				return fmt.Sprintf("func(%s) (%s %s, n int, err error) { %s }",
 					conf.UnmarshalParamSignature(),
 					vname,
 					tp,
-					g.GenerateUnmarshalCall())
+					fnBody)
 			case Size:
+				vname1 := vname
+				if arrayType {
+					vname1 += "[:]"
+				}
 				return fmt.Sprintf("func(%s %s) (size int) { return %s }", vname, tp,
-					g.GenerateSizeCall(vname))
+					g.GenerateSizeCall(vname1))
 			case Skip:
 				return fmt.Sprintf("func(%s) (n int, err error) { return %s}",
 					conf.SkipParamSignature(),
@@ -149,7 +168,7 @@ func ParsePtrType(t string) (stars, elemType string, ok bool) {
 // ParseArrayType is a template function. If the given string represents an
 // array type, than Valid == true. The required format is [Length]Type.
 func ParseArrayType(t string) (elemType string, length int, ok bool) {
-	re := regexp.MustCompile(`^\**\[(\d+)\](.+$)`)
+	re := regexp.MustCompile(`^\[(\d+)\](.+$)`)
 	match := re.FindStringSubmatch(t)
 	if len(match) == 3 {
 		length, err := strconv.Atoi(match[1])

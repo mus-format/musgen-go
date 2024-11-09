@@ -580,7 +580,8 @@ func makeCompplexStruct() pkg1.ComplexStruct {
 		SliceByte:   []byte{1, 2, 3, 4},
 		SliceStruct: []pkg1.Struct{{Int: 10}, {Int: 20}},
 
-		Array: [3]int{1, 2, 3},
+		Array:    [3]int{1, 2, 3},
+		PtrArray: &[3]int{1, 1, 1},
 
 		Map: map[float32]map[pkg1.IntAlias][]pkg1.Struct{
 			40.8: {

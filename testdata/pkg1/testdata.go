@@ -67,17 +67,20 @@ type ComplexStruct struct {
 	Float32 float32
 	Float64 float64
 
-	String string
+	String    string
+	PtrString *string
 
 	Alias            SliceAlias
 	Ptr              *Struct
+	NilPtr           *string
 	AnotherPkgStruct pkg2.Struct
 	Interface        Interface
 
 	SliceByte   []byte
 	SliceStruct []Struct
 
-	Array [3]int
+	Array    [3]int
+	PtrArray *[3]int
 
 	Map map[float32]map[IntAlias][]Struct
 }
