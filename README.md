@@ -29,7 +29,7 @@ For now musgen-go supports only the [MUS](https://medium.com/p/21d7be309e8d) for
 Here we will generate the `Marshal/Unmarshal/Size/Skip` functions of the MUS 
 format.
 
-First, you should download and install Go, version 1.17 or later.
+First, you should download and install Go, version 1.18 or later.
 
 Create in your home directory a `foo` folder with the following structure:
 ```
