@@ -1,19 +1,17 @@
 # musgen-go
 musgen-go is a code generator for the [mus-go](https://github.com/mus-format/mus-go)
-serializer. It can generate unsafe and streaming code, also has flexible 
-customization options.
-
-For now musgen-go supports only the [MUS](https://medium.com/p/21d7be309e8d) format.
+serializer. It can generate unsafe, streaming code, and currently supports 
+only the MUS format.
 
 # Contents
 - [musgen-go](#musgen-go)
 - [Contents](#contents)
   - [How to use](#how-to-use)
-  - [Custom Serialization](#custom-serialization)
+  - [Configuration](#configuration)
     - [Prefix](#prefix)
-    - [Metadata](#metadata)
-      - [Alias Metadata](#alias-metadata)
-      - [Struct Metadata](#struct-metadata)
+    - [Options](#options)
+      - [Alias Options](#alias-options)
+      - [Struct Options](#struct-options)
         - [Struct Prefix](#struct-prefix)
         - [Ignore a Field](#ignore-a-field)
     - [Validation](#validation)
@@ -26,12 +24,10 @@ For now musgen-go supports only the [MUS](https://medium.com/p/21d7be309e8d) for
     - [Oneof Feature](#oneof-feature)
 
 ## How to use
-Here we will generate the `Marshal/Unmarshal/Size/Skip` functions of the MUS 
-format.
+Here, we will generate `Marshal`, `Unmarshal`, `Size`, and `Skip` functions.
 
-First, you should download and install Go, version 1.18 or later.
-
-Create in your home directory a `foo` folder with the following structure:
+First, download and install Go (version 1.18 or later). Then, create a `foo` 
+folder in your home directory with the following structure:
 ```
 foo/
  |‒‒‒gen/
@@ -47,9 +43,9 @@ package foo
 type IntAlias int
 
 type Foo struct {
-  fld0 string
-  fld1 bool
-  fld2 IntAlias
+  s string
+  b bool
+  i IntAlias
 }
 ```
 
@@ -101,7 +97,7 @@ $ go mod tidy
 ```
 
 Now you can see `mus-format.gen.go` file in the `foo` folder with the
-`Marshal/Unmarshal/Size/Skip` MUS functions for `IntAlias` and `Foo` types. 
+`Marshal/Unmarshal/Size/Skip` functions for `IntAlias` and `Foo` types. 
 Let's write some tests. Create a `foo_test.go` file:
 ```
 foo/
@@ -121,9 +117,9 @@ import (
 func TestFooSerialization(t *testing.T) {
   var (
     foo = Foo{
-      fld0: "hello world",
-      fld1: true,
-      fld2: IntAlias(5),
+      s: "hello world",
+      b: true,
+      i: IntAlias(5),
     }
     bs = make([]byte, SizeFooMUS(foo))
   )
@@ -138,14 +134,13 @@ func TestFooSerialization(t *testing.T) {
 }
 ```
 
-## Custom Serialization
-musgen-go provides flexible options for customizing the serialization process.
-It is done by `FileGenerator.Add...With()` methods.
+## Configuration
+Configuration is done through the `FileGenerator.Add...With()` methods.
 
 ### Prefix
-Prefix allows to have several `Marshal/Unmarshal/Size/Skip` functions for one 
-type. For example, at the same time we can have both `MarshalIntAliasMUS()` and 
-`MarshalAwesomeIntAliasMUS()`, where `Awesome` is the prefix.
+A prefix allows the generation of multiple `Marshal/Unmarshal/Size/Skip` 
+functions for the same type. For example, `MarshalIntAliasMUS/...` and 
+`MarshalAwesomeIntAliasMUS/...`, where `Awesome` is the prefix.
 ```go
 // ...
 prefix := "Awesome"
@@ -156,78 +151,86 @@ if err != nil {
 // ...
 ```
 
-### Metadata
-Metadata also allows to customize the serialization of individual data types.
+### Options
+Using the options, you can specify the encoding for the type, define a validator, 
+ignore a structure field, etc.
 
-#### Alias Metadata
-Let's look at an example:
+#### Alias Options
+Let's take an example:
 ```go
 // ...
-meta := basegen.NumMetadata{
-  Encoding: basegen.Raw, // The IntAlias will be serialized using Raw encoding.
+opts := basegen.NumOptions {
+  Encoding: basegen.Raw, // IntAlias will be serialized with Raw encoding.
 }
-err = g.AddAliasWith(reflect.TypeFor[IntAlias](), "", meta)
+err = g.AddAliasWith(reflect.TypeFor[IntAlias](), "", opts)
 if err != nil {
   panic(err)
 }
 // ...
 ```
-There are other metadata types, such as:
-- `BoolMetadata`
-- `StringMetadata` - Allows to set length encoding and length validator to
-  protect against too long strings.
-- `SliceMetadata` - In addition to length encoding and length validator, allows
-  to customize the serialization of elements.
-- `ArrayMetadata` - Alias of `SliceMetadata`.
-- `MapMetadata` - In addition to length encoding and length validator, allows to
-  customize the serialization of keys and values.
-- `PtrMetadata`
-  
-, each has own customization options. It should be noted that if an incorrect 
-metadata is set for a type (for example, `BoolMetadata` for a `string` type), 
-the worst that can happen is that some settings will not be applied.
+Other available Options:
+- `BoolOptions`
+- `StringOptions`
+- `SliceOptions`
+- `ArrayOptions`
+- `MapOptions`
+- `PtrOptions`
 
-#### Struct Metadata
-For struct fields there are `BoolFieldMetadata`, `NumFieldMetadata`, 
-`CustomTypeFieldMetadata` (can be used for alias, struct, interface or DTS 
-types), etc., all ending in `FieldMetadata`. Let's look at an example:
+The encoding of slice elements can be configured as follows:
+```go
+opts := basegen.SliceOptions {
+  Elem: basegen.NumOpitions{ Encoding: basegen.Raw }, // Raw encoding will be
+  // used for slice elements.
+}
+```
+The same applies to arrays, maps, and pointers.
+
+It should be noted that if an incorrect Options are used for a type, such as
+`BoolOptions` for the `string` type, the worst that can happen is that some 
+settings will not be applied.
+
+#### Struct Options
+The same options, but with the `FieldOptions` suffix, are available for struct 
+fields: `BoolFieldOptions`, `NumFieldOptions`, etc. Additionally, 
+`CustomTypeFieldOptions` can be used for fields with alias, struct, interface, 
+or DTS types.
 ```go
 // ...
-meta := basegen.StructMetadata{ // basegen.StructMetadata is a slice whose 
-// elements must correspond to struct fields.
-  basegen.NumFieldMetadata{ // Corresponds to Foo.fld0.
-    NumMetadata: basegen.NumMetadata{
+opts := basegen.StructOptions{ // A slice whose elements must correspond to 
+// struct fields.
+  basegen.NumFieldOptions{ // For s field.
+    NumOptions: basegen.NumOptions{
       Encoding: basegen.VarintPositive, // Sets a VarintPositive encoding fot this field.
     },
   },
-  nil, // Corresponds to Foo.fld1. There is no metadata for this field.
-  basegen.CustomTypeFieldMetadata{ // Corresponds to Foo.fld2.
+  nil, // There is no Options for b field.
+  basegen.CustomTypeFieldOptions{ // For i field.
     Prefix: "Awesome",
   },
 }
-err = g.AddStructWith(reflect.TypeFor[Foo](), "", meta)
+err = g.AddStructWith(reflect.TypeFor[Foo](), "", opts)
 // ...
 ```
 
 ##### Struct Prefix
-Specifying a prefix for the entire struct means that it will be applied to 
-all fields with custom types (such as alias, struct, interface, or DTS). 
+Specifying a prefix for the entire structure means that it will be applied to 
+all fields with alias, struct, interface, or DTS types.
 ```go
 // ...
 prefix := "Awesome"
-err = g.AddStructWith(reflect.TypeFor[Struct](), prefix, meta)
+err = g.AddStructWith(reflect.TypeFor[Foo](), prefix, opts)
 // ...
 ```
-In this case, for example, `MarshalAwesomeIntAlias()` will be used to marshal
-`fld2` field. This common prefix can be ignored by the field:
+In this case, for example, `MarshalAwesomeIntAlias()` will be used to marshal 
+the `IntAlias` field. This common prefix can be ignored by the field:
 ```go
-basegen.CustomTypeFieldMetadata {
+basegen.CustomTypeFieldOptions {
   Prefix: basegen.EmptyPrefix,
 }
 ```
 or can be overridden:
 ```go
-basegen.CustomTypeFieldMetadata {
+basegen.CustomTypeFieldOptions {
   Prefix: "OwnPrefix",
 }
 ```
@@ -235,18 +238,18 @@ basegen.CustomTypeFieldMetadata {
 ##### Ignore a Field
 The field also can be ignored:
 ```go
-basegen.NumFieldMetadata {
+basegen.NumFieldOptions {
   Ignore: true,
 }
 ```
-All `FieldMetadata` types have an `Ignore` flag.
+All `FieldOptions` have an `Ignore` flag.
 
 ### Validation
 Validation is performed during the unmarshalling process and requires one or 
 more validators to be set. Each validator is just a function with the following 
 signature `func (value Type) error`, where `Type` is a type of the value to 
 which the validator is applied. To set a validator for an alias or struct 
-field, use the `Validator` metadata property. For example:
+field, use the `Validator` property. For example:
 ```go
 func NotZero[T comparable](t T) (err error) { // Validator.
   if t == *new(T) {
@@ -255,10 +258,10 @@ func NotZero[T comparable](t T) (err error) { // Validator.
   return
 }
 // ...
-meta := basegen.StructMetadata{
-  basegen.NumFieldMetadata{
-    NumMetadata: basegen.NumMetadata{
-      Validator: "NotZero", // After unmarshalling the Foo.fld0 field, its 
+opts := basegen.StructOptions{
+  basegen.NumFieldOptions{
+    NumOptions: basegen.NumOptions{
+      Validator: "NotZero", // After unmarshalling the Foo.s field, its 
     // value will be checked by the NotZero validator. In general, we should 
     // write “packageName.ValidatorName” or just “ValidatorName” if the 
     // validator is from the same package.
@@ -267,14 +270,14 @@ meta := basegen.StructMetadata{
   nil,
   nil,
 }
-err = g.AddStructWith(reflect.TypeFor[Foo], "", meta)
+err = g.AddStructWith(reflect.TypeFor[Foo], "", opts)
 // ...
 ```
 If the validator returns an error, it will be returned immediately by the
 `Unmarshal` function, i.e. the rest of the struct will not be unmarshalled.
 
 ## Unsafe Code
-To generate an unsafe code just set the `Conf.Unsafe` flag:
+To generate an unsafe code set the `Conf.Unsafe` flag:
 ```go
 g, err := musgen.NewFileGenerator(basegen.Conf{
   Unsafe: true,
@@ -283,14 +286,14 @@ g, err := musgen.NewFileGenerator(basegen.Conf{
 ```
 
 ## Streaming
-mesgen-go can also produce a streaming code:
+musgen-go can also produce a streaming code:
 ```go
 g, err := musgen.NewFileGenerator(basegen.Conf{
   Stream: true,
   // ...
 })
 ```
-In this case mus-stream-go library will be used.
+In this case mus-stream-go library will be used instead of mus-go.
 
 ## Imports
 In some cases import statement of the generated file can miss one or more
@@ -306,22 +309,20 @@ g, err := musgen.NewFileGenerator(basegen.Conf{
 ```
 
 ## MUS Format
-To generate the MUS format code, use the `github.com/mus-format/musgen-go/mus` 
-package.
-
 ### Defaults
-By default generated code:
-- Uses Varint encoding for numbers.
-- The length of variable length data types (such as `string`, `slice` or `map`) 
-  is encoded using Varint Postitive.
-- DTMs also encoded using Varint Positive.
-- There is no validation.
+By default generated code uses:
+- Varint encoding for numbers.
+- VarintPositive encoding for length of variable length data types, such 
+  as `string`, `slice` or `map`.
+- VarintPositive encoding for DTM.
+- No validation.
 
 ### Generate DTS
-In addition to alias and struct, we can add DTS to the `FileGenerator`. DTSs are
-useful when we need to deserialize data, but we don't know in advance what type 
-it has. For example, it could be `Foo` or `Bar`, we just don't know..., but want
-to handle both of these cases.
+In addition to alias and struct a [DTS](https://github.com/mus-format/mus-dts-go) 
+can be added to the `FileGenerator`. DTSs are useful when there is a need to 
+deserialize data, but we don't know in advance what type it has. For example, it
+could be `Foo` or `Bar`, we just don't know, but want to handle both of these 
+cases.
 
 To add DTS generation, we need to define a DTM:
 ```go
@@ -337,21 +338,21 @@ err = g.AddAliasDTS(reflect.TypeFor[IntAlias]()) // Marshal/Unmarshal/Size/Skip
 // ...
 ```
 There is also `FileGenerator.AddStructDTS()` method that behaves in a similar 
-way. More information about DTS can be found [here](https://github.com/mus-format/mus-dts-go).
+way.
 
 ### Oneof Feature
 Oneof feature is implemented using interfaces. Adding an interface to the 
-`FileGenerator` requires `InterfaceMetadata` with a non-empty `OneOf` property, 
+`FileGenerator` requires `InterfaceOptions` with a non-empty `Oneof` property, 
 which must contain one or more interface implementation types.
 ```go
 // ...
-meta := basegen.InterfaceMetadata{
-  OneOf: []reflect.Type{
+opts := basegen.InterfaceOptions{
+  Oneof: []reflect.Type{
     reflect.TypeFor[Copy](),
     reflect.TypeFor[Insert](),
   },
 }
-err = g.AddInterface(reflect.TypeFor[Instruction](), meta)
+err = g.AddInterface(reflect.TypeFor[Instruction](), opts)
 // ...
 ```
 , where `Instruction` is an interface implemented by `Copy` and `Insert`. Also, 
