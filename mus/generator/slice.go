@@ -6,7 +6,7 @@ import (
 	"github.com/mus-format/musgen-go/basegen"
 )
 
-func NewSliceGenerator(conf basegen.Conf, tp, prefix string, meta *basegen.Metadata) (
+func NewSliceGenerator(conf basegen.Conf, tp, prefix string, opts *basegen.Options) (
 	g SliceGenerator) {
 	elemType, ok := basegen.ParseSliceType(tp)
 	if !ok {
@@ -17,19 +17,19 @@ func NewSliceGenerator(conf basegen.Conf, tp, prefix string, meta *basegen.Metad
 	}
 
 	g.conf = conf
-	g.meta = meta
+	g.opts = opts
 	g.lenM = "nil"
 	g.lenU = "nil"
 	g.lenS = "nil"
 	g.elemType = elemType
 	var (
-		modImportName                   = conf.ModImportName()
-		elemMeta      *basegen.Metadata = nil
+		modImportName                  = conf.ModImportName()
+		elemOpts      *basegen.Options = nil
 	)
-	if meta != nil {
-		if meta.LenEncoding != 0 {
-			numG := NewNumGenerator(conf, "int", &basegen.Metadata{
-				Encoding: meta.LenEncoding})
+	if opts != nil {
+		if opts.LenEncoding != 0 {
+			numG := NewNumGenerator(conf, "int", &basegen.Options{
+				Encoding: opts.LenEncoding})
 			g.lenM = modImportName + ".MarshallerFn[int](" +
 				numG.GenerateFnName(basegen.Marshal) + ")"
 			g.lenU = modImportName + ".UnmarshallerFn[int](" +
@@ -37,24 +37,24 @@ func NewSliceGenerator(conf basegen.Conf, tp, prefix string, meta *basegen.Metad
 			g.lenS = modImportName + ".SizerFn[int](" +
 				numG.GenerateFnName(basegen.Size) + ")"
 		}
-		elemMeta = meta.Elem
-		g.validator = meta.Validator
+		elemOpts = opts.Elem
+		g.validator = opts.Validator
 	}
-	elemPrefix := basegen.Prefix(prefix, elemMeta)
+	elemPrefix := basegen.Prefix(prefix, elemOpts)
 	g.m = fmt.Sprintf("%s.MarshallerFn[%s](%s)", modImportName, elemType,
-		GenerateSubFn(conf, basegen.Marshal, elemType, elemPrefix, elemMeta))
+		GenerateSubFn(conf, basegen.Marshal, elemType, elemPrefix, elemOpts))
 	g.u = fmt.Sprintf("%s.UnmarshallerFn[%s](%s)", modImportName, elemType,
-		GenerateSubFn(conf, basegen.Unmarshal, elemType, elemPrefix, elemMeta))
+		GenerateSubFn(conf, basegen.Unmarshal, elemType, elemPrefix, elemOpts))
 	g.s = fmt.Sprintf("%s.SizerFn[%s](%s)", modImportName, elemType,
-		GenerateSubFn(conf, basegen.Size, elemType, elemPrefix, elemMeta))
+		GenerateSubFn(conf, basegen.Size, elemType, elemPrefix, elemOpts))
 	g.sk = fmt.Sprintf("%s.SkipperFn(%s)", modImportName,
-		GenerateSubFn(conf, basegen.Skip, elemType, elemPrefix, elemMeta))
+		GenerateSubFn(conf, basegen.Skip, elemType, elemPrefix, elemOpts))
 	return g
 }
 
 type SliceGenerator struct {
 	conf      basegen.Conf
-	meta      *basegen.Metadata
+	opts      *basegen.Options
 	lenM      string
 	lenU      string
 	lenS      string
@@ -127,14 +127,14 @@ func (g SliceGenerator) GenerateValidation() (validation string) {
 }
 
 func (g SliceGenerator) validFnExpected() (lenVl, elemVl string, ok bool) {
-	if g.meta != nil {
-		if g.meta.LenValidator != "" {
-			lenVl = fmt.Sprintf("com.ValidatorFn[int](%s)", g.meta.LenValidator)
+	if g.opts != nil {
+		if g.opts.LenValidator != "" {
+			lenVl = fmt.Sprintf("com.ValidatorFn[int](%s)", g.opts.LenValidator)
 			ok = true
 		}
-		if g.meta.Elem != nil && g.meta.Elem.Validator != "" {
+		if g.opts.Elem != nil && g.opts.Elem.Validator != "" {
 			elemVl = fmt.Sprintf("com.ValidatorFn[%s](%s)", g.elemType,
-				g.meta.Elem.Validator)
+				g.opts.Elem.Validator)
 			ok = true
 		}
 	}

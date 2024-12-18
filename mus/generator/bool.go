@@ -7,7 +7,7 @@ import (
 	"github.com/mus-format/musgen-go/basegen"
 )
 
-func NewBoolGenerator(conf basegen.Conf, tp string, meta *basegen.Metadata) (
+func NewBoolGenerator(conf basegen.Conf, tp string, opts *basegen.Options) (
 	g BoolGenerator) {
 	g.conf = conf
 	g.tp = tp

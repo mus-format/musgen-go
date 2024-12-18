@@ -6,28 +6,28 @@ import (
 	"github.com/mus-format/musgen-go/basegen"
 )
 
-func NewMapGenerator(conf basegen.Conf, tp, prefix string, meta *basegen.Metadata) (
+func NewMapGenerator(conf basegen.Conf, tp, prefix string, opts *basegen.Options) (
 	g MapGenerator) {
 	keyType, elemType, ok := basegen.ParseMapType(tp)
 	if !ok {
 		panic("not a map type")
 	}
 	g.conf = conf
-	g.meta = meta
+	g.opts = opts
 	g.lenM = "nil"
 	g.lenU = "nil"
 	g.lenS = "nil"
 	g.keyType = keyType
 	g.elemType = elemType
 	var (
-		modImportName                   = conf.ModImportName()
-		keyMeta       *basegen.Metadata = nil
-		elemMeta      *basegen.Metadata = nil
+		modImportName                  = conf.ModImportName()
+		keyOpts       *basegen.Options = nil
+		elemOpts      *basegen.Options = nil
 	)
-	if meta != nil {
-		if meta.LenEncoding != 0 {
-			numG := NewNumGenerator(conf, "int", &basegen.Metadata{
-				Encoding: meta.LenEncoding})
+	if opts != nil {
+		if opts.LenEncoding != 0 {
+			numG := NewNumGenerator(conf, "int", &basegen.Options{
+				Encoding: opts.LenEncoding})
 			g.lenM = fmt.Sprintf("%s.MarshallerFn[int](%s)", modImportName,
 				numG.GenerateFnName(basegen.Marshal))
 			g.lenU = fmt.Sprintf("%s.UnmarshallerFn[int](%s)", modImportName,
@@ -35,36 +35,36 @@ func NewMapGenerator(conf basegen.Conf, tp, prefix string, meta *basegen.Metadat
 			g.lenS = fmt.Sprintf("%s.SizerFn[int](%s)", modImportName,
 				numG.GenerateFnName(basegen.Size))
 		}
-		keyMeta = meta.Key
-		elemMeta = meta.Elem
-		g.validator = meta.Validator
+		keyOpts = opts.Key
+		elemOpts = opts.Elem
+		g.validator = opts.Validator
 
 	}
-	keyPrefix := basegen.Prefix(prefix, keyMeta)
-	elemPrefix := basegen.Prefix(prefix, elemMeta)
+	keyPrefix := basegen.Prefix(prefix, keyOpts)
+	elemPrefix := basegen.Prefix(prefix, elemOpts)
 	g.m1 = fmt.Sprintf("%s.MarshallerFn[%s](%s)", modImportName, keyType,
-		GenerateSubFn(conf, basegen.Marshal, keyType, keyPrefix, keyMeta))
+		GenerateSubFn(conf, basegen.Marshal, keyType, keyPrefix, keyOpts))
 	g.u1 = fmt.Sprintf("%s.UnmarshallerFn[%s](%s)", modImportName, keyType,
-		GenerateSubFn(conf, basegen.Unmarshal, keyType, keyPrefix, keyMeta))
+		GenerateSubFn(conf, basegen.Unmarshal, keyType, keyPrefix, keyOpts))
 	g.s1 = fmt.Sprintf("%s.SizerFn[%s](%s)", modImportName, keyType,
-		GenerateSubFn(conf, basegen.Size, keyType, keyPrefix, keyMeta))
+		GenerateSubFn(conf, basegen.Size, keyType, keyPrefix, keyOpts))
 	g.sk1 = fmt.Sprintf("%s.SkipperFn(%s)", modImportName,
-		GenerateSubFn(conf, basegen.Skip, keyType, keyPrefix, keyMeta))
+		GenerateSubFn(conf, basegen.Skip, keyType, keyPrefix, keyOpts))
 
 	g.m2 = fmt.Sprintf("%s.MarshallerFn[%s](%s)", modImportName, elemType,
-		GenerateSubFn(conf, basegen.Marshal, elemType, elemPrefix, elemMeta))
+		GenerateSubFn(conf, basegen.Marshal, elemType, elemPrefix, elemOpts))
 	g.u2 = fmt.Sprintf("%s.UnmarshallerFn[%s](%s)", modImportName, elemType,
-		GenerateSubFn(conf, basegen.Unmarshal, elemType, elemPrefix, elemMeta))
+		GenerateSubFn(conf, basegen.Unmarshal, elemType, elemPrefix, elemOpts))
 	g.s2 = fmt.Sprintf("%s.SizerFn[%s](%s)", modImportName, elemType,
-		GenerateSubFn(conf, basegen.Size, elemType, elemPrefix, elemMeta))
+		GenerateSubFn(conf, basegen.Size, elemType, elemPrefix, elemOpts))
 	g.sk2 = fmt.Sprintf("%s.SkipperFn(%s)", modImportName,
-		GenerateSubFn(conf, basegen.Skip, elemType, elemPrefix, elemMeta))
+		GenerateSubFn(conf, basegen.Skip, elemType, elemPrefix, elemOpts))
 	return g
 }
 
 type MapGenerator struct {
 	conf      basegen.Conf
-	meta      *basegen.Metadata
+	opts      *basegen.Options
 	lenM      string
 	lenU      string
 	lenS      string
@@ -145,19 +145,19 @@ func (g MapGenerator) GenerateValidation() (validation string) {
 }
 
 func (g MapGenerator) validFnExpected() (lenVl, keyVl, elemVl string, ok bool) {
-	if g.meta != nil {
-		if g.meta.LenValidator != "" {
-			lenVl = fmt.Sprintf("com.ValidatorFn[int](%s)", g.meta.LenValidator)
+	if g.opts != nil {
+		if g.opts.LenValidator != "" {
+			lenVl = fmt.Sprintf("com.ValidatorFn[int](%s)", g.opts.LenValidator)
 			ok = true
 		}
-		if g.meta.Key != nil && g.meta.Key.Validator != "" {
+		if g.opts.Key != nil && g.opts.Key.Validator != "" {
 			keyVl = fmt.Sprintf("com.ValidatorFn[%s](%s)", g.keyType,
-				g.meta.Key.Validator)
+				g.opts.Key.Validator)
 			ok = true
 		}
-		if g.meta.Elem != nil && g.meta.Elem.Validator != "" {
+		if g.opts.Elem != nil && g.opts.Elem.Validator != "" {
 			elemVl = fmt.Sprintf("com.ValidatorFn[%s](%s)", g.elemType,
-				g.meta.Elem.Validator)
+				g.opts.Elem.Validator)
 			ok = true
 		}
 	}

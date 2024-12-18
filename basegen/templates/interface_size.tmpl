@@ -1,6 +1,6 @@
 {{- $p := .Prefix }}
 switch tp := {{ Receiver .Name }}.(type) {
-{{- range $index, $oneOf := .OneOf }}
+{{- range $index, $oneOf := .Oneof }}
 	case {{ $oneOf }}:
 		return {{ $p }}{{ $oneOf }}DTS.Size(tp)
 {{- end }}

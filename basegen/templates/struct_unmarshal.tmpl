@@ -8,8 +8,8 @@
 	{{- range $i, $f := Fields . }}
 		{{- $a := ArrayType $f.Type}}
 		{{- $v := print $r "." $f.Name }}
-		{{- $fnCall := GenerateFnCall $c $v "Unmarshal" $f.Type $p $f.Metadata }}
-		{{- if or (not $f.Metadata) (not $f.Metadata.Ignore) }}
+		{{- $fnCall := GenerateFnCall $c $v "Unmarshal" $f.Type $p $f.Options }}
+		{{- if or (not $f.Options) (not $f.Options.Ignore) }}
 
 {{- /* if only one field */}}
 
@@ -24,13 +24,13 @@
 					{{ $v }}, n, err = {{ $fnCall }}
 				{{- end }}
 
-				{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
+				{{- if and $f.Options (ne $f.Options.Validator "") }}
 					{{- if not $a }}
 						if err != nil {
 							return
 						}
 					{{- end }}
-					err = {{ $f.Metadata.Validator }}({{ $v }})
+					err = {{ $f.Options.Validator }}({{ $v }})
 				{{- end }}
 				return
 			{{- else }}
@@ -79,8 +79,8 @@
 							return
 						}
 					{{- end }}
-					{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
-						if err = {{ $f.Metadata.Validator }}({{ $v }}); err != nil {
+					{{- if and $f.Options (ne $f.Options.Validator "") }}
+						if err = {{ $f.Options.Validator }}({{ $v }}); err != nil {
 							return
 						}
 					{{- end }}
@@ -89,13 +89,13 @@
 {{- /* if the last one field */}}
 
 				{{- if eq $i (minus $l 1) }}
-					{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
+					{{- if and $f.Options (ne $f.Options.Validator "") }}
 						{{- if not $a }}
 							if err != nil {
 								return
 							}
 						{{- end }}
-						err = {{ $f.Metadata.Validator }}({{ $v }})
+						err = {{ $f.Options.Validator }}({{ $v }})
 					{{- end }}
 					return
 				{{- end }}

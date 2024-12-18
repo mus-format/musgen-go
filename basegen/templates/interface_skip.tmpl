@@ -6,7 +6,7 @@ if err != nil {
 }
 var n1 int
 switch dtm {
-{{- range $index, $oneOf := .OneOf }}
+{{- range $index, $oneOf := .Oneof }}
 	case {{ $oneOf }}DTM:
 		n1, err = {{ $p }}{{ $oneOf }}DTS.SkipData({{ $c.UnmarshalParam }})
 {{- end }}

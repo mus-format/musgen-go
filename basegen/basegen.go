@@ -25,8 +25,8 @@ type Basegen struct {
 }
 
 func (g *Basegen) GenerateInterface(tp reflect.Type, prefix string,
-	meta Metadata) (bs []byte, err error) {
-	td, err := BuildInterfaceTypeDesc(g.conf, tp, prefix, meta)
+	opts Options) (bs []byte, err error) {
+	td, err := BuildInterfaceTypeDesc(g.conf, tp, prefix, opts)
 	if err != nil {
 		return
 	}
@@ -35,23 +35,23 @@ func (g *Basegen) GenerateInterface(tp reflect.Type, prefix string,
 }
 
 func (g *Basegen) GenerateAlias(tp reflect.Type, prefix string,
-	meta *Metadata) (bs []byte, err error) {
-	return g.generateAlias(tp, prefix, meta, "main_alias_struct.tmpl")
+	opts *Options) (bs []byte, err error) {
+	return g.generateAlias(tp, prefix, opts, "main_alias_struct.tmpl")
 }
 
 func (g *Basegen) GenerateStruct(tp reflect.Type, prefix string,
-	meta []*Metadata) (bs []byte, err error) {
-	return g.generateStruct(tp, prefix, meta, "main_alias_struct.tmpl")
+	opts []*Options) (bs []byte, err error) {
+	return g.generateStruct(tp, prefix, opts, "main_alias_struct.tmpl")
 }
 
 func (g *Basegen) GenerateAliasDTS(tp reflect.Type, prefix string,
-	meta *Metadata) (bs []byte, err error) {
-	return g.generateAlias(tp, prefix, meta, "main_dts.tmpl")
+	opts *Options) (bs []byte, err error) {
+	return g.generateAlias(tp, prefix, opts, "main_dts.tmpl")
 }
 
 func (g *Basegen) GenerateStructDTS(tp reflect.Type, prefix string,
-	meta []*Metadata) (bs []byte, err error) {
-	return g.generateStruct(tp, prefix, meta, "main_dts.tmpl")
+	opts []*Options) (bs []byte, err error) {
+	return g.generateStruct(tp, prefix, opts, "main_dts.tmpl")
 }
 
 // // TODO tps should be ordered by DTMs.
@@ -64,8 +64,8 @@ func (g *Basegen) GenerateStructDTS(tp reflect.Type, prefix string,
 // }
 
 func (g Basegen) generateAlias(tp reflect.Type, prefix string,
-	meta *Metadata, tmplFile string) (bs []byte, err error) {
-	td, err := BuildAliasTypeDesc(g.conf, tp, prefix, meta)
+	opts *Options, tmplFile string) (bs []byte, err error) {
+	td, err := BuildAliasTypeDesc(g.conf, tp, prefix, opts)
 	if err != nil {
 		return
 	}
@@ -73,8 +73,8 @@ func (g Basegen) generateAlias(tp reflect.Type, prefix string,
 }
 
 func (g Basegen) generateStruct(tp reflect.Type, prefix string,
-	meta []*Metadata, tmplFile string) (bs []byte, err error) {
-	td, err := BuildStructTypeDesc(g.conf, tp, prefix, meta)
+	opts []*Options, tmplFile string) (bs []byte, err error) {
+	td, err := BuildStructTypeDesc(g.conf, tp, prefix, opts)
 	if err != nil {
 		return
 	}

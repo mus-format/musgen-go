@@ -7,9 +7,9 @@ import (
 	"github.com/mus-format/musgen-go/basegen"
 )
 
-func NewSAIGenerator(conf basegen.Conf, tp, prefix string, meta *basegen.Metadata) (
+func NewSAIGenerator(conf basegen.Conf, tp, prefix string, opts *basegen.Options) (
 	g CustomGenerator) {
-	return CustomGenerator{conf, tp, basegen.Prefix(prefix, meta)}
+	return CustomGenerator{conf, tp, basegen.Prefix(prefix, opts)}
 }
 
 type CustomGenerator struct {

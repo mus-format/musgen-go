@@ -8,8 +8,8 @@
 	{{- range $i, $f := Fields . }}
 		{{- $v := print $r "." $f.Name }}
 		{{- if ArrayType $f.Type }}{{ $v = print $v "[:]"}}{{ end }}
-		{{- $fnCall := GenerateFnCall $c $v "Size" $f.Type $p $f.Metadata }}
-		{{- if or (not $f.Metadata) (not $f.Metadata.Ignore) }}
+		{{- $fnCall := GenerateFnCall $c $v "Size" $f.Type $p $f.Options }}
+		{{- if or (not $f.Options) (not $f.Options.Ignore) }}
 			{{- if eq $l 1 }}
 				return {{ $fnCall }}
 			{{- else }}

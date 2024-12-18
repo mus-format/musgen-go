@@ -49,15 +49,15 @@ func (b *FileGenerator) AddAlias(tp reflect.Type) (err error) {
 //
 // Prefix allows to have several Marshal/Unmarshal/Size/Skip functions for one
 // alias type. For example, at the same time we can have MarshalAlias and
-// MarshaUnsafeAlias, where Unsafe is a prefix. With meta, we can configure the
+// MarshaUnsafeAlias, where Unsafe is a prefix. With opts, we can configure the
 // serialization of an alias type, specify encoding, validator, etc.
 //
 // Returns basegen.ErrNotAlias if type is not an alias.
 func (b *FileGenerator) AddAliasWith(tp reflect.Type, prefix string,
-	meta basegen.TypeMetadataBuilder) (err error) {
-	var m *basegen.Metadata
-	if meta != nil {
-		m = meta.BuildTypeMetadata()
+	opts basegen.TypeOptionsBuilder) (err error) {
+	var m *basegen.Options
+	if opts != nil {
+		m = opts.BuildTypeOptions()
 	}
 	bs, err := b.bg.GenerateAlias(tp, prefix, m)
 	if err != nil {
@@ -79,15 +79,15 @@ func (b *FileGenerator) AddStruct(tp reflect.Type) (err error) {
 //
 // Prefix allows to have several Marshal/Unmarshal/Size/Skip functions for one
 // struct type. For example, at the same time we can have MarshalStruct and
-// MarshaUnsafeStruct, where Unsafe is a prefix. With meta, we can configure the
+// MarshaUnsafeStruct, where Unsafe is a prefix. With opts, we can configure the
 // serialization of struct fields, specify encoding, validator, skip a field, etc.
 //
 // Returns basegen.ErrNotStruct if type is not a struct.
 func (b *FileGenerator) AddStructWith(tp reflect.Type, prefix string,
-	meta basegen.StructMetadataBuilder) (err error) {
-	var m []*basegen.Metadata
-	if meta != nil {
-		m = meta.BuildStructMetadata()
+	opts basegen.StructOptionsBuilder) (err error) {
+	var m []*basegen.Options
+	if opts != nil {
+		m = opts.BuildStructOptions()
 	}
 	bs, err := b.bg.GenerateStruct(tp, prefix, m)
 	if err != nil {
@@ -102,24 +102,24 @@ func (b *FileGenerator) AddStructWith(tp reflect.Type, prefix string,
 //
 // Returns besegen.ErrNotInterface if type is not an interface.
 func (b *FileGenerator) AddInterface(tp reflect.Type,
-	meta basegen.InterfaceMetadataBuilder) (err error) {
-	return b.AddInterfaceWith(tp, "", meta)
+	opts basegen.InterfaceOptionsBuilder) (err error) {
+	return b.AddInterfaceWith(tp, "", opts)
 }
 
 // AddInterfaceWith adds an interface type to the generator.
 //
 // Prefix allows to have several Marshal/Unmarshal/Size/Skip functions for one
 // interface type. For example, at the same time we can have MarshalInterface
-// and MarshaUnsafeInterface, where Unsafe is a prefix. Meta must contain one
+// and MarshaUnsafeInterface, where Unsafe is a prefix. Opts must contain one
 // or more interface implementation types.
 //
 // Returns basegen.ErrNotInterface if type is not an interface or
-// basegen.ErrEmptyOneOf if meta's OneOf property is empty.
+// basegen.ErrEmptyOneof if opts's Oneof property is empty.
 func (b *FileGenerator) AddInterfaceWith(tp reflect.Type, prefix string,
-	meta basegen.InterfaceMetadataBuilder) (err error) {
-	var m basegen.Metadata
-	if meta != nil {
-		m, err = meta.BuildInterfaceMetadata()
+	opts basegen.InterfaceOptionsBuilder) (err error) {
+	var m basegen.Options
+	if opts != nil {
+		m, err = opts.BuildInterfaceOptions()
 		if err != nil {
 			return
 		}
@@ -144,15 +144,15 @@ func (b *FileGenerator) AddAliasDTS(tp reflect.Type) (err error) {
 //
 // Prefix allows to have several Marshal/Unmarshal/Size/Skip functions for one
 // alias type. For example, at the same time we can have MarshalAlias and
-// MarshaUnsafeAlias, where Unsafe is a prefix. With meta, we can configure the
+// MarshaUnsafeAlias, where Unsafe is a prefix. With opts, we can configure the
 // serialization of an alias type, specify encoding, validator, etc.
 //
 // Returns basegen.ErrNotAlias if type is not an alias.
 func (b *FileGenerator) AddAliasDTSWith(tp reflect.Type, prefix string,
-	meta basegen.TypeMetadataBuilder) (err error) {
-	var m *basegen.Metadata
-	if meta != nil {
-		m = meta.BuildTypeMetadata()
+	opts basegen.TypeOptionsBuilder) (err error) {
+	var m *basegen.Options
+	if opts != nil {
+		m = opts.BuildTypeOptions()
 	}
 	bs, err := b.bg.GenerateAliasDTS(tp, prefix, m)
 	if err != nil {
@@ -174,16 +174,16 @@ func (b *FileGenerator) AddStructDTS(tp reflect.Type) (err error) {
 //
 // Prefix allows to have several Marshal/Unmarshal/Size/Skip functions for one
 // struct/DTS type. For example, at the same time we can have MarshalStruct and
-// MarshaUnsafeStruct, where Unsafe is a prefix. With meta, we can configure the
+// MarshaUnsafeStruct, where Unsafe is a prefix. With opts, we can configure the
 // serialization of struct fields, specify encoding, validator, skip a field,
 // etc.
 //
 // Returns basegen.ErrNotStruct if type is not a struct.
 func (b *FileGenerator) AddStructDTSWith(tp reflect.Type, prefix string,
-	meta basegen.StructMetadataBuilder) (err error) {
-	var m []*basegen.Metadata
-	if meta != nil {
-		m = meta.BuildStructMetadata()
+	opts basegen.StructOptionsBuilder) (err error) {
+	var m []*basegen.Options
+	if opts != nil {
+		m = opts.BuildStructOptions()
 	}
 	bs, err := b.bg.GenerateStructDTS(tp, prefix, m)
 	if err != nil {

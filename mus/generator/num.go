@@ -7,12 +7,12 @@ import (
 	"github.com/mus-format/musgen-go/basegen"
 )
 
-func NewNumGenerator(conf basegen.Conf, tp string, meta *basegen.Metadata) (
+func NewNumGenerator(conf basegen.Conf, tp string, opts *basegen.Options) (
 	g NumGenerator) {
 	g.conf = conf
 	g.tp = tp
-	if meta != nil {
-		g.enc = meta.Encoding
+	if opts != nil {
+		g.enc = opts.Encoding
 	}
 	return
 }

@@ -15,18 +15,18 @@ type TypeDesc struct {
 	Prefix  string
 	Name    string
 	AliasOf string
-	OneOf   []string
+	Oneof   []string
 	Fields  []FieldDesc
 }
 
 type FieldDesc struct {
-	Name     string
-	Type     string
-	Metadata *Metadata
+	Name    string
+	Type    string
+	Options *Options
 }
 
 func BuildAliasTypeDesc(conf Conf, tp reflect.Type, prefix string,
-	meta *Metadata) (td TypeDesc, err error) {
+	opts *Options) (td TypeDesc, err error) {
 	_, aliasOf, _, err := parser.Parse(tp)
 	if err != nil {
 		return
@@ -43,21 +43,21 @@ func BuildAliasTypeDesc(conf Conf, tp reflect.Type, prefix string,
 	td.AliasOf = aliasOf
 	td.Fields = []FieldDesc{
 		{
-			Type:     aliasOf,
-			Metadata: (*Metadata)(meta),
+			Type:    aliasOf,
+			Options: (*Options)(opts),
 		},
 	}
 	return
 }
 
 func BuildStructTypeDesc(conf Conf, tp reflect.Type, prefix string,
-	meta []*Metadata) (td TypeDesc, err error) {
+	opts []*Options) (td TypeDesc, err error) {
 	_, _, fieldsTypes, err := parser.Parse(tp)
 	if err != nil {
 		return
 	}
-	if meta != nil && len(meta) != len(fieldsTypes) {
-		err = ErrWrongMetadataAmount
+	if opts != nil && len(opts) != len(fieldsTypes) {
+		err = ErrWrongOptionsAmount
 		return
 	}
 	td.Conf = conf
@@ -70,16 +70,16 @@ func BuildStructTypeDesc(conf Conf, tp reflect.Type, prefix string,
 			Name: tp.Field(i).Name,
 			Type: fieldsTypes[i],
 		}
-		if meta != nil {
-			// TODO Check metadata type
-			td.Fields[i].Metadata = (*Metadata)(meta[i])
+		if opts != nil {
+			// TODO Check Options type
+			td.Fields[i].Options = (*Options)(opts[i])
 		}
 	}
 	return
 }
 
 func BuildInterfaceTypeDesc(conf Conf, tp reflect.Type, prefix string,
-	meta Metadata) (td TypeDesc, err error) {
+	opts Options) (td TypeDesc, err error) {
 	intr, _, _, err := parser.Parse(tp)
 	if err != nil {
 		return
@@ -87,11 +87,11 @@ func BuildInterfaceTypeDesc(conf Conf, tp reflect.Type, prefix string,
 	if !intr {
 		err = ErrNotInterface
 	}
-	if len(meta.OneOf) == 0 {
-		err = ErrEmptyOneOf
+	if len(opts.Oneof) == 0 {
+		err = ErrEmptyOneof
 	}
-	for i := 0; i < len(meta.OneOf); i++ {
-		_, _, _, err = parser.Parse(meta.OneOf[i])
+	for i := 0; i < len(opts.Oneof); i++ {
+		_, _, _, err = parser.Parse(opts.Oneof[i])
 		if err != nil {
 			panic(err)
 		}
@@ -100,13 +100,13 @@ func BuildInterfaceTypeDesc(conf Conf, tp reflect.Type, prefix string,
 	td.Package = pkg(tp)
 	td.Prefix = prefix
 	td.Name = tp.Name()
-	td.OneOf = make([]string, len(meta.OneOf))
-	for i := 0; i < len(meta.OneOf); i++ {
-		oneOf := meta.OneOf[i]
+	td.Oneof = make([]string, len(opts.Oneof))
+	for i := 0; i < len(opts.Oneof); i++ {
+		oneOf := opts.Oneof[i]
 		if tp.PkgPath() != oneOf.PkgPath() {
-			td.OneOf[i] = oneOf.String()
+			td.Oneof[i] = oneOf.String()
 		} else {
-			td.OneOf[i] = oneOf.Name()
+			td.Oneof[i] = oneOf.Name()
 		}
 	}
 	return

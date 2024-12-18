@@ -16,34 +16,34 @@ const (
 type FnType string
 
 type GenerateFnCall = func(conf Conf, vname string, fnType FnType, prefix,
-	tp string, meta *Metadata) (call string)
+	tp string, opts *Options) (call string)
 
 type GenerateSubFn = func(conf Conf, fnType FnType, prefix, tp string,
-	meta *Metadata) (m string)
+	opts *Options) (m string)
 
 func BuildGenerateFnCall(factory GeneratorFactory) GenerateFnCall {
 	return func(conf Conf, vname string, fnType FnType, tp, prefix string,
-		meta *Metadata) (call string) {
+		opts *Options) (call string) {
 		var g Generator
 		switch tp {
 		case "int", "int8", "int16", "int32", "int64", "uint", "uint8", "uint16", "uint32", "uint64", "float32", "float64":
-			g = factory.NewNumGenerator(conf, tp, meta)
+			g = factory.NewNumGenerator(conf, tp, opts)
 		case "string":
-			g = factory.NewStringGenerator(conf, meta)
+			g = factory.NewStringGenerator(conf, opts)
 		case "bool":
-			g = factory.NewBoolGenerator(conf, tp, meta)
+			g = factory.NewBoolGenerator(conf, tp, opts)
 		}
 		if _, ok := ParseSliceType(tp); ok {
-			g = factory.NewSliceGenerator(conf, tp, prefix, meta)
+			g = factory.NewSliceGenerator(conf, tp, prefix, opts)
 		} else if _, _, ok := ParseMapType(tp); ok {
-			g = factory.NewMapGenerator(conf, tp, prefix, meta)
+			g = factory.NewMapGenerator(conf, tp, prefix, opts)
 		} else if _, _, ok := ParsePtrType(tp); ok {
-			g = factory.NewPtrGenerator(conf, tp, prefix, meta)
+			g = factory.NewPtrGenerator(conf, tp, prefix, opts)
 		} else if _, _, ok := ParseArrayType(tp); ok {
-			g = factory.NewSliceGenerator(conf, tp, prefix, meta)
+			g = factory.NewSliceGenerator(conf, tp, prefix, opts)
 		}
 		if g == nil {
-			g = factory.NewSAIGenerator(conf, tp, prefix, meta)
+			g = factory.NewSAIGenerator(conf, tp, prefix, opts)
 		}
 		switch fnType {
 		case Marshal:
@@ -61,7 +61,7 @@ func BuildGenerateFnCall(factory GeneratorFactory) GenerateFnCall {
 }
 
 func BuildGenerateSubFn(factory GeneratorFactory) GenerateSubFn {
-	return func(conf Conf, fnType FnType, tp, prefix string, meta *Metadata) (
+	return func(conf Conf, fnType FnType, tp, prefix string, opts *Options) (
 		m string) {
 		var (
 			vname     = "t"
@@ -69,16 +69,16 @@ func BuildGenerateSubFn(factory GeneratorFactory) GenerateSubFn {
 			arrayType bool
 		)
 		if tp == "string" {
-			g = factory.NewStringGenerator(conf, meta)
+			g = factory.NewStringGenerator(conf, opts)
 		} else if _, ok := ParseSliceType(tp); ok {
-			g = factory.NewSliceGenerator(conf, tp, prefix, meta)
+			g = factory.NewSliceGenerator(conf, tp, prefix, opts)
 		} else if _, _, ok := ParseMapType(tp); ok {
-			g = factory.NewMapGenerator(conf, tp, prefix, meta)
+			g = factory.NewMapGenerator(conf, tp, prefix, opts)
 		} else if _, _, ok := ParsePtrType(tp); ok {
-			g = factory.NewPtrGenerator(conf, tp, prefix, meta)
+			g = factory.NewPtrGenerator(conf, tp, prefix, opts)
 		} else if _, _, ok := ParseArrayType(tp); ok {
 			arrayType = true
-			g = factory.NewSliceGenerator(conf, tp, prefix, meta)
+			g = factory.NewSliceGenerator(conf, tp, prefix, opts)
 		}
 		if g != nil {
 			switch fnType {
@@ -124,11 +124,11 @@ func BuildGenerateSubFn(factory GeneratorFactory) GenerateSubFn {
 
 		switch tp {
 		case "int", "int8", "int16", "int32", "int64", "uint", "uint8", "uint16", "uint32", "uint64", "float32", "float64":
-			g = factory.NewNumGenerator(conf, tp, meta)
+			g = factory.NewNumGenerator(conf, tp, opts)
 		case "bool":
-			g = factory.NewBoolGenerator(conf, tp, meta)
+			g = factory.NewBoolGenerator(conf, tp, opts)
 		default:
-			g = factory.NewSAIGenerator(conf, tp, prefix, meta)
+			g = factory.NewSAIGenerator(conf, tp, prefix, opts)
 		}
 		return g.GenerateFnName(fnType)
 	}

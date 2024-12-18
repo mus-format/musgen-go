@@ -5,8 +5,8 @@
 {{- else }}
 	{{- $c := .Conf }}
 	{{- range $i, $f := Fields . }}
-		{{- $fnCall := GenerateFnCall $c "" "Skip" $f.Type $p $f.Metadata }}
-		{{- if or (not $f.Metadata) (not $f.Metadata.Ignore) }}
+		{{- $fnCall := GenerateFnCall $c "" "Skip" $f.Type $p $f.Options }}
+		{{- if or (not $f.Options) (not $f.Options.Ignore) }}
 			{{- if eq $l 1 }}
 				return {{ $fnCall }}
 			{{- else }}

@@ -25,17 +25,17 @@ func TestFileGenerator(t *testing.T) {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.IntAlias](), "Raw",
-			basegen.NumMetadata{Encoding: basegen.Raw})
+			basegen.NumOptions{Encoding: basegen.Raw})
 		if err != nil {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.IntAlias](), "VarintPositive",
-			basegen.NumMetadata{Encoding: basegen.VarintPositive})
+			basegen.NumOptions{Encoding: basegen.VarintPositive})
 		if err != nil {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.IntAlias](), "Valid",
-			basegen.NumMetadata{Validator: "testdata.ValidateZeroValue[int]"})
+			basegen.NumOptions{Validator: "testdata.ValidateZeroValue[int]"})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -44,17 +44,17 @@ func TestFileGenerator(t *testing.T) {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.StringAlias](), "LenEncoding",
-			basegen.StringMetadata{LenEncoding: basegen.Raw})
+			basegen.StringOptions{LenEncoding: basegen.Raw})
 		if err != nil {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.StringAlias](), "LenValidator",
-			basegen.StringMetadata{LenValidator: "testdata.ValidateLength"})
+			basegen.StringOptions{LenValidator: "testdata.ValidateLength"})
 		if err != nil {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.StringAlias](), "Valid",
-			basegen.StringMetadata{Validator: "testdata.ValidateZeroValue[string]"})
+			basegen.StringOptions{Validator: "testdata.ValidateZeroValue[string]"})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -63,22 +63,22 @@ func TestFileGenerator(t *testing.T) {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.SliceAlias](), "LenEncoding",
-			basegen.SliceMetadata{LenEncoding: basegen.Raw})
+			basegen.SliceOptions{LenEncoding: basegen.Raw})
 		if err != nil {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.SliceAlias](), "LenValidator",
-			basegen.SliceMetadata{LenValidator: "testdata.ValidateLength"})
+			basegen.SliceOptions{LenValidator: "testdata.ValidateLength"})
 		if err != nil {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.SliceAlias](), "ElemEncoding",
-			basegen.SliceMetadata{Elem: basegen.NumMetadata{Encoding: basegen.Raw}})
+			basegen.SliceOptions{Elem: basegen.NumOptions{Encoding: basegen.Raw}})
 		if err != nil {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.SliceAlias](), "ElemValidator",
-			basegen.SliceMetadata{Elem: basegen.NumMetadata{
+			basegen.SliceOptions{Elem: basegen.NumOptions{
 				Validator: "testdata.ValidateZeroValue[int]"},
 			})
 		if err != nil {
@@ -89,22 +89,17 @@ func TestFileGenerator(t *testing.T) {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.ArrayAlias](), "LenEncoding",
-			basegen.SliceMetadata{LenEncoding: basegen.Raw})
-		if err != nil {
-			t.Fatal(err)
-		}
-		err = g.AddAliasWith(reflect.TypeFor[pkg1.ArrayAlias](), "LenValidator",
-			basegen.ArrayMetadata{LenValidator: "testdata.ValidateLength"})
+			basegen.SliceOptions{LenEncoding: basegen.Raw})
 		if err != nil {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.ArrayAlias](), "ElemEncoding",
-			basegen.ArrayMetadata{Elem: basegen.NumMetadata{Encoding: basegen.Raw}})
+			basegen.ArrayOptions{Elem: basegen.NumOptions{Encoding: basegen.Raw}})
 		if err != nil {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.ArrayAlias](), "ElemValidator",
-			basegen.ArrayMetadata{Elem: basegen.NumMetadata{
+			basegen.ArrayOptions{Elem: basegen.NumOptions{
 				Validator: "testdata.ValidateZeroValue[int]"},
 			})
 		if err != nil {
@@ -115,25 +110,25 @@ func TestFileGenerator(t *testing.T) {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.MapAlias](), "LenEncoding",
-			basegen.MapMetadata{LenEncoding: basegen.Raw})
+			basegen.MapOptions{LenEncoding: basegen.Raw})
 		if err != nil {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.MapAlias](), "LenValidator",
-			basegen.MapMetadata{LenValidator: "testdata.ValidateLength"})
+			basegen.MapOptions{LenValidator: "testdata.ValidateLength"})
 		if err != nil {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.MapAlias](), "KeyValidator",
-			basegen.MapMetadata{
-				Key: basegen.StringMetadata{Validator: "testdata.ValidateZeroValue[string]"},
+			basegen.MapOptions{
+				Key: basegen.StringOptions{Validator: "testdata.ValidateZeroValue[string]"},
 			})
 		if err != nil {
 			t.Fatal(err)
 		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.MapAlias](), "ElemValidator",
-			basegen.MapMetadata{
-				Elem: basegen.NumMetadata{Validator: "testdata.ValidateZeroValue[int]"},
+			basegen.MapOptions{
+				Elem: basegen.NumOptions{Validator: "testdata.ValidateZeroValue[int]"},
 			})
 		if err != nil {
 			t.Fatal(err)
@@ -181,8 +176,8 @@ func TestFileGenerator(t *testing.T) {
 			t.Fatal(err)
 		}
 		err = g.AddInterface(reflect.TypeFor[pkg1.Interface](),
-			basegen.InterfaceMetadata{
-				OneOf: []reflect.Type{
+			basegen.InterfaceOptions{
+				Oneof: []reflect.Type{
 					reflect.TypeFor[pkg1.InterfaceImpl1](),
 					reflect.TypeFor[pkg1.InterfaceImpl2](),
 				},
@@ -217,16 +212,16 @@ func TestFileGenerator(t *testing.T) {
 		}
 		// There is no test function for this case.
 		err = g2.AddStructWith(reflect.TypeFor[pkg2.Struct](), "ValidAllFields",
-			basegen.StructMetadata{
-				basegen.NumFieldMetadata{
-					NumMetadata: basegen.NumMetadata{Validator: "testdata.ValidateZeroValue[float32]"},
+			basegen.StructOptions{
+				basegen.NumFieldOptions{
+					NumOptions: basegen.NumOptions{Validator: "testdata.ValidateZeroValue[float32]"},
 				},
-				basegen.NumFieldMetadata{
-					NumMetadata: basegen.NumMetadata{Validator: "testdata.ValidateZeroValue[float64]"},
+				basegen.NumFieldOptions{
+					NumOptions: basegen.NumOptions{Validator: "testdata.ValidateZeroValue[float64]"},
 				},
 				nil,
-				basegen.BoolFieldMetadata{
-					BoolMetadata: basegen.BoolMetadata{Validator: "testdata.ValidateZeroValue[bool]"},
+				basegen.BoolFieldOptions{
+					BoolOptions: basegen.BoolOptions{Validator: "testdata.ValidateZeroValue[bool]"},
 				},
 			},
 		)
@@ -235,9 +230,9 @@ func TestFileGenerator(t *testing.T) {
 		}
 		// There is no test function for this case.
 		err = g2.AddStructWith(reflect.TypeFor[pkg2.Struct](), "ValidateFirstField",
-			basegen.StructMetadata{
-				basegen.NumFieldMetadata{
-					NumMetadata: basegen.NumMetadata{Validator: "testdata.ValidateZeroValue[float32]"},
+			basegen.StructOptions{
+				basegen.NumFieldOptions{
+					NumOptions: basegen.NumOptions{Validator: "testdata.ValidateZeroValue[float32]"},
 				},
 				nil,
 				nil,
@@ -248,12 +243,12 @@ func TestFileGenerator(t *testing.T) {
 		}
 		// There is no test function for this case.
 		err = g2.AddStructWith(reflect.TypeFor[pkg2.Struct](), "ValidateLastField",
-			basegen.StructMetadata{
+			basegen.StructOptions{
 				nil,
 				nil,
 				nil,
-				basegen.BoolFieldMetadata{
-					BoolMetadata: basegen.BoolMetadata{Validator: "testdata.ValidateZeroValue[bool]"},
+				basegen.BoolFieldOptions{
+					BoolOptions: basegen.BoolOptions{Validator: "testdata.ValidateZeroValue[bool]"},
 				},
 			})
 		if err != nil {
@@ -261,17 +256,17 @@ func TestFileGenerator(t *testing.T) {
 		}
 		// There is no test function for this case.
 		err = g2.AddStructWith(reflect.TypeFor[pkg2.AnotherStruct](), "Prefix",
-			basegen.StructMetadata{
-				basegen.CustomTypeFieldMetadata{Prefix: "Skip"},
-				basegen.CustomTypeFieldMetadata{Prefix: basegen.EmptyPrefix},
+			basegen.StructOptions{
+				basegen.CustomTypeFieldOptions{Prefix: "Skip"},
+				basegen.CustomTypeFieldOptions{Prefix: basegen.EmptyPrefix},
 			},
 		)
 		if err != nil {
 			t.Fatal(err)
 		}
 		err = g2.AddStructWith(reflect.TypeFor[pkg2.Struct](), "Skip",
-			basegen.StructMetadata{
-				basegen.NumFieldMetadata{Ignore: true},
+			basegen.StructOptions{
+				basegen.NumFieldOptions{Ignore: true},
 				nil,
 				nil,
 				nil})

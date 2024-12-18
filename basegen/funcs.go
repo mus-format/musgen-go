@@ -46,7 +46,7 @@ func CurrentTypeOf(s string) string {
 func FieldsLen(td TypeDesc) (l int) {
 	for i := 0; i < len(td.Fields); i++ {
 		f := td.Fields[i]
-		if f.Metadata == nil || !f.Metadata.Ignore {
+		if f.Options == nil || !f.Options.Ignore {
 			l += 1
 		}
 	}
@@ -57,20 +57,20 @@ func Fields(td TypeDesc) (fs []FieldDesc) {
 	fs = make([]FieldDesc, 0, len(td.Fields))
 	for i := 0; i < len(td.Fields); i++ {
 		f := td.Fields[i]
-		if f.Metadata == nil || !f.Metadata.Ignore {
+		if f.Options == nil || !f.Options.Ignore {
 			fs = append(fs, f)
 		}
 	}
 	return
 }
 
-func Prefix(prefix string, meta *Metadata) string {
-	if meta != nil {
-		if meta.Prefix == EmptyPrefix {
+func Prefix(prefix string, opts *Options) string {
+	if opts != nil {
+		if opts.Prefix == EmptyPrefix {
 			return ""
 		}
-		if meta.Prefix != "" {
-			return meta.Prefix
+		if opts.Prefix != "" {
+			return opts.Prefix
 		}
 	}
 	if prefix != "" {

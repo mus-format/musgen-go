@@ -2,12 +2,12 @@
 {{- $r := Receiver .Name }}
 {{- $v := print $r "a" }}
 {{- $a := ArrayType $f.Type }}
-{{ $v }}, n, err := {{ GenerateFnCall .Conf "" "Unmarshal" $f.Type .Prefix $f.Metadata }}
+{{ $v }}, n, err := {{ GenerateFnCall .Conf "" "Unmarshal" $f.Type .Prefix $f.Options }}
 if err != nil {
 	return
 }
-{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
-	if err = {{ $f.Metadata.Validator }}({{ $v }}); err != nil {
+{{- if and $f.Options (ne $f.Options.Validator "") }}
+	if err = {{ $f.Options.Validator }}({{ $v }}); err != nil {
 		return
 	}
 {{- end }}

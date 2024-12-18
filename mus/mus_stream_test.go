@@ -66,8 +66,8 @@ func TestStreamFileGenerator(t *testing.T) {
 			t.Fatal(err)
 		}
 		err = g.AddInterfaceWith(reflect.TypeFor[pkg1.Interface](), StreamPrefix,
-			basegen.InterfaceMetadata{
-				OneOf: []reflect.Type{
+			basegen.InterfaceOptions{
+				Oneof: []reflect.Type{
 					reflect.TypeFor[pkg1.InterfaceImpl1](),
 					reflect.TypeFor[pkg1.InterfaceImpl2](),
 				},

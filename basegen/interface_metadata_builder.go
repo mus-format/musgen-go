@@ -2,21 +2,21 @@ package basegen
 
 import "reflect"
 
-type InterfaceMetadataBuilder interface {
-	BuildInterfaceMetadata() (Metadata, error)
+type InterfaceOptionsBuilder interface {
+	BuildInterfaceOptions() (Options, error)
 }
 
-type InterfaceMetadata struct {
-	OneOf []reflect.Type
+type InterfaceOptions struct {
+	Oneof []reflect.Type
 }
 
-func (m InterfaceMetadata) BuildInterfaceMetadata() (meta Metadata, err error) {
-	if len(m.OneOf) < 1 {
-		err = ErrEmptyOneOf
+func (m InterfaceOptions) BuildInterfaceOptions() (opts Options, err error) {
+	if len(m.Oneof) < 1 {
+		err = ErrEmptyOneof
 		return
 	}
-	meta = Metadata{
-		OneOf: m.OneOf,
+	opts = Options{
+		Oneof: m.Oneof,
 	}
 	return
 }

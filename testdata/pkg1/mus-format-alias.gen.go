@@ -408,41 +408,6 @@ func SkipLenEncodingArrayAliasMUS(bs []byte) (n int, err error) {
 		bs[n:])
 }
 
-func MarshalLenValidatorArrayAliasMUS(v ArrayAlias, bs []byte) (n int) {
-	va := [3]int(v)
-	return ord.MarshalSlice[int](va[:],
-		nil,
-		mus.MarshallerFn[int](varint.MarshalInt),
-		bs[n:])
-}
-
-func UnmarshalLenValidatorArrayAliasMUS(bs []byte) (v ArrayAlias, n int, err error) {
-	va, n, err := ord.UnmarshalValidSlice[int](nil,
-		com.ValidatorFn[int](testdata.ValidateLength),
-		mus.UnmarshallerFn[int](varint.UnmarshalInt),
-		nil,
-		nil,
-		bs[n:])
-	if err != nil {
-		return
-	}
-	v = ArrayAlias(([3]int)(va))
-	return
-}
-
-func SizeLenValidatorArrayAliasMUS(v ArrayAlias) (size int) {
-	va := [3]int(v)
-	return ord.SizeSlice[int](va[:],
-		nil,
-		mus.SizerFn[int](varint.SizeInt))
-}
-
-func SkipLenValidatorArrayAliasMUS(bs []byte) (n int, err error) {
-	return ord.SkipSlice(nil,
-		mus.SkipperFn(varint.SkipInt),
-		bs[n:])
-}
-
 func MarshalElemEncodingArrayAliasMUS(v ArrayAlias, bs []byte) (n int) {
 	va := [3]int(v)
 	return ord.MarshalSlice[int](va[:],

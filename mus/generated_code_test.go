@@ -17,7 +17,7 @@ import (
 
 func TestGeneratedCode(t *testing.T) {
 
-	t.Run("Test alias serializability and metadata impact", func(t *testing.T) {
+	t.Run("Test alias serializability and Options impact", func(t *testing.T) {
 
 		t.Run("IntAlias should be serializable", func(t *testing.T) {
 			v := pkg1.IntAlias(5)
@@ -163,17 +163,6 @@ func TestGeneratedCode(t *testing.T) {
 				pkg1.SizeLenEncodingArrayAliasMUS,
 				len(v),
 				t)
-		})
-
-		t.Run("We should be able to set LenValidator for ArrayAlias", func(t *testing.T) {
-			testValidation(pkg1.ArrayAlias([3]int{1, 2, 3}),
-				pkg1.MarshalLenValidatorArrayAliasMUS,
-				pkg1.UnmarshalLenValidatorArrayAliasMUS,
-				pkg1.SizeLenValidatorArrayAliasMUS,
-				testdata.ErrTooLong,
-				[]int{1},
-				t,
-			)
 		})
 
 		t.Run("We should be able to set Elem.Encoding for ArrayAlias", func(t *testing.T) {

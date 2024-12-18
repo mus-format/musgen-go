@@ -6,7 +6,7 @@ import (
 	"github.com/mus-format/musgen-go/basegen"
 )
 
-func NewStringGenerator(conf basegen.Conf, meta *basegen.Metadata) (
+func NewStringGenerator(conf basegen.Conf, opts *basegen.Options) (
 	g StringGenerator) {
 	g.conf = conf
 	g.lenM = "nil"
@@ -15,10 +15,10 @@ func NewStringGenerator(conf basegen.Conf, meta *basegen.Metadata) (
 
 	modImportName := conf.ModImportName()
 
-	if meta != nil {
-		if meta.LenEncoding != 0 {
-			numG := NewNumGenerator(conf, "int", &basegen.Metadata{
-				Encoding: meta.LenEncoding,
+	if opts != nil {
+		if opts.LenEncoding != 0 {
+			numG := NewNumGenerator(conf, "int", &basegen.Options{
+				Encoding: opts.LenEncoding,
 			})
 			g.lenM = fmt.Sprintf("%s.MarshallerFn[int](%s)", modImportName,
 				numG.GenerateFnName(basegen.Marshal))
@@ -27,10 +27,10 @@ func NewStringGenerator(conf basegen.Conf, meta *basegen.Metadata) (
 			g.lenS = fmt.Sprintf("%s.SizerFn[int](%s)", modImportName,
 				numG.GenerateFnName(basegen.Size))
 		}
-		if meta.LenValidator != "" {
-			g.lenVl = fmt.Sprintf("com.ValidatorFn[int](%s)", meta.LenValidator)
+		if opts.LenValidator != "" {
+			g.lenVl = fmt.Sprintf("com.ValidatorFn[int](%s)", opts.LenValidator)
 		}
-		g.validator = meta.Validator
+		g.validator = opts.Validator
 	}
 	return
 }

@@ -9,11 +9,11 @@ type Generator interface {
 }
 
 type GeneratorFactory interface {
-	NewNumGenerator(conf Conf, tp string, meta *Metadata) Generator
-	NewStringGenerator(conf Conf, meta *Metadata) Generator
-	NewBoolGenerator(conf Conf, tp string, meta *Metadata) Generator
-	NewSliceGenerator(conf Conf, tp, prefix string, meta *Metadata) Generator
-	NewMapGenerator(conf Conf, tp, prefix string, meta *Metadata) Generator
-	NewPtrGenerator(conf Conf, tp, prefix string, meta *Metadata) Generator
-	NewSAIGenerator(conf Conf, tp, prefix string, meta *Metadata) Generator
+	NewNumGenerator(conf Conf, tp string, opts *Options) Generator
+	NewStringGenerator(conf Conf, opts *Options) Generator
+	NewBoolGenerator(conf Conf, tp string, opts *Options) Generator
+	NewSliceGenerator(conf Conf, tp, prefix string, opts *Options) Generator
+	NewMapGenerator(conf Conf, tp, prefix string, opts *Options) Generator
+	NewPtrGenerator(conf Conf, tp, prefix string, opts *Options) Generator
+	NewSAIGenerator(conf Conf, tp, prefix string, opts *Options) Generator
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/mus-format/musgen-go/basegen"
 )
 
-func NewPtrGenerator(conf basegen.Conf, tp, prefix string, meta *basegen.Metadata) (
+func NewPtrGenerator(conf basegen.Conf, tp, prefix string, opts *basegen.Options) (
 	g PtrGenerator) {
 	stars, elemType, ok := ParsePtrType(tp)
 	if !ok {
@@ -19,23 +19,23 @@ func NewPtrGenerator(conf basegen.Conf, tp, prefix string, meta *basegen.Metadat
 	g.conf = conf
 	g.elemType = elemType
 	var (
-		modImportName                   = conf.ModImportName()
-		elemMeta      *basegen.Metadata = nil
+		modImportName                  = conf.ModImportName()
+		elemOpts      *basegen.Options = nil
 	)
-	if meta != nil {
-		if meta.Elem != nil {
-			elemMeta = meta.Elem
+	if opts != nil {
+		if opts.Elem != nil {
+			elemOpts = opts.Elem
 		}
-		g.validator = meta.Validator
+		g.validator = opts.Validator
 	}
 	g.m = fmt.Sprintf("%s.MarshallerFn[%s](%s)", modImportName, elemType,
-		GenerateSubFn(conf, basegen.Marshal, elemType, prefix, elemMeta))
+		GenerateSubFn(conf, basegen.Marshal, elemType, prefix, elemOpts))
 	g.u = fmt.Sprintf("%s.UnmarshallerFn[%s](%s)", modImportName, elemType,
-		GenerateSubFn(conf, basegen.Unmarshal, elemType, prefix, elemMeta))
+		GenerateSubFn(conf, basegen.Unmarshal, elemType, prefix, elemOpts))
 	g.s = fmt.Sprintf("%s.SizerFn[%s](%s)", modImportName, elemType,
-		GenerateSubFn(conf, basegen.Size, elemType, prefix, elemMeta))
+		GenerateSubFn(conf, basegen.Size, elemType, prefix, elemOpts))
 	g.sk = fmt.Sprintf("%s.SkipperFn(%s)", modImportName,
-		GenerateSubFn(conf, basegen.Skip, elemType, prefix, elemMeta))
+		GenerateSubFn(conf, basegen.Skip, elemType, prefix, elemOpts))
 	return
 }
 

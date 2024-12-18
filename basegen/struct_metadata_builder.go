@@ -1,17 +1,17 @@
 package basegen
 
-type StructMetadataBuilder interface {
-	BuildStructMetadata() []*Metadata
+type StructOptionsBuilder interface {
+	BuildStructOptions() []*Options
 }
 
-type StructMetadata []FieldMetadataBuilder
+type StructOptions []FieldOptionsBuilder
 
-func (m StructMetadata) BuildStructMetadata() (sl []*Metadata) {
+func (m StructOptions) BuildStructOptions() (sl []*Options) {
 	if m != nil {
-		sl = make([]*Metadata, len(m))
+		sl = make([]*Options, len(m))
 		for i := 0; i < len(m); i++ {
 			if m[i] != nil {
-				fm := (FieldMetadataBuilder)(m[i]).BuildFieldMetadata()
+				fm := (FieldOptionsBuilder)(m[i]).BuildFieldOptions()
 				sl[i] = fm
 			}
 		}
@@ -19,95 +19,95 @@ func (m StructMetadata) BuildStructMetadata() (sl []*Metadata) {
 	return
 }
 
-type FieldMetadataBuilder interface {
-	BuildFieldMetadata() *Metadata
+type FieldOptionsBuilder interface {
+	BuildFieldOptions() *Options
 }
 
-type BoolFieldMetadata struct {
-	BoolMetadata
+type BoolFieldOptions struct {
+	BoolOptions
 	Ignore bool
 }
 
-func (m BoolFieldMetadata) BuildFieldMetadata() (meta *Metadata) {
-	meta = m.BoolMetadata.BuildTypeMetadata()
-	meta.Ignore = m.Ignore
+func (m BoolFieldOptions) BuildFieldOptions() (opts *Options) {
+	opts = m.BoolOptions.BuildTypeOptions()
+	opts.Ignore = m.Ignore
 	return
 }
 
-type NumFieldMetadata struct {
-	NumMetadata
+type NumFieldOptions struct {
+	NumOptions
 	Ignore bool
 }
 
-func (m NumFieldMetadata) BuildFieldMetadata() (meta *Metadata) {
-	meta = m.NumMetadata.BuildTypeMetadata()
-	meta.Ignore = m.Ignore
+func (m NumFieldOptions) BuildFieldOptions() (opts *Options) {
+	opts = m.NumOptions.BuildTypeOptions()
+	opts.Ignore = m.Ignore
 	return
 }
 
-type StringFieldMetadata struct {
-	StringMetadata
+type StringFieldOptions struct {
+	StringOptions
 	Ignore bool
 }
 
-func (m StringFieldMetadata) BuildFiledMetadata() (meta *Metadata) {
-	meta = m.StringMetadata.BuildTypeMetadata()
-	meta.Ignore = m.Ignore
+func (m StringFieldOptions) BuildFiledOptions() (opts *Options) {
+	opts = m.StringOptions.BuildTypeOptions()
+	opts.Ignore = m.Ignore
 	return
 }
 
-type SliceFieldMetadata struct {
-	SliceMetadata
+type SliceFieldOptions struct {
+	SliceOptions
 	Ignore bool
 }
 
-func (m SliceFieldMetadata) BuildFieldMetadata() (meta *Metadata) {
-	meta = m.SliceMetadata.BuildTypeMetadata()
-	meta.Ignore = m.Ignore
+func (m SliceFieldOptions) BuildFieldOptions() (opts *Options) {
+	opts = m.SliceOptions.BuildTypeOptions()
+	opts.Ignore = m.Ignore
 	return
 }
 
-type ArrayFieldMetadata struct {
-	ArrayMetadata
+type ArrayFieldOptions struct {
+	ArrayOptions
 	Ignore bool
 }
 
-func (m ArrayFieldMetadata) BuildFieldMetadata() (meta *Metadata) {
-	meta = m.ArrayMetadata.BuildTypeMetadata()
-	meta.Ignore = m.Ignore
+func (m ArrayFieldOptions) BuildFieldOptions() (opts *Options) {
+	opts = m.ArrayOptions.BuildTypeOptions()
+	opts.Ignore = m.Ignore
 	return
 }
 
-type MapFieldMetadata struct {
-	MapMetadata
+type MapFieldOptions struct {
+	MapOptions
 	Ignore bool
 }
 
-func (m MapFieldMetadata) BuildFieldMetadata() (meta *Metadata) {
-	meta = m.MapMetadata.BuildTypeMetadata()
-	meta.Ignore = m.Ignore
+func (m MapFieldOptions) BuildFieldOptions() (opts *Options) {
+	opts = m.MapOptions.BuildTypeOptions()
+	opts.Ignore = m.Ignore
 	return
 }
 
-type PtrFieldMetadata struct {
-	PtrMetadata
+type PtrFieldOptions struct {
+	PtrOptions
 	Ignore bool
 }
 
-func (m PtrFieldMetadata) BuildTypeMetadata() (meta *Metadata) {
-	meta = m.PtrMetadata.BuildTypeMetadata()
-	meta.Ignore = m.Ignore
+func (m PtrFieldOptions) BuildTypeOptions() (opts *Options) {
+	opts = m.PtrOptions.BuildTypeOptions()
+	opts.Ignore = m.Ignore
 	return
 }
 
-type CustomTypeFieldMetadata struct {
+type CustomTypeFieldOptions struct {
 	Prefix    string
 	Ignore    bool
 	Validator string
 }
 
-func (m CustomTypeFieldMetadata) BuildFieldMetadata() *Metadata {
-	return &Metadata{
+func (m CustomTypeFieldOptions) BuildFieldOptions() *Options {
+	return &Options{
 		Prefix:    m.Prefix,
 		Ignore:    m.Ignore,
 		Validator: m.Validator,

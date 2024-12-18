@@ -14,11 +14,11 @@ var ErrNotStruct = errors.New("not a struct")
 // ErrNotAlias happens on building interface TypeDesc for not an interface type.
 var ErrNotInterface = errors.New("not an interface")
 
-// ErrWrongMetadataAmount indicates than the amount of metadata differs
+// ErrWrongOptionsAmount indicates than the amount of Options differs
 // from the number structure fields.
-var ErrWrongMetadataAmount = errors.New("wrong metadata amount")
+var ErrWrongOptionsAmount = errors.New("wrong Options amount")
 
-var ErrEmptyOneOf = errors.New("Metadata.OneOf should contain at least one item")
+var ErrEmptyOneof = errors.New("Options.Oneof should contain at least one item")
 
 var ErrUnsupportedArrayType = errors.New("do not support array type")
 

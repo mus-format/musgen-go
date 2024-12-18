@@ -14,7 +14,7 @@ func init() {
 	{{ $r }}a := {{ $v }}
 	{{- $v = print $r "a" "[:]" }}
 {{- end }}
-return {{ GenerateFnCall .Conf $v "Marshal" $f.Type .Prefix $f.Metadata }}`
+return {{ GenerateFnCall .Conf $v "Marshal" $f.Type .Prefix $f.Options }}`
 	templates["alias_size.tmpl"] = `{{- $f := index .Fields 0 }}
 {{- $r := Receiver .Name }}
 {{- $a := ArrayType $f.Type }}
@@ -23,19 +23,19 @@ return {{ GenerateFnCall .Conf $v "Marshal" $f.Type .Prefix $f.Metadata }}`
 	{{ $r }}a := {{ $v }}
 	{{- $v = print $r "a" "[:]" }}
 {{- end }}
-return {{ GenerateFnCall .Conf $v "Size" $f.Type .Prefix $f.Metadata }}`
+return {{ GenerateFnCall .Conf $v "Size" $f.Type .Prefix $f.Options }}`
 	templates["alias_skip.tmpl"] = `{{- $f := index .Fields 0 }}
-return {{ GenerateFnCall .Conf "" "Skip" $f.Type .Prefix $f.Metadata }}`
+return {{ GenerateFnCall .Conf "" "Skip" $f.Type .Prefix $f.Options }}`
 	templates["alias_unmarshal.tmpl"] = `{{- $f := index .Fields 0 }}
 {{- $r := Receiver .Name }}
 {{- $v := print $r "a" }}
 {{- $a := ArrayType $f.Type }}
-{{ $v }}, n, err := {{ GenerateFnCall .Conf "" "Unmarshal" $f.Type .Prefix $f.Metadata }}
+{{ $v }}, n, err := {{ GenerateFnCall .Conf "" "Unmarshal" $f.Type .Prefix $f.Options }}
 if err != nil {
 	return
 }
-{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
-	if err = {{ $f.Metadata.Validator }}({{ $v }}); err != nil {
+{{- if and $f.Options (ne $f.Options.Validator "") }}
+	if err = {{ $f.Options.Validator }}({{ $v }}); err != nil {
 		return
 	}
 {{- end }}
@@ -48,7 +48,7 @@ return`
 	templates["interface_marshal.tmpl"] = `{{- $c := .Conf}}
 {{- $p := .Prefix }}
 switch tp := {{ Receiver .Name }}.(type) {
-	{{- range $i, $oneOf := .OneOf }}
+	{{- range $i, $oneOf := .Oneof }}
 		case {{ $oneOf }}:
 			return {{ $p }}{{ $oneOf }}DTS.Marshal(tp, {{ $c.MarshalParam }})
 	{{- end }}
@@ -57,7 +57,7 @@ switch tp := {{ Receiver .Name }}.(type) {
 }`
 	templates["interface_size.tmpl"] = `{{- $p := .Prefix }}
 switch tp := {{ Receiver .Name }}.(type) {
-{{- range $index, $oneOf := .OneOf }}
+{{- range $index, $oneOf := .Oneof }}
 	case {{ $oneOf }}:
 		return {{ $p }}{{ $oneOf }}DTS.Size(tp)
 {{- end }}
@@ -72,7 +72,7 @@ if err != nil {
 }
 var n1 int
 switch dtm {
-{{- range $index, $oneOf := .OneOf }}
+{{- range $index, $oneOf := .Oneof }}
 	case {{ $oneOf }}DTM:
 		n1, err = {{ $p }}{{ $oneOf }}DTS.SkipData({{ $c.UnmarshalParam }})
 {{- end }}
@@ -91,7 +91,7 @@ if err != nil {
 }
 var n1 int
 switch dtm {
-{{- range $index, $oneOf := .OneOf }}
+{{- range $index, $oneOf := .Oneof }}
 	case {{ $oneOf }}DTM:
 		{{ $r }}, n1, err = {{ $p }}{{ $oneOf }}DTS.UnmarshalData({{ $c.UnmarshalParam }})
 {{- end }}
@@ -135,7 +135,7 @@ var (
 	templates["serializer.tmpl"] = `func Marshal{{ .Prefix }}{{ .Name }}MUS({{ Receiver .Name }} {{ .Name }}, {{ .Conf.MarshalParamSignature }}) (n int {{ if .Conf.Stream }} , err error {{ end }}) {
 	{{- if ne .AliasOf "" }}
 		{{- include "alias_marshal.tmpl" . }}
-	{{- else if gt (len .OneOf) 0 }}
+	{{- else if gt (len .Oneof) 0 }}
 		{{- include "interface_marshal.tmpl" . }}
 	{{- else }}
 		{{- include "struct_marshal.tmpl" . }}
@@ -145,7 +145,7 @@ var (
 func Unmarshal{{ .Prefix }}{{ .Name }}MUS({{ .Conf.UnmarshalParamSignature }}) ({{ Receiver .Name }} {{ .Name }}, n int, err error) {
 	{{- if ne .AliasOf "" }}
 		{{- include "alias_unmarshal.tmpl" . }}
-	{{- else if gt (len .OneOf) 0 }}
+	{{- else if gt (len .Oneof) 0 }}
 		{{- include "interface_unmarshal.tmpl" . }}
 	{{- else }}
 		{{- include "struct_unmarshal.tmpl" . }}
@@ -155,7 +155,7 @@ func Unmarshal{{ .Prefix }}{{ .Name }}MUS({{ .Conf.UnmarshalParamSignature }}) (
 func Size{{ .Prefix }}{{ .Name }}MUS({{ Receiver .Name }} {{ .Name }}) (size int) {
 	{{- if ne .AliasOf "" }}
 		{{- include "alias_size.tmpl" . }}
-	{{- else if gt (len .OneOf) 0 }}
+	{{- else if gt (len .Oneof) 0 }}
 		{{- include "interface_size.tmpl" . }}
 	{{- else }}
 		{{- include "struct_size.tmpl" . }}
@@ -165,7 +165,7 @@ func Size{{ .Prefix }}{{ .Name }}MUS({{ Receiver .Name }} {{ .Name }}) (size int
 func Skip{{ .Prefix }}{{ .Name }}MUS({{ .Conf.SkipParamSignature }}) (n int, err error) {
 	{{- if ne .AliasOf "" }}
 		{{- include "alias_skip.tmpl" . }}
-	{{- else if gt (len .OneOf) 0 }}
+	{{- else if gt (len .Oneof) 0 }}
 		{{- include "interface_skip.tmpl" . }}
 	{{- else }}
 		{{- include "struct_skip.tmpl" . }}
@@ -182,8 +182,8 @@ func Skip{{ .Prefix }}{{ .Name }}MUS({{ .Conf.SkipParamSignature }}) (n int, err
 	{{- range $i, $f := Fields . }}
 		{{- $v := print $r "." $f.Name }}
 		{{- if ArrayType $f.Type }}{{ $v = print $v "[:]"}}{{ end }}
-		{{- $fnCall := GenerateFnCall $c $v "Marshal" $f.Type $p $f.Metadata }}
-		{{- if or (not $f.Metadata) (not $f.Metadata.Ignore) }}
+		{{- $fnCall := GenerateFnCall $c $v "Marshal" $f.Type $p $f.Options }}
+		{{- if or (not $f.Options) (not $f.Options.Ignore) }}
 			{{- if eq $l 1 }}
 				return {{ $fnCall }}
 			{{- else }}
@@ -235,8 +235,8 @@ func Skip{{ .Prefix }}{{ .Name }}MUS({{ .Conf.SkipParamSignature }}) (n int, err
 	{{- range $i, $f := Fields . }}
 		{{- $v := print $r "." $f.Name }}
 		{{- if ArrayType $f.Type }}{{ $v = print $v "[:]"}}{{ end }}
-		{{- $fnCall := GenerateFnCall $c $v "Size" $f.Type $p $f.Metadata }}
-		{{- if or (not $f.Metadata) (not $f.Metadata.Ignore) }}
+		{{- $fnCall := GenerateFnCall $c $v "Size" $f.Type $p $f.Options }}
+		{{- if or (not $f.Options) (not $f.Options.Ignore) }}
 			{{- if eq $l 1 }}
 				return {{ $fnCall }}
 			{{- else }}
@@ -260,8 +260,8 @@ func Skip{{ .Prefix }}{{ .Name }}MUS({{ .Conf.SkipParamSignature }}) (n int, err
 {{- else }}
 	{{- $c := .Conf }}
 	{{- range $i, $f := Fields . }}
-		{{- $fnCall := GenerateFnCall $c "" "Skip" $f.Type $p $f.Metadata }}
-		{{- if or (not $f.Metadata) (not $f.Metadata.Ignore) }}
+		{{- $fnCall := GenerateFnCall $c "" "Skip" $f.Type $p $f.Options }}
+		{{- if or (not $f.Options) (not $f.Options.Ignore) }}
 			{{- if eq $l 1 }}
 				return {{ $fnCall }}
 			{{- else }}
@@ -297,8 +297,8 @@ func Skip{{ .Prefix }}{{ .Name }}MUS({{ .Conf.SkipParamSignature }}) (n int, err
 	{{- range $i, $f := Fields . }}
 		{{- $a := ArrayType $f.Type}}
 		{{- $v := print $r "." $f.Name }}
-		{{- $fnCall := GenerateFnCall $c $v "Unmarshal" $f.Type $p $f.Metadata }}
-		{{- if or (not $f.Metadata) (not $f.Metadata.Ignore) }}
+		{{- $fnCall := GenerateFnCall $c $v "Unmarshal" $f.Type $p $f.Options }}
+		{{- if or (not $f.Options) (not $f.Options.Ignore) }}
 
 {{- /* if only one field */}}
 
@@ -313,13 +313,13 @@ func Skip{{ .Prefix }}{{ .Name }}MUS({{ .Conf.SkipParamSignature }}) (n int, err
 					{{ $v }}, n, err = {{ $fnCall }}
 				{{- end }}
 
-				{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
+				{{- if and $f.Options (ne $f.Options.Validator "") }}
 					{{- if not $a }}
 						if err != nil {
 							return
 						}
 					{{- end }}
-					err = {{ $f.Metadata.Validator }}({{ $v }})
+					err = {{ $f.Options.Validator }}({{ $v }})
 				{{- end }}
 				return
 			{{- else }}
@@ -368,8 +368,8 @@ func Skip{{ .Prefix }}{{ .Name }}MUS({{ .Conf.SkipParamSignature }}) (n int, err
 							return
 						}
 					{{- end }}
-					{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
-						if err = {{ $f.Metadata.Validator }}({{ $v }}); err != nil {
+					{{- if and $f.Options (ne $f.Options.Validator "") }}
+						if err = {{ $f.Options.Validator }}({{ $v }}); err != nil {
 							return
 						}
 					{{- end }}
@@ -378,13 +378,13 @@ func Skip{{ .Prefix }}{{ .Name }}MUS({{ .Conf.SkipParamSignature }}) (n int, err
 {{- /* if the last one field */}}
 
 				{{- if eq $i (minus $l 1) }}
-					{{- if and $f.Metadata (ne $f.Metadata.Validator "") }}
+					{{- if and $f.Options (ne $f.Options.Validator "") }}
 						{{- if not $a }}
 							if err != nil {
 								return
 							}
 						{{- end }}
-						err = {{ $f.Metadata.Validator }}({{ $v }})
+						err = {{ $f.Options.Validator }}({{ $v }})
 					{{- end }}
 					return
 				{{- end }}

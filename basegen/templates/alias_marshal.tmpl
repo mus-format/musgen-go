@@ -6,4 +6,4 @@
 	{{ $r }}a := {{ $v }}
 	{{- $v = print $r "a" "[:]" }}
 {{- end }}
-return {{ GenerateFnCall .Conf $v "Marshal" $f.Type .Prefix $f.Metadata }}
+return {{ GenerateFnCall .Conf $v "Marshal" $f.Type .Prefix $f.Options }}

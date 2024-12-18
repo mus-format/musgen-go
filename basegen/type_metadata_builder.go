@@ -1,94 +1,105 @@
 package basegen
 
-type TypeMetadataBuilder interface {
-	BuildTypeMetadata() *Metadata
+type TypeOptionsBuilder interface {
+	BuildTypeOptions() *Options
 }
 
-type BoolMetadata struct {
+type BoolOptions struct {
 	Validator string
 }
 
-func (m BoolMetadata) BuildTypeMetadata() *Metadata {
-	return &Metadata{}
+func (m BoolOptions) BuildTypeOptions() *Options {
+	return &Options{}
 }
 
-type NumMetadata struct {
+type NumOptions struct {
 	Encoding  NumEncoding
 	Validator string
 }
 
-func (m NumMetadata) BuildTypeMetadata() *Metadata {
-	return &Metadata{Encoding: m.Encoding, Validator: m.Validator}
+func (m NumOptions) BuildTypeOptions() *Options {
+	return &Options{Encoding: m.Encoding, Validator: m.Validator}
 }
 
-type StringMetadata struct {
+type StringOptions struct {
 	LenEncoding  NumEncoding
 	LenValidator string
 	Validator    string
 }
 
-func (m StringMetadata) BuildTypeMetadata() *Metadata {
-	return &Metadata{
+func (m StringOptions) BuildTypeOptions() *Options {
+	return &Options{
 		LenEncoding:  m.LenEncoding,
 		LenValidator: m.LenValidator,
 		Validator:    m.Validator,
 	}
 }
 
-type SliceMetadata struct {
+type SliceOptions struct {
 	LenEncoding  NumEncoding
 	LenValidator string
-	Elem         TypeMetadataBuilder
+	Elem         TypeOptionsBuilder
 	Validator    string
 }
 
-func (m SliceMetadata) BuildTypeMetadata() *Metadata {
-	tm := &Metadata{
-		LenEncoding:  m.LenEncoding,
-		LenValidator: m.LenValidator,
-		Validator:    m.Validator,
+func (o SliceOptions) BuildTypeOptions() *Options {
+	opts := &Options{
+		LenEncoding:  o.LenEncoding,
+		LenValidator: o.LenValidator,
+		Validator:    o.Validator,
 	}
-	if m.Elem != nil {
-		tm.Elem = m.Elem.BuildTypeMetadata()
+	if o.Elem != nil {
+		opts.Elem = o.Elem.BuildTypeOptions()
 	}
-	return tm
+	return opts
 }
 
-type ArrayMetadata SliceMetadata
-
-func (m ArrayMetadata) BuildTypeMetadata() *Metadata {
-	return SliceMetadata(m).BuildTypeMetadata()
+type ArrayOptions struct {
+	LenEncoding NumEncoding
+	Elem        TypeOptionsBuilder
+	Validator   string
 }
 
-type MapMetadata struct {
+func (o ArrayOptions) BuildTypeOptions() *Options {
+	opts := &Options{
+		LenEncoding: o.LenEncoding,
+		Validator:   o.Validator,
+	}
+	if o.Elem != nil {
+		opts.Elem = o.Elem.BuildTypeOptions()
+	}
+	return opts
+}
+
+type MapOptions struct {
 	LenEncoding  NumEncoding
 	LenValidator string
-	Key          TypeMetadataBuilder
-	Elem         TypeMetadataBuilder
+	Key          TypeOptionsBuilder
+	Elem         TypeOptionsBuilder
 	Validator    string
 }
 
-func (m MapMetadata) BuildTypeMetadata() *Metadata {
-	tm := &Metadata{
+func (m MapOptions) BuildTypeOptions() *Options {
+	tm := &Options{
 		LenEncoding:  m.LenEncoding,
 		LenValidator: m.LenValidator,
 		Validator:    m.Validator,
 	}
 	if m.Key != nil {
-		tm.Key = m.Key.BuildTypeMetadata()
+		tm.Key = m.Key.BuildTypeOptions()
 	}
 	if m.Elem != nil {
-		tm.Elem = m.Elem.BuildTypeMetadata()
+		tm.Elem = m.Elem.BuildTypeOptions()
 	}
 	return tm
 }
 
-type PtrMetadata struct {
+type PtrOptions struct {
 	Validator string
 }
 
-func (m PtrMetadata) BuildTypeMetadata() *Metadata {
-	return &Metadata{
+func (m PtrOptions) BuildTypeOptions() *Options {
+	return &Options{
 		Validator: m.Validator,
 	}
 }

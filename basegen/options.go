@@ -51,14 +51,14 @@ const (
 	PM
 )
 
-type Metadata struct {
+type Options struct {
 	Prefix       string
 	Ignore       bool
 	Encoding     NumEncoding
 	Validator    string
 	LenEncoding  NumEncoding
 	LenValidator string
-	Key          *Metadata
-	Elem         *Metadata
-	OneOf        []reflect.Type
+	Key          *Options
+	Elem         *Options
+	Oneof        []reflect.Type
 }

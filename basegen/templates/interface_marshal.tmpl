@@ -1,7 +1,7 @@
 {{- $c := .Conf}}
 {{- $p := .Prefix }}
 switch tp := {{ Receiver .Name }}.(type) {
-	{{- range $i, $oneOf := .OneOf }}
+	{{- range $i, $oneOf := .Oneof }}
 		case {{ $oneOf }}:
 			return {{ $p }}{{ $oneOf }}DTS.Marshal(tp, {{ $c.MarshalParam }})
 	{{- end }}
