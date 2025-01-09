@@ -4,12 +4,14 @@ github.com/mus-format/common-go v0.0.0-20240704141923-ea7d12c7eed3 h1:lq6NjZLxX2
 github.com/mus-format/common-go v0.0.0-20240704141923-ea7d12c7eed3/go.mod h1:1hTb8w0YdSGIOU6wNY+e9uXnDZ9OQnUivNtd8cPSdoU=
 github.com/mus-format/mus-dts-go v0.5.1 h1:Ndbl6ZG0B/xxc0/ImxS42usBXzkPaTlD7UiOFTlJJZc=
 github.com/mus-format/mus-dts-go v0.5.1/go.mod h1:cD0kM0m2F1SpRN36gP4Nk74Ox3X0oebLYCFpzLnary8=
-github.com/mus-format/mus-go v0.4.2 h1:qdt63B1h8oMnDv9c+CMAmRMfcVlzvCpXt9G8fxTUvqo=
-github.com/mus-format/mus-go v0.4.2/go.mod h1:hs04lVPvkj2d0RC1k75yARNd3ZlVPpljAW64LwkgMJk=
+github.com/mus-format/mus-go v0.4.3-0.20250109004938-0ee1b18c1f58 h1:EYIgRk42pJwo7IVD18oR2RPgLFp8CiH0JFkrcgdeouQ=
+github.com/mus-format/mus-go v0.4.3-0.20250109004938-0ee1b18c1f58/go.mod h1:hs04lVPvkj2d0RC1k75yARNd3ZlVPpljAW64LwkgMJk=
 github.com/mus-format/mus-stream-dts-go v0.5.1 h1:2nk1nN1hq+ScDVzOVvMH0Puf8q8sNQQOQKEfa3GkCj8=
 github.com/mus-format/mus-stream-dts-go v0.5.1/go.mod h1:xFYL56HhkL2yptnCwruu94iSn7vK+bfiKY3oQ0Syuz0=
 github.com/mus-format/mus-stream-go v0.4.2 h1:xHd79uzii2NdaBCoZmRD/ySFYpnV1QvrNXePPveRGOU=
 github.com/mus-format/mus-stream-go v0.4.2/go.mod h1:PioCqrxiUifQEKHvL2MJzLPkYs5LMITIMrCbL1COMdw=
+github.com/mus-format/mus-stream-go v0.4.3-0.20250109012520-76c1cf870d01 h1:4/bNWkDfFKolSc39mKK1FWS56J6Gj904PTOAUlgXDQw=
+github.com/mus-format/mus-stream-go v0.4.3-0.20250109012520-76c1cf870d01/go.mod h1:PioCqrxiUifQEKHvL2MJzLPkYs5LMITIMrCbL1COMdw=
 github.com/ymz-ncnk/fvar v0.0.0-20241027181210-3a6f93bc969e h1:q2is17SMV5sOEZluJa/Q0sTjZYmhXsPDjD6LPqYzE1Q=
 github.com/ymz-ncnk/fvar v0.0.0-20241027181210-3a6f93bc969e/go.mod h1:epPjlvHUv5z0i742Y5RzB491yIHCrSq7ACd2EK3xJU8=
 github.com/ymz-ncnk/mok v0.2.0 h1:4xOvkG0EXDlr05ZTSeRzM2q5mbyNbALRqRoI+cTwUyc=

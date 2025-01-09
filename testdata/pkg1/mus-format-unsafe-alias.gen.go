@@ -113,6 +113,32 @@ func SkipUnsafeFloat32AliasMUS(bs []byte) (n int, err error) {
 	return unsafe.SkipFloat32(bs[n:])
 }
 
+func MarshalUnsafeByteSliceAliasMUS(v ByteSliceAlias, bs []byte) (n int) {
+	return unsafe.MarshalByteSlice([]uint8(v),
+		nil,
+		bs[n:])
+}
+
+func UnmarshalUnsafeByteSliceAliasMUS(bs []byte) (v ByteSliceAlias, n int, err error) {
+	va, n, err := unsafe.UnmarshalByteSlice(nil,
+		bs[n:])
+	if err != nil {
+		return
+	}
+	v = ByteSliceAlias(va)
+	return
+}
+
+func SizeUnsafeByteSliceAliasMUS(v ByteSliceAlias) (size int) {
+	return unsafe.SizeByteSlice([]uint8(v),
+		nil)
+}
+
+func SkipUnsafeByteSliceAliasMUS(bs []byte) (n int, err error) {
+	return unsafe.SkipByteSlice(nil,
+		bs[n:])
+}
+
 func MarshalUnsafeSliceAliasMUS(v SliceAlias, bs []byte) (n int) {
 	return ord.MarshalSlice[int]([]int(v),
 		nil,

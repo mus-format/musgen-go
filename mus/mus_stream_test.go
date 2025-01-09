@@ -23,6 +23,10 @@ func TestStreamFileGenerator(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		err = g.AddAliasWith(reflect.TypeFor[pkg1.ByteSliceAlias](), StreamPrefix, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.SliceAlias](), StreamPrefix, nil)
 		if err != nil {
 			t.Fatal(err)

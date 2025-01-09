@@ -33,14 +33,22 @@ func BuildGenerateFnCall(factory GeneratorFactory) GenerateFnCall {
 		case "bool":
 			g = factory.NewBoolGenerator(conf, tp, opts)
 		}
-		if _, ok := ParseSliceType(tp); ok {
-			g = factory.NewSliceGenerator(conf, tp, prefix, opts)
+		if elemType, ok := ParseSliceType(tp); ok {
+			if elemType == "byte" || elemType == "uint8" {
+				g = factory.NewByteSliceGenerator(conf, tp, prefix, opts)
+			} else {
+				g = factory.NewSliceGenerator(conf, tp, prefix, opts)
+			}
 		} else if _, _, ok := ParseMapType(tp); ok {
 			g = factory.NewMapGenerator(conf, tp, prefix, opts)
 		} else if _, _, ok := ParsePtrType(tp); ok {
 			g = factory.NewPtrGenerator(conf, tp, prefix, opts)
-		} else if _, _, ok := ParseArrayType(tp); ok {
-			g = factory.NewSliceGenerator(conf, tp, prefix, opts)
+		} else if elemType, _, ok := ParseArrayType(tp); ok {
+			if elemType == "byte" || elemType == "uint8" {
+				g = factory.NewByteSliceGenerator(conf, tp, prefix, opts)
+			} else {
+				g = factory.NewSliceGenerator(conf, tp, prefix, opts)
+			}
 		}
 		if g == nil {
 			g = factory.NewSAIGenerator(conf, tp, prefix, opts)
@@ -70,15 +78,23 @@ func BuildGenerateSubFn(factory GeneratorFactory) GenerateSubFn {
 		)
 		if tp == "string" {
 			g = factory.NewStringGenerator(conf, opts)
-		} else if _, ok := ParseSliceType(tp); ok {
-			g = factory.NewSliceGenerator(conf, tp, prefix, opts)
+		} else if elemType, ok := ParseSliceType(tp); ok {
+			if elemType == "byte" || elemType == "uint8" {
+				g = factory.NewByteSliceGenerator(conf, tp, prefix, opts)
+			} else {
+				g = factory.NewSliceGenerator(conf, tp, prefix, opts)
+			}
 		} else if _, _, ok := ParseMapType(tp); ok {
 			g = factory.NewMapGenerator(conf, tp, prefix, opts)
 		} else if _, _, ok := ParsePtrType(tp); ok {
 			g = factory.NewPtrGenerator(conf, tp, prefix, opts)
-		} else if _, _, ok := ParseArrayType(tp); ok {
+		} else if elemType, _, ok := ParseArrayType(tp); ok {
 			arrayType = true
-			g = factory.NewSliceGenerator(conf, tp, prefix, opts)
+			if elemType == "byte" || elemType == "uint8" {
+				g = factory.NewByteSliceGenerator(conf, tp, prefix, opts)
+			} else {
+				g = factory.NewSliceGenerator(conf, tp, prefix, opts)
+			}
 		}
 		if g != nil {
 			switch fnType {

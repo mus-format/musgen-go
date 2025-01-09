@@ -6,9 +6,9 @@ require (
 	github.com/google/go-cmp v0.6.0
 	github.com/mus-format/common-go v0.0.0-20240704141923-ea7d12c7eed3
 	github.com/mus-format/mus-dts-go v0.5.1
-	github.com/mus-format/mus-go v0.4.2
+	github.com/mus-format/mus-go v0.4.3-0.20250109004938-0ee1b18c1f58
 	github.com/mus-format/mus-stream-dts-go v0.5.1
-	github.com/mus-format/mus-stream-go v0.4.2
+	github.com/mus-format/mus-stream-go v0.4.3-0.20250109012520-76c1cf870d01
 	github.com/ymz-ncnk/fvar v0.0.0-20241027181210-3a6f93bc969e
 	golang.org/x/tools v0.25.0
 )

@@ -72,6 +72,22 @@ func TestGeneratedUnsafeCode(t *testing.T) {
 			pkg1.SizeUnsafeFloat32AliasMUS,
 			pkg1.SkipUnsafeFloat32AliasMUS,
 			t)
+		testSerializability(pkg1.ByteSliceAlias([]byte{10, 20}),
+			pkg1.MarshalUnsafeByteSliceAliasMUS,
+			func(bs []byte) (v pkg1.ByteSliceAlias, n int, err error) {
+				_, n, err = varint.UnmarshalInt(bs)
+				if err != nil {
+					return
+				}
+				_, _, err = unsafe.UnmarshalByte(bs[n:])
+				if err != nil {
+					return
+				}
+				return pkg1.UnmarshalUnsafeByteSliceAliasMUS(bs)
+			},
+			pkg1.SizeUnsafeByteSliceAliasMUS,
+			pkg1.SkipUnsafeByteSliceAliasMUS,
+			t)
 		testSerializability(pkg1.SliceAlias([]int{10, 20}),
 			pkg1.MarshalUnsafeSliceAliasMUS,
 			func(bs []byte) (v pkg1.SliceAlias, n int, err error) {

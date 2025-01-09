@@ -308,6 +308,15 @@ func TestGeneratedCode(t *testing.T) {
 			t)
 	})
 
+	t.Run("ByteSliceAlias should be serializable", func(t *testing.T) {
+		v := pkg1.ByteSliceAlias([]byte{1, 2, 3})
+		testSerializability(v, pkg1.MarshalByteSliceAliasMUS,
+			pkg1.UnmarshalByteSliceAliasMUS,
+			pkg1.SizeByteSliceAliasMUS,
+			pkg1.SkipByteSliceAliasMUS,
+			t)
+	})
+
 	t.Run("SliceAlias should be serializable", func(t *testing.T) {
 		v := pkg1.SliceAlias([]int{1, 2, 3})
 		testSerializability(v, pkg1.MarshalSliceAliasMUS,

@@ -122,9 +122,8 @@ func MarshalStreamComplexStructMUS(v ComplexStruct, w muss.Writer) (n int, err e
 	if err != nil {
 		return
 	}
-	n1, err = ord.MarshalSlice[uint8](v.SliceByte,
+	n1, err = ord.MarshalByteSlice(v.SliceByte,
 		nil,
-		muss.MarshallerFn[uint8](varint.MarshalUint8),
 		w)
 	n += n1
 	if err != nil {
@@ -270,8 +269,7 @@ func UnmarshalStreamComplexStructMUS(r muss.Reader) (v ComplexStruct, n int, err
 	if err != nil {
 		return
 	}
-	v.SliceByte, n1, err = ord.UnmarshalSlice[uint8](nil,
-		muss.UnmarshallerFn[uint8](varint.UnmarshalUint8),
+	v.SliceByte, n1, err = ord.UnmarshalByteSlice(nil,
 		r)
 	n += n1
 	if err != nil {
@@ -343,9 +341,8 @@ func SizeStreamComplexStructMUS(v ComplexStruct) (size int) {
 	size += ord.SizePtr[string](v.NilPtr, muss.SizerFn[string](func(t string) (size int) { return ord.SizeString(t, nil) }))
 	size += pkg2.SizeStreamStructMUS(v.AnotherPkgStruct)
 	size += SizeStreamInterfaceMUS(v.Interface)
-	size += ord.SizeSlice[uint8](v.SliceByte,
-		nil,
-		muss.SizerFn[uint8](varint.SizeUint8))
+	size += ord.SizeByteSlice(v.SliceByte,
+		nil)
 	size += ord.SizeSlice[Struct](v.SliceStruct,
 		nil,
 		muss.SizerFn[Struct](SizeStreamStructMUS))
@@ -466,8 +463,7 @@ func SkipStreamComplexStructMUS(r muss.Reader) (n int, err error) {
 	if err != nil {
 		return
 	}
-	n1, err = ord.SkipSlice(nil,
-		muss.SkipperFn(varint.SkipUint8),
+	n1, err = ord.SkipByteSlice(nil,
 		r)
 	n += n1
 	if err != nil {

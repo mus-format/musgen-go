@@ -29,5 +29,12 @@ func TestGeneratedUnsafeStreamCode(t *testing.T) {
 			pkg1.SkipUnsafeStreamBoolAliasMUS,
 			t)
 
+		testStreamSerializability(pkg1.ByteSliceAlias([]byte{11, 76}),
+			pkg1.MarshalUnsafeStreamByteSliceAliasMUS,
+			pkg1.UnmarshalUnsafeStreamByteSliceAliasMUS,
+			pkg1.SizeUnsafeStreamByteSliceAliasMUS,
+			pkg1.SkipUnsafeStreamByteSliceAliasMUS,
+			t)
+
 	})
 }

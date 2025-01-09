@@ -29,6 +29,32 @@ func SkipStreamIntAliasMUS(r muss.Reader) (n int, err error) {
 	return varint.SkipInt(r)
 }
 
+func MarshalStreamByteSliceAliasMUS(v ByteSliceAlias, w muss.Writer) (n int, err error) {
+	return ord.MarshalByteSlice([]uint8(v),
+		nil,
+		w)
+}
+
+func UnmarshalStreamByteSliceAliasMUS(r muss.Reader) (v ByteSliceAlias, n int, err error) {
+	va, n, err := ord.UnmarshalByteSlice(nil,
+		r)
+	if err != nil {
+		return
+	}
+	v = ByteSliceAlias(va)
+	return
+}
+
+func SizeStreamByteSliceAliasMUS(v ByteSliceAlias) (size int) {
+	return ord.SizeByteSlice([]uint8(v),
+		nil)
+}
+
+func SkipStreamByteSliceAliasMUS(r muss.Reader) (n int, err error) {
+	return ord.SkipByteSlice(nil,
+		r)
+}
+
 func MarshalStreamSliceAliasMUS(v SliceAlias, w muss.Writer) (n int, err error) {
 	return ord.MarshalSlice[int]([]int(v),
 		nil,

@@ -46,9 +46,8 @@ func MarshalUnsafeComplexStructMUS(v ComplexStruct, bs []byte) (n int) {
 	n += ord.MarshalPtr[string](v.NilPtr, mus.MarshallerFn[string](func(t string, bs []byte) (n int) { return unsafe.MarshalString(t, nil, bs[n:]) }), bs[n:])
 	n += pkg2.MarshalUnsafeStructMUS(v.AnotherPkgStruct, bs[n:])
 	n += MarshalUnsafeInterfaceMUS(v.Interface, bs[n:])
-	n += ord.MarshalSlice[uint8](v.SliceByte,
+	n += unsafe.MarshalByteSlice(v.SliceByte,
 		nil,
-		mus.MarshallerFn[uint8](unsafe.MarshalUint8),
 		bs[n:])
 	n += ord.MarshalSlice[Struct](v.SliceStruct,
 		nil,
@@ -176,8 +175,7 @@ func UnmarshalUnsafeComplexStructMUS(bs []byte) (v ComplexStruct, n int, err err
 	if err != nil {
 		return
 	}
-	v.SliceByte, n1, err = ord.UnmarshalSlice[uint8](nil,
-		mus.UnmarshallerFn[uint8](unsafe.UnmarshalUint8),
+	v.SliceByte, n1, err = unsafe.UnmarshalByteSlice(nil,
 		bs[n:])
 	n += n1
 	if err != nil {
@@ -249,9 +247,8 @@ func SizeUnsafeComplexStructMUS(v ComplexStruct) (size int) {
 	size += ord.SizePtr[string](v.NilPtr, mus.SizerFn[string](func(t string) (size int) { return unsafe.SizeString(t, nil) }))
 	size += pkg2.SizeUnsafeStructMUS(v.AnotherPkgStruct)
 	size += SizeUnsafeInterfaceMUS(v.Interface)
-	size += ord.SizeSlice[uint8](v.SliceByte,
-		nil,
-		mus.SizerFn[uint8](unsafe.SizeUint8))
+	size += unsafe.SizeByteSlice(v.SliceByte,
+		nil)
 	size += ord.SizeSlice[Struct](v.SliceStruct,
 		nil,
 		mus.SizerFn[Struct](SizeUnsafeStructMUS))
@@ -372,8 +369,7 @@ func SkipUnsafeComplexStructMUS(bs []byte) (n int, err error) {
 	if err != nil {
 		return
 	}
-	n1, err = ord.SkipSlice(nil,
-		mus.SkipperFn(unsafe.SkipUint8),
+	n1, err = unsafe.SkipByteSlice(nil,
 		bs[n:])
 	n += n1
 	if err != nil {

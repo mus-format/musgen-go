@@ -4,6 +4,7 @@ package pkg1
 
 import (
 	muss "github.com/mus-format/mus-stream-go"
+	"github.com/mus-format/mus-stream-go/ord"
 	"github.com/mus-format/mus-stream-go/unsafe"
 )
 
@@ -26,4 +27,30 @@ func SizeUnsafeStreamBoolAliasMUS(v BoolAlias) (size int) {
 
 func SkipUnsafeStreamBoolAliasMUS(r muss.Reader) (n int, err error) {
 	return unsafe.SkipBool(r)
+}
+
+func MarshalUnsafeStreamByteSliceAliasMUS(v ByteSliceAlias, w muss.Writer) (n int, err error) {
+	return ord.MarshalByteSlice([]uint8(v),
+		nil,
+		w)
+}
+
+func UnmarshalUnsafeStreamByteSliceAliasMUS(r muss.Reader) (v ByteSliceAlias, n int, err error) {
+	va, n, err := ord.UnmarshalByteSlice(nil,
+		r)
+	if err != nil {
+		return
+	}
+	v = ByteSliceAlias(va)
+	return
+}
+
+func SizeUnsafeStreamByteSliceAliasMUS(v ByteSliceAlias) (size int) {
+	return ord.SizeByteSlice([]uint8(v),
+		nil)
+}
+
+func SkipUnsafeStreamByteSliceAliasMUS(r muss.Reader) (n int, err error) {
+	return ord.SkipByteSlice(nil,
+		r)
 }

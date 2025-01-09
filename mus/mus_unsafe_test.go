@@ -39,6 +39,10 @@ func TestUnsafeFileGenerator(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		err = g.AddAliasWith(reflect.TypeFor[pkg1.ByteSliceAlias](), UnsafePrefix, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
 		err = g.AddAliasWith(reflect.TypeFor[pkg1.SliceAlias](), UnsafePrefix, nil)
 		if err != nil {
 			t.Fatal(err)

@@ -58,6 +58,10 @@ func TestFileGenerator(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		err = g.AddAlias(reflect.TypeFor[pkg1.ByteSliceAlias]())
+		if err != nil {
+			t.Fatal(err)
+		}
 		err = g.AddAlias(reflect.TypeFor[pkg1.SliceAlias]())
 		if err != nil {
 			t.Fatal(err)

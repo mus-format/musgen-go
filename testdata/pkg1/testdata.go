@@ -22,6 +22,8 @@ type StringAlias string
 
 type Float32Alias float32
 
+type ByteSliceAlias []byte
+
 type SliceAlias []int
 
 type ArrayAlias [3]int

@@ -188,6 +188,32 @@ func SkipValidStringAliasMUS(bs []byte) (n int, err error) {
 	return ord.SkipString(nil, bs[n:])
 }
 
+func MarshalByteSliceAliasMUS(v ByteSliceAlias, bs []byte) (n int) {
+	return ord.MarshalByteSlice([]uint8(v),
+		nil,
+		bs[n:])
+}
+
+func UnmarshalByteSliceAliasMUS(bs []byte) (v ByteSliceAlias, n int, err error) {
+	va, n, err := ord.UnmarshalByteSlice(nil,
+		bs[n:])
+	if err != nil {
+		return
+	}
+	v = ByteSliceAlias(va)
+	return
+}
+
+func SizeByteSliceAliasMUS(v ByteSliceAlias) (size int) {
+	return ord.SizeByteSlice([]uint8(v),
+		nil)
+}
+
+func SkipByteSliceAliasMUS(bs []byte) (n int, err error) {
+	return ord.SkipByteSlice(nil,
+		bs[n:])
+}
+
 func MarshalSliceAliasMUS(v SliceAlias, bs []byte) (n int) {
 	return ord.MarshalSlice[int]([]int(v),
 		nil,

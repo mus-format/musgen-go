@@ -19,6 +19,11 @@ func (f GeneratorFactory) NewBoolGenerator(conf basegen.Conf, tp string,
 	return NewBoolGenerator(conf, tp, opts)
 }
 
+func (f GeneratorFactory) NewByteSliceGenerator(conf basegen.Conf, tp, prefix string,
+	opts *basegen.Options) basegen.Generator {
+	return NewByteSliceGenerator(conf, tp, prefix, opts)
+}
+
 func (f GeneratorFactory) NewSliceGenerator(conf basegen.Conf, tp, prefix string,
 	opts *basegen.Options) basegen.Generator {
 	return NewSliceGenerator(conf, tp, prefix, opts)

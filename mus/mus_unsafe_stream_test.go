@@ -20,6 +20,10 @@ func TestUnsafeStreamFileGenerator(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	err = g.AddAliasWith(reflect.TypeFor[pkg1.ByteSliceAlias](), UnsafeStreamPrefix, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
 	bs, err := g.Generate()
 	if err != nil {
 		t.Fatal(err)
