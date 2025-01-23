@@ -50,7 +50,7 @@ type StringFieldOptions struct {
 	Ignore bool
 }
 
-func (m StringFieldOptions) BuildFiledOptions() (opts *Options) {
+func (m StringFieldOptions) BuildFieldOptions() (opts *Options) {
 	opts = m.StringOptions.BuildTypeOptions()
 	opts.Ignore = m.Ignore
 	return
