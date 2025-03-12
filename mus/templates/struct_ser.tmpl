@@ -1,0 +1,50 @@
+{{/* tdesc.TypeDesc */}}
+{{- $serVar := SerVar . }}
+{{- $serType := SerType . }}
+
+{{- $v := VarName .Name }}
+{{- $Type := .FullName}}
+
+{{- $mslp := .Gops.MarshalSignatureLastParam }}
+{{- $uslp := .Gops.UnmarshalSignatureLastParam }}
+
+{{- $gops := .Gops }}
+{{- $td := . }}
+
+var {{ $serVar }} = {{ $serType }}{}
+
+type {{ $serType }} struct{}
+
+func (s {{ $serType }}) Marshal({{ $v }} {{ $Type }}, {{ $mslp }}) (n int {{ if $gops.Stream }} , err error {{ end }}) {
+	{{- if eq (len .Fields) 0}}
+		return
+	{{- else }}
+		{{- range $i, $f := Fields . }}
+			{{- include "field_marshal.tmpl" (MakeFieldTmplPipe $td $f $i $gops) }}		
+		{{- end }}
+	{{- end }}
+}
+
+func (s {{ $serType }}) Unmarshal({{ $uslp }}) ({{ $v }} {{ $Type }}, n int, err error) {
+	{{- range $i, $f := Fields . }}
+			{{- include "field_unmarshal.tmpl" (MakeFieldTmplPipe $td $f $i $gops) }}		
+	{{- end }}
+	return
+}
+
+func (s {{ $serType }}) Size({{ $v }} {{ $Type }}) (size int) {
+	{{- if eq (len .Fields) 0}}
+		return
+	{{- else }}
+		{{- range $i, $f := Fields . }}
+			{{- include "field_size.tmpl" (MakeFieldTmplPipe $td $f $i $gops) }}		
+		{{- end }}
+	{{- end }}
+}
+
+func (s {{ $serType }}) Skip({{ $uslp }}) (n int, err error) {
+	{{- range $i, $f := Fields . }}
+		{{- include "field_skip.tmpl" (MakeFieldTmplPipe $td $f $i $gops) }}		
+	{{- end }}
+	return
+}

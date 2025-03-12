@@ -1,0 +1,11 @@
+{{/* tdesc.TypeDesc */}}
+{{- $mlp := .Gops.MarshalLastParam true }}
+{{- $v := VarName .Name }}
+switch t := {{ $v }}.(type) {
+	{{- range $i, $oneOf := .Oneof }}
+		case {{ $oneOf }}:
+			return {{ $oneOf }}DTS.Marshal(t, {{ $mlp }})
+	{{- end }}
+		default:
+			panic(fmt.Sprintf("unexpected %v type", t))
+}

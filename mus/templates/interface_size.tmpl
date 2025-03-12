@@ -1,0 +1,10 @@
+{{/* tdesc.TypeDesc */}}
+{{- $v := VarName .Name }}
+switch t := {{ $v }}.(type) {
+{{- range $index, $oneOf := .Oneof }}
+	case {{ $oneOf }}:
+		return {{ $oneOf }}DTS.Size(t)
+{{- end }}
+	default:
+		panic(fmt.Sprintf("unexpected %v type", t))
+}

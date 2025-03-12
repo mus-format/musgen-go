@@ -1,4 +1,4 @@
-package mus
+package musgen
 
 import (
 	"bytes"
@@ -9,6 +9,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	muss "github.com/mus-format/mus-stream-go"
 	"github.com/mus-format/musgen-go/testdata/pkg1"
+	"github.com/mus-format/musgen-go/testdata/pkg2"
 )
 
 func TestGeneratedStreamCode(t *testing.T) {
@@ -16,11 +17,8 @@ func TestGeneratedStreamCode(t *testing.T) {
 	t.Run("Test struct/alias/dts/interface/ptr serializability", func(t *testing.T) {
 
 		t.Run("ComplexStruct should be serializable", func(t *testing.T) {
-			testStreamSerializability(makeCompplexStruct(),
-				pkg1.MarshalStreamComplexStructMUS,
-				pkg1.UnmarshalStreamComplexStructMUS,
-				pkg1.SizeStreamComplexStructMUS,
-				pkg1.SkipStreamComplexStructMUS,
+			testStreamSerializability(makeCompplexStructStream(),
+				pkg1.ComplexStructStreamMUS,
 				t)
 		})
 
@@ -28,21 +26,18 @@ func TestGeneratedStreamCode(t *testing.T) {
 
 }
 
-func testStreamSerializability[T any](v T, m muss.MarshallerFn[T],
-	u muss.UnmarshallerFn[T],
-	s muss.SizerFn[T],
-	sk muss.SkipperFn,
+func testStreamSerializability[T any](v T, ser muss.Serializer[T],
 	t *testing.T,
 ) {
-	buf := bytes.NewBuffer(make([]byte, 0, s(v)))
-	m(v, buf)
-	v1, n1, err := u(buf)
+	buf := bytes.NewBuffer(make([]byte, 0, ser.Size(v)))
+	ser.Marshal(v, buf)
+	v1, n1, err := ser.Unmarshal(buf)
 	if err != nil {
 		t.Fatal(err)
 	}
-	buf = bytes.NewBuffer(make([]byte, 0, s(v)))
-	m(v, buf)
-	n2, err := sk(buf)
+	buf = bytes.NewBuffer(make([]byte, 0, ser.Size(v)))
+	ser.Marshal(v, buf)
+	n2, err := ser.Skip(buf)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -73,5 +68,58 @@ func testStreamSerializability[T any](v T, m muss.MarshallerFn[T],
 	}
 	if n1 != n2 {
 		t.Errorf("unexpected value %v", n2)
+	}
+}
+
+func makeCompplexStructStream() pkg1.ComplexStructStream {
+	str := "some"
+	return pkg1.ComplexStructStream{
+		Bool: true,
+		Byte: 111,
+
+		Int8:  8,
+		Int16: 16,
+		Int32: 32,
+		Int64: 64,
+
+		Uint8:  8,
+		Uint16: 16,
+		Uint32: 32,
+		Uint64: 64,
+
+		Float32: 32.5,
+		Float64: 64.5,
+
+		String: "some",
+
+		Alias: pkg1.SliceAliasStream{1, 2, 3, 4},
+		AnotherPkgStruct: pkg2.StructStream{
+			Float32: 3.0,
+			Float64: 55.0,
+			Bool:    false,
+			Byte:    100,
+		},
+
+		Interface: pkg1.InterfaceImpl1Stream{},
+
+		ByteSlice:   []byte{1, 2, 3, 4},
+		StructSlice: []pkg1.SimpleStructStream{{Int: 10}, {Int: 20}},
+
+		Array: [3]int{1, 2, 3},
+
+		PtrArray:  &[3]int{1, 1, 1},
+		PtrString: &str,
+		PtrStruct: &pkg1.SimpleStructStream{
+			Int: 100,
+		},
+		NilPtr: nil,
+
+		Map: map[float32]map[pkg1.IntAliasStream][]pkg1.SimpleStructStream{
+			40.8: {
+				pkg1.IntAliasStream(11): {
+					{Int: 30},
+				},
+			},
+		},
 	}
 }

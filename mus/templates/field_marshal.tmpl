@@ -1,0 +1,43 @@
+{{- /* {VarName string, FieldsCount int, Field tdesc.FieldDesc, Index int, Gops genops.Options} */}}
+{{- $mlp := .Gops.MarshalLastParam false }}
+{{- if eq .Index 0 }}
+	{{- $mlp = .Gops.MarshalLastParam true }}
+{{- end}}
+
+{{- $vf := print .VarName "." .Field.Name }}
+{{- $fieldSer := SerializerOf .Field .Gops }}
+
+{{- $nVar := "n" }}
+{{- if gt .Index 0 }}
+	{{- $nVar = "n1" }}
+{{- end }}
+
+{{- $call := print $fieldSer ".Marshal(" $vf ", " $mlp ")" }}
+{{- if eq .FieldsCount 1 }}
+	return {{ $call }}
+{{- else }}
+	{{- if .Gops.Stream }}
+		{{- if eq .Index 1 }}
+			var n1 int
+		{{- end }}
+		{{ $nVar }}, err = {{ $call }}
+		{{- if ge .Index 1 }}
+			n += n1
+		{{- end }}
+		{{- if eq .Index (minus .FieldsCount 1) }}
+			return
+		{{- else }}
+			if err != nil {
+				return
+			}		
+		{{- end }}
+	{{- else }}
+		{{- if eq .Index 0 }}
+			n = {{ $call }}
+		{{- else if eq .Index (minus .FieldsCount 1) }}
+			return n + {{ $call }}
+		{{- else }}
+			n += {{ $call }}
+		{{- end }}
+	{{- end }}
+{{- end }}

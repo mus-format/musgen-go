@@ -1,0 +1,78 @@
+{{/* {Map: map[adesc.AnonymousName]adesc.AnonymousDesc, Ops: genops.Options} */}}
+{{- if gt (len .Map)  0 }}
+	{{- $gops := .Ops }}
+	var (
+		{{- range $name, $ad := .Map }}
+{{- /* string type */}}
+			{{- if eq $ad.Kind "string" }}
+				{{- $p := $ad.LenVl }}
+				{{- if and (ne $ad.LenSer "nil") (ne $ad.LenVl "nil")}}
+					{{ $ad.Name }} = ord.NewValidStringSerWith({{ $ad.LenSer }}, {{ $p }})
+				{{- else if (ne $ad.LenSer "nil") }}
+					{{ $ad.Name }} = ord.NewStringSerWith({{ $ad.LenSer }})	
+				{{- else }}
+					{{ $ad.Name }} = ord.NewValidStringSer({{ $p }})
+				{{- end }}
+			{{- end }}
+{{- /* array type */}}
+			{{- if eq $ad.Kind "array" }}
+				{{- $elemSer := ElemSerializer $ad $gops }}
+				{{- $p := print $elemSer ", " $ad.ElemVl  }}
+				{{- if and (eq $ad.LenSer "nil") (eq $ad.ElemVl "nil") }}
+					{{ $ad.Name }} = ord.NewArraySer[{{ $ad.Type }}, {{ $ad.ElemType }}]({{ $ad.ArrLength }}, {{ $elemSer }})
+				{{- else if and (ne $ad.LenSer "nil") (ne $ad.ElemVl "nil") }}
+					{{ $ad.Name }} = ord.NewValidArraySerWith[{{ $ad.Type }}, {{ $ad.ElemType }}]({{$ad.ArrLength}}, {{ $ad.LenSer }}, {{ $p }})
+				{{- else if (ne $ad.LenSer "nil") }}
+					{{ $ad.Name }} = ord.NewArraySerWith[{{ $ad.Type }}, {{ $ad.ElemType }}]({{ $ad.ArrLength }}, {{ $ad.LenSer }}, {{ $elemSer }})
+				{{- else }}
+					{{ $ad.Name }} = ord.NewValidArraySer[{{ $ad.Type }}, {{ $ad.ElemType }}]({{ $ad.ArrLength }}, {{ $p }})
+				{{- end }}
+			{{- end }}
+{{- /* byte slice type */}}
+			{{- if eq $ad.Kind "byte_slice" }}
+				{{- $p := print $ad.LenVl ", " $ad.ElemVl  }}
+				{{- if and (ne $ad.LenSer "nil") (ne $ad.LenVl "nil") }}
+					{{ $ad.Name }} = ord.NewValidByteSliceSerWith({{ $ad.LenSer }}, {{ $ad.LenVl }})
+				{{- else if (ne $ad.LenSer "nil") }}
+					{{ $ad.Name }} = ord.NewByteSliceSerWith({{ $ad.LenSer }})
+				{{- else }}
+					{{ $ad.Name }} = ord.NewValidByteSliceSer({{ $ad.LenVl }})
+				{{- end }}
+			{{- end }}
+{{- /* slice type */}}
+			{{- if eq $ad.Kind "slice" }}
+				{{- $elemSer := ElemSerializer $ad $gops }}
+				{{- $p := print $elemSer ", " $ad.LenVl ", " $ad.ElemVl  }}
+				{{- if and (eq $ad.LenSer "nil") (eq $ad.LenVl "nil") (eq $ad.ElemVl "nil") }}
+					{{ $ad.Name }} = ord.NewSliceSer[{{ $ad.ElemType }}]({{ $elemSer }})
+				{{- else if and (ne $ad.LenSer "nil") (or (ne $ad.LenVl "nil") (ne $ad.ElemVl "nil")) }}
+					{{ $ad.Name }} = ord.NewValidSliceSerWith[{{ $ad.ElemType }}]({{ $ad.LenSer }}, {{ $p }})
+				{{- else if (ne $ad.LenSer "nil") }}
+					{{ $ad.Name }} = ord.NewSliceSerWith[{{ $ad.ElemType }}]({{ $ad.LenSer }}, {{ $elemSer }})
+				{{- else }}
+					{{ $ad.Name }} = ord.NewValidSliceSer[{{ $ad.ElemType }}]({{ $p }})
+				{{- end }}
+			{{- end }}
+{{- /* map type */}}
+			{{- if eq $ad.Kind "map" }}
+				{{- $keySer := KeySerializer $ad $gops }}
+				{{- $elemSer := ElemSerializer $ad $gops }}
+				{{- $p := print $keySer ", " $elemSer ", " $ad.LenVl ", "  $ad.KeyVl ", " $ad.ElemVl }}
+				{{- if and (eq $ad.LenSer "nil") (eq $ad.LenVl "nil") (eq $ad.KeyVl "nil") (eq $ad.ElemVl "nil") }}
+					{{ $ad.Name }} = ord.NewMapSer[{{ $ad.KeyType }}, {{ $ad.ElemType }}]({{ $keySer}}, {{ $elemSer }})
+				{{- else if and (ne $ad.LenSer "nil") (or (ne $ad.LenVl "nil") (ne $ad.KeyVl "nil") (ne $ad.ElemVl "nil")) }}
+					{{ $ad.Name }} = ord.NewValidMapSerWith[{{ $ad.KeyType }}, {{ $ad.ElemType }}]({{ $ad.LenSer }}, {{ $p }})
+				{{- else if (ne $ad.LenSer "nil") }}
+					{{ $ad.Name }} = ord.NewMapSerWith[{{ $ad.KeyType }}, {{ $ad.ElemType }}]({{ $ad.LenSer }}, {{ $keySer }}, {{ $elemSer }})
+				{{- else }}
+					{{ $ad.Name }} = ord.NewValidMapSer[{{ $ad.KeyType }}, {{ $ad.ElemType }}]({{ $p }})
+				{{- end }}
+			{{- end }}
+{{- /* ptr type */}}
+			{{- if eq $ad.Kind "ptr" }}
+				{{- $elemSer := ElemSerializer $ad $gops }}
+				{{ $ad.Name }} = ord.NewPtrSer[{{ $ad.ElemType }}]({{ $elemSer }})
+			{{- end }}
+		{{- end }}
+	)
+{{- end }}

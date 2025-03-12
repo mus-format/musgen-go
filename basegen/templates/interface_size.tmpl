@@ -1,9 +1,0 @@
-{{- $p := .Prefix }}
-switch tp := {{ Receiver .Name }}.(type) {
-{{- range $index, $oneOf := .Oneof }}
-	case {{ $oneOf }}:
-		return {{ $p }}{{ $oneOf }}DTS.Size(tp)
-{{- end }}
-	default:
-		panic(fmt.Errorf("unexpected %v type", tp))
-}

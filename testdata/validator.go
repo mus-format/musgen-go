@@ -13,3 +13,10 @@ func ValidateLength(l int) (err error) {
 	}
 	return
 }
+
+func ValidateLength1(l int) (err error) {
+	if l > 1 {
+		err = ErrTooLong
+	}
+	return
+}

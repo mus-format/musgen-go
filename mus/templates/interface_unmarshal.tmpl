@@ -1,0 +1,20 @@
+{{/* tdesc.TypeDesc */}}
+{{- $fulp := .Gops.UnmarshalLastParam true }}
+{{- $ulp := .Gops.UnmarshalLastParam false }}
+{{- $v := VarName .Name }}
+dtm, n, err := dts.DTMSer.Unmarshal({{ $fulp }})
+if err != nil {
+	return
+}
+var n1 int
+switch dtm {
+{{- range $index, $oneOf := .Oneof }}
+	case {{ $oneOf }}DTM:
+		{{ $v }}, n1, err = {{ $oneOf }}DTS.UnmarshalData({{ $ulp }})
+{{- end }}
+	default:
+		err = fmt.Errorf("unexpected %v DTM", dtm)
+		return
+}
+n += n1
+return

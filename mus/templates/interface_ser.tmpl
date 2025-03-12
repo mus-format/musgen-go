@@ -1,0 +1,28 @@
+{{/* tdesc.TypeDesc */}}
+{{- $serVar := SerVar . }}
+{{- $serType := SerType . }}
+{{- $v := VarName .Name }}
+{{- $Type := .FullName}}
+{{- $mslp := .Gops.MarshalSignatureLastParam }}
+{{- $uslp := .Gops.UnmarshalSignatureLastParam }}
+{{- $gops := .Gops }}
+
+var {{ $serVar }} = {{ $serType }}{}
+
+type {{ $serType }} struct{}
+
+func (s {{ $serType }}) Marshal({{ $v }} {{ $Type }}, {{ $mslp }}) (n int {{ if $gops.Stream }} , err error {{ end }}) {
+	{{- include "interface_marshal.tmpl" . }}
+}
+
+func (s {{ $serType }}) Unmarshal({{ $uslp }}) ({{ $v }} {{ $Type }}, n int, err error) {
+	{{- include "interface_unmarshal.tmpl" . }}
+}
+
+func (s {{ $serType }}) Size({{ $v }} {{ $Type }}) (size int) {
+	{{- include "interface_size.tmpl" . }}
+}
+
+func (s {{ $serType }}) Skip({{ $uslp }}) (n int, err error) {
+	{{- include "interface_skip.tmpl" . }}
+}

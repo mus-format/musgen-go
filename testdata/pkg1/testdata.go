@@ -9,47 +9,77 @@ import (
 const (
 	InterfaceImpl1DTM = 1
 	InterfaceImpl2DTM = 2
-	StructDTM         = 3
+	SimpleStructDTM   = 3
+	IntAliasDTM       = 4
 )
 
 type BoolAlias bool
-
 type ByteAlias byte
-
-type IntAlias int
-
-type StringAlias string
-
 type Float32Alias float32
 
+type IntAlias int
+type RawIntAlias int
+type VarintPositiveIntAlias int
+type ValidIntAlias int
+type AllIntAlias int
+
+type StringAlias string
+type LenEncodingStringAlias string
+type LenValidStringAlias string
+type ValidStringAlias string
+type AllStringAlias string
+
 type ByteSliceAlias []byte
+type LenEncodingByteSliceAlias []byte
+type LenValidByteSliceAlias []byte
+type ValidByteSliceAlias []byte
+type AllByteSliceAlias []byte
 
 type SliceAlias []int
+type LenEncodingSliceAlias []int
+type LenValidSliceAlias []int
+type ElemEncodingSliceAlias []int
+type ElemValidSliceAlias []int
+type ValidSliceAlias []int
+type AllSliceAlias []int
 
 type ArrayAlias [3]int
+type LenEncodingArrayAlias [3]int
+type ElemEncodingArrayAlias [3]int
+type ElemValidArrayAlias [3]int
+type ValidArrayAlias [3]int
+type AllArrayAlias [3]int
 
-type MapAlias map[string]int
+type MapAlias map[int]int
+type LenEncodingMapAlias map[int]int
+type LenValidMapAlias map[int]int
+type KeyEncodingMapAlias map[int]int
+type KeyValidMapAlias map[int]int
+type ElemEncodingMapAlias map[int]int
+type ElemValidMapAlias map[int]int
+type ValidMapAlias map[int]int
+type AllMapAlias map[int]int
 
-type Struct struct {
+type PtrAlias *int
+type ElemNumEncodingPtrAlias *int
+
+type ValidPtrAlias *int
+
+type SimpleStructPtrAlias *SimpleStruct
+
+type InterfaceDoublePtrAlias **Interface
+
+type StructAlias SimpleStruct
+
+type InterfaceAlias Interface
+
+type AnotherStruct SimpleStruct
+type AnotherInterface Interface
+
+// -----------------------------------------------------------------------------
+
+type SimpleStruct struct {
 	Int int
-}
-
-type StructAlias Struct
-
-type Interface interface {
-	Print()
-}
-
-type InterfaceImpl1 struct{}
-
-func (i InterfaceImpl1) Print() {
-	fmt.Println("impl1")
-}
-
-type InterfaceImpl2 struct{}
-
-func (i InterfaceImpl2) Print() {
-	fmt.Println("impl2")
 }
 
 type ComplexStruct struct {
@@ -69,49 +99,43 @@ type ComplexStruct struct {
 	Float32 float32
 	Float64 float64
 
-	String    string
-	PtrString *string
+	String string
 
 	Alias            SliceAlias
-	Ptr              *Struct
-	NilPtr           *string
 	AnotherPkgStruct pkg2.Struct
 	Interface        Interface
 
-	SliceByte   []byte
-	SliceStruct []Struct
+	ByteSlice   []byte
+	StructSlice []SimpleStruct
 
-	Array    [3]int
-	PtrArray *[3]int
+	Array [3]int
 
-	Map map[float32]map[IntAlias][]Struct
+	PtrString *string
+	PtrStruct *SimpleStruct
+	NilPtr    *string
+	PtrArray  *[3]int
+
+	Map map[float32]map[IntAlias][]SimpleStruct
 }
 
-// func ValidateNum[T comparable](t T) (err error) {
-// 	if t == *new(T) {
-// 		err = errs.ErrZeroValue
-// 	}
-// 	return
-// }
+// -----------------------------------------------------------------------------
 
-// func ValidateString(str string) (err error) {
-// 	if str == "" {
-// 		err = errs.ErrZeroValue
-// 	}
-// 	return
-// }
+type Interface interface {
+	Print()
+}
 
-// func ValidateLength(l int) (err error) {
-// 	if l > 0 {
-// 		err = errs.ErrTooLong
-// 	}
-// 	return
-// }
+type InterfaceImpl1 struct {
+	Str string
+}
 
-// func ValidateMap(m map[string]int) (err error) {
-// 	return errs.ErrNotValid
-// }
+func (i InterfaceImpl1) Print() {
+	fmt.Println("impl1")
+}
 
-// func ValidateSimpleStructPtr(p *Struct) (err error) {
-// 	return errs.ErrNotValid
-// }
+type InterfaceImpl2 int
+
+func (i InterfaceImpl2) Print() {
+	fmt.Println("impl2")
+}
+
+// ----------------------------------------------------------------------------
