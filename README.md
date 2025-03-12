@@ -100,7 +100,7 @@ func TestFooSerialization(t *testing.T) {
       b: true,
       i: MyInt(5),
     }
-		size = FooMUS.Size(foo)
+    size = FooMUS.Size(foo)
     bs = make([]byte, size)
   )
   FooMUS.Marshal(foo, bs)
@@ -122,8 +122,8 @@ The `FileGenerator` is responsible for generating serialization code.
 To generate a streaming code:
 ```go
 import (
-	musgen "github.com/mus-format/musgen-go/mus"
-	genops "github.com/mus-format/musgen-go/options/generate"
+  musgen "github.com/mus-format/musgen-go/mus"
+  genops "github.com/mus-format/musgen-go/options/generate"
 )
 
 g := musgen.NewFileGenerator(genops.WithPackage("package_name"),
@@ -135,8 +135,8 @@ In this case mus-stream-go library will be used instead of mus-go.
 To generate an unsafe code:
 ```go
 import (
-	musgen "github.com/mus-format/musgen-go/mus"
-	genops "github.com/mus-format/musgen-go/options/generate"
+  musgen "github.com/mus-format/musgen-go/mus"
+  genops "github.com/mus-format/musgen-go/options/generate"
 )
 
 g := musgen.NewFileGenerator(genops.WithPackage("package_name"),
@@ -148,8 +148,8 @@ In some cases import statement of the generated file can miss one or more
 packages. To fix this:
 ```go
 import (
-	musgen "github.com/mus-format/musgen-go/mus"
-	genops "github.com/mus-format/musgen-go/options/generate"
+  musgen "github.com/mus-format/musgen-go/mus"
+  genops "github.com/mus-format/musgen-go/options/generate"
 )
 
 g := musgen.NewFileGenerator(genops.WithPackage("package_name"),
@@ -161,9 +161,9 @@ g := musgen.NewFileGenerator(genops.WithPackage("package_name"),
 It can be used as follows:
 ```go
 import (
-	"reflect"
+  "reflect"
 
-	typeops "github.com/mus-format/musgen-go/options/type"
+  typeops "github.com/mus-format/musgen-go/options/type"
 )
 
 type MyInt int // Where int is the source type.
@@ -192,11 +192,11 @@ Supported source types:
 It can be used as follows:
 ```go
 import (
-	"reflect"
+  "reflect"
 
-	genops "github.com/mus-format/musgen-go/options/generate"
-	structops "github.com/mus-format/musgen-go/options/struct"
-	typeops "github.com/mus-format/musgen-go/options/type"
+  genops "github.com/mus-format/musgen-go/options/generate"
+  structops "github.com/mus-format/musgen-go/options/struct"
+  typeops "github.com/mus-format/musgen-go/options/type"
 )
 
 type MyStruct struct {
@@ -240,7 +240,7 @@ Supports struct types.
 It can be used as follows:
 ```go
 import (
-	"reflect"
+  "reflect"
 )
 
 type MyInt int
