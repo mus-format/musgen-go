@@ -166,7 +166,9 @@ import (
   typeops "github.com/mus-format/musgen-go/options/type"
 )
 
-type MyInt int // Where int is the source type.
+type MyInt int // Where int is the source type for MyInt.
+
+// ...
 
 err := g.AddTypedef(reflect.TypeFor[MyInt]())
 ```
@@ -207,6 +209,8 @@ type MyStruct struct {
   // Any any                // But not the `any` type.
 }
 
+// ...
+
 err := g.AddStruct(reflect.TypeFor[MyStruct]())
 ```
 
@@ -245,6 +249,8 @@ import (
 
 type MyInt int
 
+// ...
+
 t := reflect.TypeFor[MyInt]()
 err := g.AddTypedef(t)
 // ...
@@ -260,12 +266,15 @@ It can be used as follows:
 type MyInterface interface {...}
 type MyInterfaceImpl1 struct {...}
 type MyInterfaceImpl2 int
+
 // ...
 
 var (
   t1 = reflect.TypeFor[MyInterfaceImpl1]()
   t2 = reflect.TypeFor[MyInterfaceImpl2]()
 )
+
+// ...
 
 err := g.AddStruct(t1)
 // ...
@@ -279,6 +288,8 @@ err = g.AddInterface(reflect.TypeFor[MyInterface](),
   introps.WithImplType(t1),
   introps.WithImplType(t2))
 ```
+
+Supports interface types.
 
 ## Serialization Options
 Different types support different serialization options. If an incorrect option 
