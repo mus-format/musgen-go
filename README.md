@@ -163,7 +163,7 @@ import (
   typeops "github.com/mus-format/musgen-go/options/type"
 )
 
-type MyInt int // Where int is the source type for MyInt.
+type MyInt int // Where int is the source type of MyInt.
 
 // ...
 
