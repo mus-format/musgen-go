@@ -34,36 +34,33 @@ __gen/main.go__
 package main
 
 import (
-  "os"
-  "reflect"
+	"os"
+	"reflect"
 
-  "foo"
+	"foo"
 
-  "github.com/mus-format/musgen-go/basegen"
-  musgen "github.com/mus-format/musgen-go/mus"
+	musgen "github.com/mus-format/musgen-go/mus"
+	genops "github.com/mus-format/musgen-go/options/generate"
 )
 
 func main() {
-  g, err := musgen.NewFileGenerator(genops.WithPackage("foo"))
-  if err != nil {
-    panic(err)
-  }
-  err = g.AddTypedef(reflect.TypeFor[foo.MyInt]())
-  if err != nil {
-    panic(err)
-  }
-  err = g.AddStruct(reflect.TypeFor[foo.Foo]())
-  if err != nil {
-    panic(err)
-  }
-  bs, err := g.Generate()
-  if err != nil {
-    panic(err)
-  }
-  err = os.WriteFile("./mus-format.gen.go", bs, 0755)
-  if err != nil {
-    panic(err)
-  }
+	g := musgen.NewFileGenerator(genops.WithPackage("foo"))
+	err := g.AddTypedef(reflect.TypeFor[foo.MyInt]())
+	if err != nil {
+		panic(err)
+	}
+	err = g.AddStruct(reflect.TypeFor[foo.Foo]())
+	if err != nil {
+		panic(err)
+	}
+	bs, err := g.Generate()
+	if err != nil {
+		panic(err)
+	}
+	err = os.WriteFile("./mus-format.gen.go", bs, 0755)
+	if err != nil {
+		panic(err)
+	}
 }
 ```
 
