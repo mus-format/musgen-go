@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"regexp"
+	"strings"
 	"text/template"
 	"unicode"
 
@@ -163,6 +164,101 @@ func MakeFieldTmplPipe(td tdesc.TypeDesc, field tdesc.FieldDesc, index int,
 		Index:       index,
 		Gops:        gops,
 	}
+}
+
+func MakeStringOps(ad adesc.AnonymousDesc) string {
+	b := strings.Builder{}
+	if ad.LenSer != "" && ad.LenSer != "nil" {
+		b.WriteString(fmt.Sprintf("strops.WithLenSer(%v)", ad.LenSer))
+	}
+	if ad.LenVl != "" && ad.LenVl != "nil" {
+		if b.Len() > 0 {
+			b.WriteString(", ")
+		}
+		b.WriteString(fmt.Sprintf("strops.WithLenValidator(%v)", ad.LenVl))
+	}
+	return b.String()
+}
+
+func MakeArrayOps(ad adesc.AnonymousDesc) string {
+	b := strings.Builder{}
+	if ad.LenSer != "" && ad.LenSer != "nil" {
+		b.WriteString(fmt.Sprintf("arrops.WithLenSer[%v](%v)", ad.ElemType, ad.LenSer))
+	}
+	if ad.ElemVl != "" && ad.ElemVl != "nil" {
+		if b.Len() > 0 {
+			b.WriteString(", ")
+		}
+		b.WriteString(fmt.Sprintf("arrops.WithElemValidator[%v](%v)", ad.ElemType,
+			ad.ElemVl))
+	}
+	return b.String()
+}
+
+func MakeByteSliceOps(ad adesc.AnonymousDesc) string {
+	b := strings.Builder{}
+	if ad.LenSer != "" && ad.LenSer != "nil" {
+		b.WriteString(fmt.Sprintf("bslops.WithLenSer(%v)", ad.LenSer))
+	}
+	if ad.LenVl != "" && ad.LenVl != "nil" {
+		if b.Len() > 0 {
+			b.WriteString(", ")
+		}
+		b.WriteString(fmt.Sprintf("bslops.WithLenValidator(%v)", ad.LenVl))
+	}
+	return b.String()
+}
+
+func MakeSliceOps(ad adesc.AnonymousDesc) string {
+	b := strings.Builder{}
+	if ad.LenSer != "" && ad.LenSer != "nil" {
+		b.WriteString(fmt.Sprintf("slops.WithLenSer[%v](%v)", ad.ElemType, ad.LenSer))
+	}
+	if ad.LenVl != "" && ad.LenVl != "nil" {
+		if b.Len() > 0 {
+			b.WriteString(", ")
+		}
+		b.WriteString(fmt.Sprintf("slops.WithLenValidator[%v](%v)", ad.ElemType,
+			ad.LenVl))
+	}
+	if ad.ElemVl != "" && ad.ElemVl != "nil" {
+		if b.Len() > 0 {
+			b.WriteString(", ")
+		}
+		b.WriteString(fmt.Sprintf("slops.WithElemValidator[%v](%v)", ad.ElemType,
+			ad.ElemVl))
+	}
+	return b.String()
+}
+
+func MakeMapOps(ad adesc.AnonymousDesc) string {
+	b := strings.Builder{}
+	if ad.LenSer != "" && ad.LenSer != "nil" {
+		b.WriteString(fmt.Sprintf("mapops.WithLenSer[%v, %v](%v)", ad.KeyType,
+			ad.ElemType, ad.LenSer))
+	}
+	if ad.LenVl != "" && ad.LenVl != "nil" {
+		if b.Len() > 0 {
+			b.WriteString(", ")
+		}
+		b.WriteString(fmt.Sprintf("mapops.WithLenValidator[%v, %v](%v)",
+			ad.KeyType, ad.ElemType, ad.LenVl))
+	}
+	if ad.KeyVl != "" && ad.KeyVl != "nil" {
+		if b.Len() > 0 {
+			b.WriteString(", ")
+		}
+		b.WriteString(fmt.Sprintf("mapops.WithKeyValidator[%v, %v](%v)",
+			ad.KeyType, ad.ElemType, ad.KeyVl))
+	}
+	if ad.ElemVl != "" && ad.ElemVl != "nil" {
+		if b.Len() > 0 {
+			b.WriteString(", ")
+		}
+		b.WriteString(fmt.Sprintf("mapops.WithValueValidator[%v, %v](%v)",
+			ad.KeyType, ad.ElemType, ad.ElemVl))
+	}
+	return b.String()
 }
 
 func numPkg(tops *typeops.Options) (pkg string) {

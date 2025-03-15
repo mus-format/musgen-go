@@ -5,72 +5,209 @@ package pkg1
 import (
 	"fmt"
 
+	com "github.com/mus-format/common-go"
 	dts "github.com/mus-format/mus-stream-dts-go"
 	muss "github.com/mus-format/mus-stream-go"
+	arrops "github.com/mus-format/mus-stream-go/options/array"
+	bslops "github.com/mus-format/mus-stream-go/options/byte_slice"
+	mapops "github.com/mus-format/mus-stream-go/options/map"
+	slops "github.com/mus-format/mus-stream-go/options/slice"
+	strops "github.com/mus-format/mus-stream-go/options/string"
 	"github.com/mus-format/mus-stream-go/ord"
 	"github.com/mus-format/mus-stream-go/varint"
+	"github.com/mus-format/musgen-go/testdata"
 	"github.com/mus-format/musgen-go/testdata/pkg2"
 )
 
 var (
-	arrayiPZBrΔvΣtuyiSe3E0BBΔZAΞΞ = ord.NewArraySer[[3]int, int](3, varint.Int)
-	mapXOR1E9UYBE4vZVdxrG6qngΞΞ   = ord.NewMapSer[float32, map[IntAliasStream][]SimpleStructStream](varint.Float32, maph5T9ΔE27gYoRRZWA8cIMmAΞΞ)
-	maph5T9ΔE27gYoRRZWA8cIMmAΞΞ   = ord.NewMapSer[IntAliasStream, []SimpleStructStream](IntAliasStreamMUS, slice56OiSlDΣiBN8xiRNXjFu1AΞΞ)
-	ptrR2Xmw2fVSjWhntYt9CΣ7SwΞΞ   = ord.NewPtrSer[string](ord.String)
-	ptrryzF15r3UQX0mWyEIuftXwΞΞ   = ord.NewPtrSer[SimpleStructStream](SimpleStructStreamMUS)
-	ptrzvaAxrtkbvHKhrwΣIJM9cAΞΞ   = ord.NewPtrSer[[3]int](arrayiPZBrΔvΣtuyiSe3E0BBΔZAΞΞ)
-	slice3VVTpis4uDBxiJkaΔSxelQΞΞ = ord.NewSliceSer[int](varint.Int)
-	slice56OiSlDΣiBN8xiRNXjFu1AΞΞ = ord.NewSliceSer[SimpleStructStream](SimpleStructStreamMUS)
+	arrayTmIΔ0PpG8w7aD1a6FYb8ΔQΞΞ      = ord.NewArraySer[[3]int, int](3, varint.Int)
+	arrayd3UCTuS0HΔTyQFB1AR47mwΞΞ      = ord.NewValidArraySer[[3]int, int](3, varint.Int, arrops.WithElemValidator[int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])))
+	byte_sliceuvZKF7pSWKcTOpuVCUtR6wΞΞ = ord.NewValidByteSliceSer(bslops.WithLenValidator(com.ValidatorFn[int](testdata.ValidateLength)))
+	mapWY5BjxP7fZfΔ8y3u5ΣyNAwΞΞ        = ord.NewValidMapSer[int, int](varint.Int, varint.Int, mapops.WithLenValidator[int, int](com.ValidatorFn[int](testdata.ValidateLength)))
+	mapoo8ΣM84YHYspIΣOQWKrAbgΞΞ        = ord.NewMapSer[float32, map[MyIntStream][]SimpleStructStream](varint.Float32, mapΔqVacXL5gHBZo7mX1Q8ΔKQΞΞ)
+	mapΔqVacXL5gHBZo7mX1Q8ΔKQΞΞ        = ord.NewMapSer[MyIntStream, []SimpleStructStream](MyIntStreamMUS, slicessnkΔvgHOhepPlHcDJ0wLQΞΞ)
+	ptrpDXLUgdWgSHAfUBnMyIURwΞΞ        = ord.NewPtrSer[[3]int](arrayTmIΔ0PpG8w7aD1a6FYb8ΔQΞΞ)
+	ptrsZ1jCgUntHdxyz2i5pCsBQΞΞ        = ord.NewPtrSer[string](ord.String)
+	ptrxOrkEmVctmuTnDp5kqk2lAΞΞ        = ord.NewPtrSer[SimpleStructStream](SimpleStructStreamMUS)
+	slicekIYZkyxblkxWz0wWOYc4swΞΞ      = ord.NewValidSliceSer[int](varint.Int, slops.WithLenValidator[int](com.ValidatorFn[int](testdata.ValidateLength)))
+	slicessnkΔvgHOhepPlHcDJ0wLQΞΞ      = ord.NewSliceSer[SimpleStructStream](SimpleStructStreamMUS)
+	sliceΔyyAUELCQJUtjEJqbBIddQΞΞ      = ord.NewSliceSer[int](varint.Int)
+	stringbgyTSVIWHIuEhXq5k7HdswΞΞ     = ord.NewValidStringSer(strops.WithLenValidator(com.ValidatorFn[int](testdata.ValidateLength)))
 )
 
-var IntAliasStreamMUS = intAliasStreamMUS{}
+var MyIntStreamMUS = myIntStreamMUS{}
 
-type intAliasStreamMUS struct{}
+type myIntStreamMUS struct{}
 
-func (s intAliasStreamMUS) Marshal(v IntAliasStream, w muss.Writer) (n int, err error) {
+func (s myIntStreamMUS) Marshal(v MyIntStream, w muss.Writer) (n int, err error) {
 	return varint.Int.Marshal(int(v), w)
 }
 
-func (s intAliasStreamMUS) Unmarshal(r muss.Reader) (v IntAliasStream, n int, err error) {
+func (s myIntStreamMUS) Unmarshal(r muss.Reader) (v MyIntStream, n int, err error) {
 	tmp, n, err := varint.Int.Unmarshal(r)
 	if err != nil {
 		return
 	}
-	v = IntAliasStream(tmp)
+	v = MyIntStream(tmp)
 	return
 }
 
-func (s intAliasStreamMUS) Size(v IntAliasStream) (size int) {
+func (s myIntStreamMUS) Size(v MyIntStream) (size int) {
 	return varint.Int.Size(int(v))
 }
 
-func (s intAliasStreamMUS) Skip(r muss.Reader) (n int, err error) {
+func (s myIntStreamMUS) Skip(r muss.Reader) (n int, err error) {
 	return varint.Int.Skip(r)
 }
 
-var SliceAliasStreamMUS = sliceAliasStreamMUS{}
+var MySliceStreamMUS = mySliceStreamMUS{}
 
-type sliceAliasStreamMUS struct{}
+type mySliceStreamMUS struct{}
 
-func (s sliceAliasStreamMUS) Marshal(v SliceAliasStream, w muss.Writer) (n int, err error) {
-	return slice3VVTpis4uDBxiJkaΔSxelQΞΞ.Marshal([]int(v), w)
+func (s mySliceStreamMUS) Marshal(v MySliceStream, w muss.Writer) (n int, err error) {
+	return sliceΔyyAUELCQJUtjEJqbBIddQΞΞ.Marshal([]int(v), w)
 }
 
-func (s sliceAliasStreamMUS) Unmarshal(r muss.Reader) (v SliceAliasStream, n int, err error) {
-	tmp, n, err := slice3VVTpis4uDBxiJkaΔSxelQΞΞ.Unmarshal(r)
+func (s mySliceStreamMUS) Unmarshal(r muss.Reader) (v MySliceStream, n int, err error) {
+	tmp, n, err := sliceΔyyAUELCQJUtjEJqbBIddQΞΞ.Unmarshal(r)
 	if err != nil {
 		return
 	}
-	v = SliceAliasStream(tmp)
+	v = MySliceStream(tmp)
 	return
 }
 
-func (s sliceAliasStreamMUS) Size(v SliceAliasStream) (size int) {
-	return slice3VVTpis4uDBxiJkaΔSxelQΞΞ.Size([]int(v))
+func (s mySliceStreamMUS) Size(v MySliceStream) (size int) {
+	return sliceΔyyAUELCQJUtjEJqbBIddQΞΞ.Size([]int(v))
 }
 
-func (s sliceAliasStreamMUS) Skip(r muss.Reader) (n int, err error) {
-	return slice3VVTpis4uDBxiJkaΔSxelQΞΞ.Skip(r)
+func (s mySliceStreamMUS) Skip(r muss.Reader) (n int, err error) {
+	return sliceΔyyAUELCQJUtjEJqbBIddQΞΞ.Skip(r)
+}
+
+var ValidMyStringStreamMUS = validMyStringStreamMUS{}
+
+type validMyStringStreamMUS struct{}
+
+func (s validMyStringStreamMUS) Marshal(v ValidMyStringStream, w muss.Writer) (n int, err error) {
+	return stringbgyTSVIWHIuEhXq5k7HdswΞΞ.Marshal(string(v), w)
+}
+
+func (s validMyStringStreamMUS) Unmarshal(r muss.Reader) (v ValidMyStringStream, n int, err error) {
+	tmp, n, err := stringbgyTSVIWHIuEhXq5k7HdswΞΞ.Unmarshal(r)
+	if err != nil {
+		return
+	}
+	v = ValidMyStringStream(tmp)
+	return
+}
+
+func (s validMyStringStreamMUS) Size(v ValidMyStringStream) (size int) {
+	return stringbgyTSVIWHIuEhXq5k7HdswΞΞ.Size(string(v))
+}
+
+func (s validMyStringStreamMUS) Skip(r muss.Reader) (n int, err error) {
+	return stringbgyTSVIWHIuEhXq5k7HdswΞΞ.Skip(r)
+}
+
+var ValidMyArrayStreamMUS = validMyArrayStreamMUS{}
+
+type validMyArrayStreamMUS struct{}
+
+func (s validMyArrayStreamMUS) Marshal(v ValidMyArrayStream, w muss.Writer) (n int, err error) {
+	return arrayd3UCTuS0HΔTyQFB1AR47mwΞΞ.Marshal([3]int(v), w)
+}
+
+func (s validMyArrayStreamMUS) Unmarshal(r muss.Reader) (v ValidMyArrayStream, n int, err error) {
+	tmp, n, err := arrayd3UCTuS0HΔTyQFB1AR47mwΞΞ.Unmarshal(r)
+	if err != nil {
+		return
+	}
+	v = ValidMyArrayStream(tmp)
+	return
+}
+
+func (s validMyArrayStreamMUS) Size(v ValidMyArrayStream) (size int) {
+	return arrayd3UCTuS0HΔTyQFB1AR47mwΞΞ.Size([3]int(v))
+}
+
+func (s validMyArrayStreamMUS) Skip(r muss.Reader) (n int, err error) {
+	return arrayd3UCTuS0HΔTyQFB1AR47mwΞΞ.Skip(r)
+}
+
+var ValidMyByteSliceStreamMUS = validMyByteSliceStreamMUS{}
+
+type validMyByteSliceStreamMUS struct{}
+
+func (s validMyByteSliceStreamMUS) Marshal(v ValidMyByteSliceStream, w muss.Writer) (n int, err error) {
+	return byte_sliceuvZKF7pSWKcTOpuVCUtR6wΞΞ.Marshal([]uint8(v), w)
+}
+
+func (s validMyByteSliceStreamMUS) Unmarshal(r muss.Reader) (v ValidMyByteSliceStream, n int, err error) {
+	tmp, n, err := byte_sliceuvZKF7pSWKcTOpuVCUtR6wΞΞ.Unmarshal(r)
+	if err != nil {
+		return
+	}
+	v = ValidMyByteSliceStream(tmp)
+	return
+}
+
+func (s validMyByteSliceStreamMUS) Size(v ValidMyByteSliceStream) (size int) {
+	return byte_sliceuvZKF7pSWKcTOpuVCUtR6wΞΞ.Size([]uint8(v))
+}
+
+func (s validMyByteSliceStreamMUS) Skip(r muss.Reader) (n int, err error) {
+	return byte_sliceuvZKF7pSWKcTOpuVCUtR6wΞΞ.Skip(r)
+}
+
+var ValidMySliceStreamMUS = validMySliceStreamMUS{}
+
+type validMySliceStreamMUS struct{}
+
+func (s validMySliceStreamMUS) Marshal(v ValidMySliceStream, w muss.Writer) (n int, err error) {
+	return slicekIYZkyxblkxWz0wWOYc4swΞΞ.Marshal([]int(v), w)
+}
+
+func (s validMySliceStreamMUS) Unmarshal(r muss.Reader) (v ValidMySliceStream, n int, err error) {
+	tmp, n, err := slicekIYZkyxblkxWz0wWOYc4swΞΞ.Unmarshal(r)
+	if err != nil {
+		return
+	}
+	v = ValidMySliceStream(tmp)
+	return
+}
+
+func (s validMySliceStreamMUS) Size(v ValidMySliceStream) (size int) {
+	return slicekIYZkyxblkxWz0wWOYc4swΞΞ.Size([]int(v))
+}
+
+func (s validMySliceStreamMUS) Skip(r muss.Reader) (n int, err error) {
+	return slicekIYZkyxblkxWz0wWOYc4swΞΞ.Skip(r)
+}
+
+var ValidMyMapStreamMUS = validMyMapStreamMUS{}
+
+type validMyMapStreamMUS struct{}
+
+func (s validMyMapStreamMUS) Marshal(v ValidMyMapStream, w muss.Writer) (n int, err error) {
+	return mapWY5BjxP7fZfΔ8y3u5ΣyNAwΞΞ.Marshal(map[int]int(v), w)
+}
+
+func (s validMyMapStreamMUS) Unmarshal(r muss.Reader) (v ValidMyMapStream, n int, err error) {
+	tmp, n, err := mapWY5BjxP7fZfΔ8y3u5ΣyNAwΞΞ.Unmarshal(r)
+	if err != nil {
+		return
+	}
+	v = ValidMyMapStream(tmp)
+	return
+}
+
+func (s validMyMapStreamMUS) Size(v ValidMyMapStream) (size int) {
+	return mapWY5BjxP7fZfΔ8y3u5ΣyNAwΞΞ.Size(map[int]int(v))
+}
+
+func (s validMyMapStreamMUS) Skip(r muss.Reader) (n int, err error) {
+	return mapWY5BjxP7fZfΔ8y3u5ΣyNAwΞΞ.Skip(r)
 }
 
 var SimpleStructStreamMUS = simpleStructStreamMUS{}
@@ -165,7 +302,7 @@ func (s complexStructStreamMUS) Marshal(v ComplexStructStream, w muss.Writer) (n
 	if err != nil {
 		return
 	}
-	n1, err = SliceAliasStreamMUS.Marshal(v.Alias, w)
+	n1, err = MySliceStreamMUS.Marshal(v.Alias, w)
 	n += n1
 	if err != nil {
 		return
@@ -185,37 +322,37 @@ func (s complexStructStreamMUS) Marshal(v ComplexStructStream, w muss.Writer) (n
 	if err != nil {
 		return
 	}
-	n1, err = slice56OiSlDΣiBN8xiRNXjFu1AΞΞ.Marshal(v.StructSlice, w)
+	n1, err = slicessnkΔvgHOhepPlHcDJ0wLQΞΞ.Marshal(v.StructSlice, w)
 	n += n1
 	if err != nil {
 		return
 	}
-	n1, err = arrayiPZBrΔvΣtuyiSe3E0BBΔZAΞΞ.Marshal(v.Array, w)
+	n1, err = arrayTmIΔ0PpG8w7aD1a6FYb8ΔQΞΞ.Marshal(v.Array, w)
 	n += n1
 	if err != nil {
 		return
 	}
-	n1, err = ptrR2Xmw2fVSjWhntYt9CΣ7SwΞΞ.Marshal(v.PtrString, w)
+	n1, err = ptrsZ1jCgUntHdxyz2i5pCsBQΞΞ.Marshal(v.PtrString, w)
 	n += n1
 	if err != nil {
 		return
 	}
-	n1, err = ptrryzF15r3UQX0mWyEIuftXwΞΞ.Marshal(v.PtrStruct, w)
+	n1, err = ptrxOrkEmVctmuTnDp5kqk2lAΞΞ.Marshal(v.PtrStruct, w)
 	n += n1
 	if err != nil {
 		return
 	}
-	n1, err = ptrR2Xmw2fVSjWhntYt9CΣ7SwΞΞ.Marshal(v.NilPtr, w)
+	n1, err = ptrsZ1jCgUntHdxyz2i5pCsBQΞΞ.Marshal(v.NilPtr, w)
 	n += n1
 	if err != nil {
 		return
 	}
-	n1, err = ptrzvaAxrtkbvHKhrwΣIJM9cAΞΞ.Marshal(v.PtrArray, w)
+	n1, err = ptrpDXLUgdWgSHAfUBnMyIURwΞΞ.Marshal(v.PtrArray, w)
 	n += n1
 	if err != nil {
 		return
 	}
-	n1, err = mapXOR1E9UYBE4vZVdxrG6qngΞΞ.Marshal(v.Map, w)
+	n1, err = mapoo8ΣM84YHYspIΣOQWKrAbgΞΞ.Marshal(v.Map, w)
 	n += n1
 	return
 }
@@ -286,7 +423,7 @@ func (s complexStructStreamMUS) Unmarshal(r muss.Reader) (v ComplexStructStream,
 	if err != nil {
 		return
 	}
-	v.Alias, n1, err = SliceAliasStreamMUS.Unmarshal(r)
+	v.Alias, n1, err = MySliceStreamMUS.Unmarshal(r)
 	n += n1
 	if err != nil {
 		return
@@ -306,37 +443,37 @@ func (s complexStructStreamMUS) Unmarshal(r muss.Reader) (v ComplexStructStream,
 	if err != nil {
 		return
 	}
-	v.StructSlice, n1, err = slice56OiSlDΣiBN8xiRNXjFu1AΞΞ.Unmarshal(r)
+	v.StructSlice, n1, err = slicessnkΔvgHOhepPlHcDJ0wLQΞΞ.Unmarshal(r)
 	n += n1
 	if err != nil {
 		return
 	}
-	v.Array, n1, err = arrayiPZBrΔvΣtuyiSe3E0BBΔZAΞΞ.Unmarshal(r)
+	v.Array, n1, err = arrayTmIΔ0PpG8w7aD1a6FYb8ΔQΞΞ.Unmarshal(r)
 	n += n1
 	if err != nil {
 		return
 	}
-	v.PtrString, n1, err = ptrR2Xmw2fVSjWhntYt9CΣ7SwΞΞ.Unmarshal(r)
+	v.PtrString, n1, err = ptrsZ1jCgUntHdxyz2i5pCsBQΞΞ.Unmarshal(r)
 	n += n1
 	if err != nil {
 		return
 	}
-	v.PtrStruct, n1, err = ptrryzF15r3UQX0mWyEIuftXwΞΞ.Unmarshal(r)
+	v.PtrStruct, n1, err = ptrxOrkEmVctmuTnDp5kqk2lAΞΞ.Unmarshal(r)
 	n += n1
 	if err != nil {
 		return
 	}
-	v.NilPtr, n1, err = ptrR2Xmw2fVSjWhntYt9CΣ7SwΞΞ.Unmarshal(r)
+	v.NilPtr, n1, err = ptrsZ1jCgUntHdxyz2i5pCsBQΞΞ.Unmarshal(r)
 	n += n1
 	if err != nil {
 		return
 	}
-	v.PtrArray, n1, err = ptrzvaAxrtkbvHKhrwΣIJM9cAΞΞ.Unmarshal(r)
+	v.PtrArray, n1, err = ptrpDXLUgdWgSHAfUBnMyIURwΞΞ.Unmarshal(r)
 	n += n1
 	if err != nil {
 		return
 	}
-	v.Map, n1, err = mapXOR1E9UYBE4vZVdxrG6qngΞΞ.Unmarshal(r)
+	v.Map, n1, err = mapoo8ΣM84YHYspIΣOQWKrAbgΞΞ.Unmarshal(r)
 	n += n1
 	return
 }
@@ -355,17 +492,17 @@ func (s complexStructStreamMUS) Size(v ComplexStructStream) (size int) {
 	size += varint.Float32.Size(v.Float32)
 	size += varint.Float64.Size(v.Float64)
 	size += ord.String.Size(v.String)
-	size += SliceAliasStreamMUS.Size(v.Alias)
+	size += MySliceStreamMUS.Size(v.Alias)
 	size += pkg2.StructStreamMUS.Size(v.AnotherPkgStruct)
 	size += InterfaceStreamMUS.Size(v.Interface)
 	size += ord.ByteSlice.Size(v.ByteSlice)
-	size += slice56OiSlDΣiBN8xiRNXjFu1AΞΞ.Size(v.StructSlice)
-	size += arrayiPZBrΔvΣtuyiSe3E0BBΔZAΞΞ.Size(v.Array)
-	size += ptrR2Xmw2fVSjWhntYt9CΣ7SwΞΞ.Size(v.PtrString)
-	size += ptrryzF15r3UQX0mWyEIuftXwΞΞ.Size(v.PtrStruct)
-	size += ptrR2Xmw2fVSjWhntYt9CΣ7SwΞΞ.Size(v.NilPtr)
-	size += ptrzvaAxrtkbvHKhrwΣIJM9cAΞΞ.Size(v.PtrArray)
-	return size + mapXOR1E9UYBE4vZVdxrG6qngΞΞ.Size(v.Map)
+	size += slicessnkΔvgHOhepPlHcDJ0wLQΞΞ.Size(v.StructSlice)
+	size += arrayTmIΔ0PpG8w7aD1a6FYb8ΔQΞΞ.Size(v.Array)
+	size += ptrsZ1jCgUntHdxyz2i5pCsBQΞΞ.Size(v.PtrString)
+	size += ptrxOrkEmVctmuTnDp5kqk2lAΞΞ.Size(v.PtrStruct)
+	size += ptrsZ1jCgUntHdxyz2i5pCsBQΞΞ.Size(v.NilPtr)
+	size += ptrpDXLUgdWgSHAfUBnMyIURwΞΞ.Size(v.PtrArray)
+	return size + mapoo8ΣM84YHYspIΣOQWKrAbgΞΞ.Size(v.Map)
 }
 
 func (s complexStructStreamMUS) Skip(r muss.Reader) (n int, err error) {
@@ -434,7 +571,7 @@ func (s complexStructStreamMUS) Skip(r muss.Reader) (n int, err error) {
 	if err != nil {
 		return
 	}
-	n1, err = SliceAliasStreamMUS.Skip(r)
+	n1, err = MySliceStreamMUS.Skip(r)
 	n += n1
 	if err != nil {
 		return
@@ -454,37 +591,37 @@ func (s complexStructStreamMUS) Skip(r muss.Reader) (n int, err error) {
 	if err != nil {
 		return
 	}
-	n1, err = slice56OiSlDΣiBN8xiRNXjFu1AΞΞ.Skip(r)
+	n1, err = slicessnkΔvgHOhepPlHcDJ0wLQΞΞ.Skip(r)
 	n += n1
 	if err != nil {
 		return
 	}
-	n1, err = arrayiPZBrΔvΣtuyiSe3E0BBΔZAΞΞ.Skip(r)
+	n1, err = arrayTmIΔ0PpG8w7aD1a6FYb8ΔQΞΞ.Skip(r)
 	n += n1
 	if err != nil {
 		return
 	}
-	n1, err = ptrR2Xmw2fVSjWhntYt9CΣ7SwΞΞ.Skip(r)
+	n1, err = ptrsZ1jCgUntHdxyz2i5pCsBQΞΞ.Skip(r)
 	n += n1
 	if err != nil {
 		return
 	}
-	n1, err = ptrryzF15r3UQX0mWyEIuftXwΞΞ.Skip(r)
+	n1, err = ptrxOrkEmVctmuTnDp5kqk2lAΞΞ.Skip(r)
 	n += n1
 	if err != nil {
 		return
 	}
-	n1, err = ptrR2Xmw2fVSjWhntYt9CΣ7SwΞΞ.Skip(r)
+	n1, err = ptrsZ1jCgUntHdxyz2i5pCsBQΞΞ.Skip(r)
 	n += n1
 	if err != nil {
 		return
 	}
-	n1, err = ptrzvaAxrtkbvHKhrwΣIJM9cAΞΞ.Skip(r)
+	n1, err = ptrpDXLUgdWgSHAfUBnMyIURwΞΞ.Skip(r)
 	n += n1
 	if err != nil {
 		return
 	}
-	n1, err = mapXOR1E9UYBE4vZVdxrG6qngΞΞ.Skip(r)
+	n1, err = mapoo8ΣM84YHYspIΣOQWKrAbgΞΞ.Skip(r)
 	n += n1
 	return
 }

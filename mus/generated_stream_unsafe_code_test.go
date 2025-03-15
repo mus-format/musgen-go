@@ -42,7 +42,7 @@ func makeComplexStructStreamUnsafe() pkg1.ComplexStructStreamUnsafe {
 
 		String: "some",
 
-		Alias: pkg1.SliceAliasStreamUnsafe{1, 2, 3, 4},
+		Alias: pkg1.MySliceStreamUnsafe{1, 2, 3, 4},
 		AnotherPkgStruct: pkg2.StructStreamUnsafe{
 			Float32: 3.0,
 			Float64: 55.0,
@@ -64,9 +64,9 @@ func makeComplexStructStreamUnsafe() pkg1.ComplexStructStreamUnsafe {
 		},
 		NilPtr: nil,
 
-		Map: map[float32]map[pkg1.IntAliasStreamUnsafe][]pkg1.SimpleStructStreamUnsafe{
+		Map: map[float32]map[pkg1.MyIntStreamUnsafe][]pkg1.SimpleStructStreamUnsafe{
 			40.8: {
-				pkg1.IntAliasStreamUnsafe(11): {
+				pkg1.MyIntStreamUnsafe(11): {
 					{Int: 30},
 				},
 			},

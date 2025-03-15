@@ -1,17 +1,17 @@
 package pkg1
 
-func ValidateByteSlice1(v ValidByteSliceAlias) (err error) {
+func ValidateByteSlice1(v ValidMyByteSlice) (err error) {
 	return
 }
 
-func ValidateByteSlice2(v AllByteSliceAlias) (err error) {
+func ValidateByteSlice2(v AllMyByteSlice) (err error) {
 	return
 }
 
-func ValidateMapAlias1(v ValidMapAlias) (err error) {
+func ValidateMyMap1(v ValidMyMap) (err error) {
 	return
 }
 
-func ValidateMapAlias2(v AllMapAlias) (err error) {
+func ValidateMyMap2(v AllMyMap) (err error) {
 	return
 }

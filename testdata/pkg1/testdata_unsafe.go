@@ -6,9 +6,9 @@ import (
 	"github.com/mus-format/musgen-go/testdata/pkg2"
 )
 
-type IntAliasUnsafe int
+type MyIntUnsafe int
 
-type SliceAliasUnsafe []int
+type MySliceUnsafe []int
 
 type SimpleStructUnsafe struct {
 	Int int
@@ -33,7 +33,7 @@ type ComplexStructUnsafe struct {
 
 	String string
 
-	Alias            SliceAliasUnsafe
+	Alias            MySliceUnsafe
 	AnotherPkgStruct pkg2.StructUnsafe
 	Interface        InterfaceUnsafe
 
@@ -47,7 +47,7 @@ type ComplexStructUnsafe struct {
 	NilPtr    *string
 	PtrArray  *[3]int
 
-	Map map[float32]map[IntAliasUnsafe][]SimpleStructUnsafe
+	Map map[float32]map[MyIntUnsafe][]SimpleStructUnsafe
 }
 
 // -----------------------------------------------------------------------------
@@ -56,7 +56,7 @@ const (
 	InterfaceImpl1UnsafeDTM = 11
 	InterfaceImpl2UnsafeDTM = 12
 	// SimpleStructUnsafeDTM   = 12
-	// IntAliasUnsafeDTM       = 14
+	// MyIntUnsafeDTM       = 14
 )
 
 type InterfaceUnsafe interface {

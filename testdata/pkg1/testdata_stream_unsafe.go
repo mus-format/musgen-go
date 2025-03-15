@@ -6,9 +6,9 @@ import (
 	"github.com/mus-format/musgen-go/testdata/pkg2"
 )
 
-type IntAliasStreamUnsafe int
+type MyIntStreamUnsafe int
 
-type SliceAliasStreamUnsafe []int
+type MySliceStreamUnsafe []int
 
 type SimpleStructStreamUnsafe struct {
 	Int int
@@ -33,7 +33,7 @@ type ComplexStructStreamUnsafe struct {
 
 	String string
 
-	Alias            SliceAliasStreamUnsafe
+	Alias            MySliceStreamUnsafe
 	AnotherPkgStruct pkg2.StructStreamUnsafe
 	Interface        InterfaceStreamUnsafe
 
@@ -47,7 +47,7 @@ type ComplexStructStreamUnsafe struct {
 	NilPtr    *string
 	PtrArray  *[3]int
 
-	Map map[float32]map[IntAliasStreamUnsafe][]SimpleStructStreamUnsafe
+	Map map[float32]map[MyIntStreamUnsafe][]SimpleStructStreamUnsafe
 }
 
 // -----------------------------------------------------------------------------
@@ -56,7 +56,7 @@ const (
 	InterfaceImpl1StreamUnsafeDTM = 11
 	InterfaceImpl2StreamUnsafeDTM = 12
 	// SimpleStructStreamUnsafeDTM   = 12
-	// IntAliasStreamUnsafeDTM       = 14
+	// MyIntStreamUnsafeDTM       = 14
 )
 
 type InterfaceStreamUnsafe interface {

@@ -5,11 +5,6 @@ import (
 	"strconv"
 )
 
-var DefOptions = Options{
-	NumEncoding: Varint,
-	LenEncoding: VarintPositive,
-}
-
 type Options struct {
 	Ignore       bool
 	NumEncoding  NumEncoding
@@ -18,7 +13,6 @@ type Options struct {
 	LenValidator string
 	Key          *Options
 	Elem         *Options
-	// Oneof        []reflect.Type
 }
 
 func (o Options) Hash() [16]byte {
@@ -85,10 +79,6 @@ func WithElem(ops ...SetOption) SetOption {
 		o.Elem = eo
 	}
 }
-
-// func WithOneof(ts []reflect.Type) SetOption {
-// 	return func(o *Options) { o.Oneof = ts }
-// }
 
 func Apply(ops []SetOption, o *Options) {
 	for i := range ops {

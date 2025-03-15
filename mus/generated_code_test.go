@@ -8,6 +8,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	com "github.com/mus-format/common-go"
 	"github.com/mus-format/mus-go"
+	slops "github.com/mus-format/mus-go/options/slice"
 	"github.com/mus-format/mus-go/ord"
 	"github.com/mus-format/mus-go/raw"
 	"github.com/mus-format/mus-go/varint"
@@ -30,246 +31,246 @@ func TestGeneratedCode(t *testing.T) {
 
 	t.Run("Test alias serializability and Options impact", func(t *testing.T) {
 
-		t.Run("IntAlias should be serializable", func(t *testing.T) {
+		t.Run("MyInt should be serializable", func(t *testing.T) {
 			var (
-				v                               = pkg1.IntAlias(5)
-				u UnmarshallerFn[pkg1.IntAlias] = func(bs []byte) (pkg1.IntAlias, int, error) {
+				v                            = pkg1.MyInt(5)
+				u UnmarshallerFn[pkg1.MyInt] = func(bs []byte) (pkg1.MyInt, int, error) {
 					num, n, err := varint.Int.Unmarshal(bs)
-					return pkg1.IntAlias(num), n, err
+					return pkg1.MyInt(num), n, err
 				}
 			)
-			testSerializability(v, pkg1.IntAliasMUS, u, t)
+			testSerializability(v, pkg1.MyIntMUS, u, t)
 		})
 
-		t.Run("We should be able to set Raw encoding for IntAlias", func(t *testing.T) {
+		t.Run("We should be able to set Raw encoding for MyInt", func(t *testing.T) {
 			var (
-				v                                  = pkg1.RawIntAlias(5)
-				u UnmarshallerFn[pkg1.RawIntAlias] = func(bs []byte) (pkg1.RawIntAlias, int, error) {
+				v                               = pkg1.RawMyInt(5)
+				u UnmarshallerFn[pkg1.RawMyInt] = func(bs []byte) (pkg1.RawMyInt, int, error) {
 					num, n, err := raw.Int.Unmarshal(bs)
-					return pkg1.RawIntAlias(num), n, err
+					return pkg1.RawMyInt(num), n, err
 				}
 			)
-			testSerializability[pkg1.RawIntAlias](v, pkg1.RawIntAliasMUS, u, t)
+			testSerializability[pkg1.RawMyInt](v, pkg1.RawMyIntMUS, u, t)
 		})
 
-		t.Run("We should be able to set VarintPositive encoding for IntAlias", func(t *testing.T) {
+		t.Run("We should be able to set VarintPositive encoding for MyInt", func(t *testing.T) {
 			var (
-				v                                             = pkg1.VarintPositiveIntAlias(5)
-				u UnmarshallerFn[pkg1.VarintPositiveIntAlias] = func(bs []byte) (pkg1.VarintPositiveIntAlias, int, error) {
+				v                                          = pkg1.VarintPositiveMyInt(5)
+				u UnmarshallerFn[pkg1.VarintPositiveMyInt] = func(bs []byte) (pkg1.VarintPositiveMyInt, int, error) {
 					num, n, err := varint.PositiveInt.Unmarshal(bs)
-					return pkg1.VarintPositiveIntAlias(num), n, err
+					return pkg1.VarintPositiveMyInt(num), n, err
 				}
 			)
-			testSerializability[pkg1.VarintPositiveIntAlias](v,
-				pkg1.VarintPositiveIntAliasMUS, u, t)
+			testSerializability[pkg1.VarintPositiveMyInt](v,
+				pkg1.VarintPositiveMyIntMUS, u, t)
 		})
 
-		t.Run("We should be able to set Validator for IntAlias", func(t *testing.T) {
-			v := pkg1.ValidIntAlias(0)
-			testValidation(v, pkg1.ValidIntAliasMUS, testdata.ErrZeroValue, []int{1}, t)
+		t.Run("We should be able to set Validator for MyInt", func(t *testing.T) {
+			v := pkg1.ValidMyInt(0)
+			testValidation(v, pkg1.ValidMyIntMUS, testdata.ErrZeroValue, []int{1}, t)
 		})
 
-		t.Run("We should be able to set Raw LenEncoding for StringAlias", func(t *testing.T) {
+		t.Run("We should be able to set Raw LenEncoding for MyString", func(t *testing.T) {
 			var (
-				v                        = pkg1.LenEncodingStringAlias("some")
+				v                        = pkg1.LenEncodingMyString("some")
 				lenU UnmarshallerFn[int] = func(bs []byte) (int, int, error) {
 					num, n, err := raw.Int.Unmarshal(bs)
 					return int(num), n, err
 				}
 			)
-			testLenEncoding(v, pkg1.LenEncodingStringAliasMUS, lenU, len(v), t)
+			testLenEncoding(v, pkg1.LenEncodingMyStringMUS, lenU, len(v), t)
 		})
 
-		t.Run("We should be able to set LenValidator for StringAlias", func(t *testing.T) {
-			v := pkg1.LenValidStringAlias("some")
-			testValidation(v, pkg1.LenValidStringAliasMUS, testdata.ErrTooLong, []int{1}, t)
+		t.Run("We should be able to set LenValidator for MyString", func(t *testing.T) {
+			v := pkg1.LenValidMyString("some")
+			testValidation(v, pkg1.LenValidMyStringMUS, testdata.ErrTooLong, []int{1}, t)
 		})
 
-		t.Run("We should be able to set Validator for StringAlias", func(t *testing.T) {
-			v := pkg1.ValidStringAlias("")
-			testValidation(v, pkg1.ValidStringAliasMUS, testdata.ErrZeroValue, []int{1}, t)
+		t.Run("We should be able to set Validator for MyString", func(t *testing.T) {
+			v := pkg1.ValidMyString("")
+			testValidation(v, pkg1.ValidMyStringMUS, testdata.ErrZeroValue, []int{1}, t)
 		})
 
-		t.Run("SliceAlias should be serializable", func(t *testing.T) {
+		t.Run("MySlice should be serializable", func(t *testing.T) {
 			var (
-				v                                 = pkg1.SliceAlias([]int{1, 2, 3})
-				u UnmarshallerFn[pkg1.SliceAlias] = func(bs []byte) (pkg1.SliceAlias, int, error) {
+				v                              = pkg1.MySlice([]int{1, 2, 3})
+				u UnmarshallerFn[pkg1.MySlice] = func(bs []byte) (pkg1.MySlice, int, error) {
 					ser := ord.NewSliceSer[int](varint.Int)
 					sl, n, err := ser.Unmarshal(bs)
-					return pkg1.SliceAlias(sl), n, err
+					return pkg1.MySlice(sl), n, err
 				}
 			)
-			testSerializability(v, pkg1.SliceAliasMUS, u, t)
+			testSerializability(v, pkg1.MySliceMUS, u, t)
 		})
 
-		t.Run("We should be able to set LenEncoding for SliceAlias", func(t *testing.T) {
+		t.Run("We should be able to set LenEncoding for MySlice", func(t *testing.T) {
 			var (
-				v                        = pkg1.LenEncodingSliceAlias([]int{1, 2, 3})
+				v                        = pkg1.LenEncodingMySlice([]int{1, 2, 3})
 				lenU UnmarshallerFn[int] = func(bs []byte) (int, int, error) {
 					num, n, err := varint.PositiveInt.Unmarshal(bs)
 					return int(num), n, err
 				}
 			)
-			testLenEncoding(v, pkg1.LenEncodingSliceAliasMUS, lenU, len(v), t)
+			testLenEncoding(v, pkg1.LenEncodingMySliceMUS, lenU, len(v), t)
 		})
 
-		t.Run("We should be able to set LenValidator for SliceAlias", func(t *testing.T) {
-			v := pkg1.LenValidSliceAlias([]int{1, 2, 3})
-			testValidation(v, pkg1.LenValidSliceAliasMUS, testdata.ErrTooLong, []int{1}, t)
+		t.Run("We should be able to set LenValidator for MySlice", func(t *testing.T) {
+			v := pkg1.LenValidMySlice([]int{1, 2, 3})
+			testValidation(v, pkg1.LenValidMySliceMUS, testdata.ErrTooLong, []int{1}, t)
 		})
 
-		t.Run("We should be able to set Elem.Encoding for SliceAlias", func(t *testing.T) {
+		t.Run("We should be able to set Elem.Encoding for MySlice", func(t *testing.T) {
 			var (
-				v                                             = pkg1.ElemEncodingSliceAlias([]int{1, 2, 3})
-				u UnmarshallerFn[pkg1.ElemEncodingSliceAlias] = func(bs []byte) (pkg1.ElemEncodingSliceAlias, int, error) {
+				v                                          = pkg1.ElemEncodingMySlice([]int{1, 2, 3})
+				u UnmarshallerFn[pkg1.ElemEncodingMySlice] = func(bs []byte) (pkg1.ElemEncodingMySlice, int, error) {
 					ser := ord.NewSliceSer[int](raw.Int)
 					sl, n, err := ser.Unmarshal(bs)
-					return pkg1.ElemEncodingSliceAlias(sl), n, err
+					return pkg1.ElemEncodingMySlice(sl), n, err
 				}
 			)
-			testSerializability(v, pkg1.ElemEncodingSliceAliasMUS, u, t)
+			testSerializability(v, pkg1.ElemEncodingMySliceMUS, u, t)
 		})
 
-		t.Run("We should be able to set Elem.Validator for SliceAlias", func(t *testing.T) {
-			v := pkg1.ElemValidSliceAlias([]int{1, 0, 3})
-			testValidation(v, pkg1.ElemValidSliceAliasMUS, testdata.ErrZeroValue, []int{3}, t)
+		t.Run("We should be able to set Elem.Validator for MySlice", func(t *testing.T) {
+			v := pkg1.ElemValidMySlice([]int{1, 0, 3})
+			testValidation(v, pkg1.ElemValidMySliceMUS, testdata.ErrZeroValue, []int{3}, t)
 		})
 
-		t.Run("ArrayAlias should be serializable", func(t *testing.T) {
+		t.Run("MyArray should be serializable", func(t *testing.T) {
 			var (
-				v                                 = pkg1.ArrayAlias([3]int{1, 2, 3})
-				u UnmarshallerFn[pkg1.ArrayAlias] = func(bs []byte) (pkg1.ArrayAlias, int, error) {
+				v                              = pkg1.MyArray([3]int{1, 2, 3})
+				u UnmarshallerFn[pkg1.MyArray] = func(bs []byte) (pkg1.MyArray, int, error) {
 					ser := ord.NewSliceSer[int](varint.Int)
 					sl, n, err := ser.Unmarshal(bs)
-					return pkg1.ArrayAlias(sl), n, err
+					return pkg1.MyArray(sl), n, err
 				}
 			)
-			testSerializability(v, pkg1.ArrayAliasMUS, u, t)
+			testSerializability(v, pkg1.MyArrayMUS, u, t)
 		})
 
-		t.Run("We should be able to set LenEncoding for ArrayAlias", func(t *testing.T) {
+		t.Run("We should be able to set LenEncoding for MyArray", func(t *testing.T) {
 			var (
-				v                        = pkg1.LenEncodingArrayAlias([3]int{1, 2, 3})
+				v                        = pkg1.LenEncodingMyArray([3]int{1, 2, 3})
 				lenU UnmarshallerFn[int] = func(bs []byte) (int, int, error) {
 					num, n, err := raw.Int.Unmarshal(bs)
 					return int(num), n, err
 				}
 			)
-			testLenEncoding(v, pkg1.LenEncodingArrayAliasMUS, lenU, len(v), t)
+			testLenEncoding(v, pkg1.LenEncodingMyArrayMUS, lenU, len(v), t)
 		})
 
-		t.Run("We should be able to set Elem.Encoding for ArrayAlias", func(t *testing.T) {
+		t.Run("We should be able to set Elem.Encoding for MyArray", func(t *testing.T) {
 			var (
-				v                                             = pkg1.ElemEncodingArrayAlias([3]int{1, 2, 3})
-				u UnmarshallerFn[pkg1.ElemEncodingArrayAlias] = func(bs []byte) (pkg1.ElemEncodingArrayAlias, int, error) {
+				v                                          = pkg1.ElemEncodingMyArray([3]int{1, 2, 3})
+				u UnmarshallerFn[pkg1.ElemEncodingMyArray] = func(bs []byte) (pkg1.ElemEncodingMyArray, int, error) {
 					ser := ord.NewArraySer[[3]int, int](3, raw.Int)
 					arr, n, err := ser.Unmarshal(bs)
-					return pkg1.ElemEncodingArrayAlias(arr), n, err
+					return pkg1.ElemEncodingMyArray(arr), n, err
 				}
 			)
-			testSerializability(v, pkg1.ElemEncodingArrayAliasMUS, u, t)
+			testSerializability(v, pkg1.ElemEncodingMyArrayMUS, u, t)
 		})
 
-		t.Run("We should be able to set Elem.Validator for ArrayAlias", func(t *testing.T) {
-			v := pkg1.ElemValidArrayAlias([3]int{1, 0, 3})
-			testValidation(v, pkg1.ElemValidArrayAliasMUS, testdata.ErrZeroValue, []int{3}, t)
+		t.Run("We should be able to set Elem.Validator for MyArray", func(t *testing.T) {
+			v := pkg1.ElemValidMyArray([3]int{1, 0, 3})
+			testValidation(v, pkg1.ElemValidMyArrayMUS, testdata.ErrZeroValue, []int{3}, t)
 		})
 
-		t.Run("MapAlias should be serializable", func(t *testing.T) {
+		t.Run("MyMap should be serializable", func(t *testing.T) {
 			var (
-				v                               = pkg1.MapAlias(map[int]int{10: 1, 11: 2})
-				u UnmarshallerFn[pkg1.MapAlias] = func(bs []byte) (pkg1.MapAlias, int, error) {
+				v                            = pkg1.MyMap(map[int]int{10: 1, 11: 2})
+				u UnmarshallerFn[pkg1.MyMap] = func(bs []byte) (pkg1.MyMap, int, error) {
 					ser := ord.NewMapSer[int, int](varint.Int, varint.Int)
 					m, n, err := ser.Unmarshal(bs)
-					return pkg1.MapAlias(m), n, err
+					return pkg1.MyMap(m), n, err
 				}
 			)
-			testSerializability(v, pkg1.MapAliasMUS, u, t)
+			testSerializability(v, pkg1.MyMapMUS, u, t)
 		})
 
-		t.Run("We should be able to set LenEncoding for MapAlias", func(t *testing.T) {
+		t.Run("We should be able to set LenEncoding for MyMap", func(t *testing.T) {
 			var (
-				v                        = pkg1.LenEncodingMapAlias(map[int]int{10: 1, 11: 2})
+				v                        = pkg1.LenEncodingMyMap(map[int]int{10: 1, 11: 2})
 				lenU UnmarshallerFn[int] = func(bs []byte) (int, int, error) {
 					num, n, err := raw.Int.Unmarshal(bs)
 					return int(num), n, err
 				}
 			)
-			testLenEncoding(v, pkg1.LenEncodingMapAliasMUS, lenU, len(v), t)
+			testLenEncoding(v, pkg1.LenEncodingMyMapMUS, lenU, len(v), t)
 		})
 
-		t.Run("We should be able to set LenValidator for MapAlias", func(t *testing.T) {
-			v := pkg1.LenValidMapAlias(map[int]int{10: 1, 11: 2})
-			testValidation(v, pkg1.LenValidMapAliasMUS, testdata.ErrTooLong, []int{1}, t)
+		t.Run("We should be able to set LenValidator for MyMap", func(t *testing.T) {
+			v := pkg1.LenValidMyMap(map[int]int{10: 1, 11: 2})
+			testValidation(v, pkg1.LenValidMyMapMUS, testdata.ErrTooLong, []int{1}, t)
 		})
 
-		t.Run("We should be able to set Key.Encoding for ArrayAlias", func(t *testing.T) {
+		t.Run("We should be able to set Key.Encoding for MyArray", func(t *testing.T) {
 			var (
-				v                                          = pkg1.KeyEncodingMapAlias(map[int]int{10: 1, 11: 2})
-				u UnmarshallerFn[pkg1.KeyEncodingMapAlias] = func(bs []byte) (pkg1.KeyEncodingMapAlias, int, error) {
+				v                                       = pkg1.KeyEncodingMyMap(map[int]int{10: 1, 11: 2})
+				u UnmarshallerFn[pkg1.KeyEncodingMyMap] = func(bs []byte) (pkg1.KeyEncodingMyMap, int, error) {
 					ser := ord.NewMapSer(raw.Int, varint.Int)
 					m, n, err := ser.Unmarshal(bs)
-					return pkg1.KeyEncodingMapAlias(m), n, err
+					return pkg1.KeyEncodingMyMap(m), n, err
 				}
 			)
-			testSerializability(v, pkg1.KeyEncodingMapAliasMUS, u, t)
+			testSerializability(v, pkg1.KeyEncodingMyMapMUS, u, t)
 		})
 
-		t.Run("We should be able to set Key.Validator for MapAlias", func(t *testing.T) {
-			v := pkg1.KeyValidMapAlias(map[int]int{0: 1, 11: 2})
-			testValidation(v, pkg1.KeyValidMapAliasMUS, testdata.ErrZeroValue, []int{2, 4}, t)
+		t.Run("We should be able to set Key.Validator for MyMap", func(t *testing.T) {
+			v := pkg1.KeyValidMyMap(map[int]int{0: 1, 11: 2})
+			testValidation(v, pkg1.KeyValidMyMapMUS, testdata.ErrZeroValue, []int{2, 4}, t)
 		})
 
-		t.Run("We should be able to set Elem.Encoding for ArrayAlias", func(t *testing.T) {
+		t.Run("We should be able to set Elem.Encoding for MyArray", func(t *testing.T) {
 			var (
-				v                                           = pkg1.ElemEncodingMapAlias(map[int]int{10: 1, 11: 2})
-				u UnmarshallerFn[pkg1.ElemEncodingMapAlias] = func(bs []byte) (pkg1.ElemEncodingMapAlias, int, error) {
+				v                                        = pkg1.ElemEncodingMyMap(map[int]int{10: 1, 11: 2})
+				u UnmarshallerFn[pkg1.ElemEncodingMyMap] = func(bs []byte) (pkg1.ElemEncodingMyMap, int, error) {
 					ser := ord.NewMapSer(varint.Int, raw.Int)
 					m, n, err := ser.Unmarshal(bs)
-					return pkg1.ElemEncodingMapAlias(m), n, err
+					return pkg1.ElemEncodingMyMap(m), n, err
 				}
 			)
-			testSerializability(v, pkg1.ElemEncodingMapAliasMUS, u, t)
+			testSerializability(v, pkg1.ElemEncodingMyMapMUS, u, t)
 		})
 
-		t.Run("We should be able to set Elem.Validator for MapAlias", func(t *testing.T) {
-			v := pkg1.ElemValidMapAlias(map[int]int{10: 0, 11: 2})
-			testValidation(v, pkg1.ElemValidMapAliasMUS, testdata.ErrZeroValue, []int{3, 5}, t)
+		t.Run("We should be able to set Elem.Validator for MyMap", func(t *testing.T) {
+			v := pkg1.ElemValidMyMap(map[int]int{10: 0, 11: 2})
+			testValidation(v, pkg1.ElemValidMyMapMUS, testdata.ErrZeroValue, []int{3, 5}, t)
 		})
 
 		// ptr
 
-		t.Run("PtrAlias should be serializable", func(t *testing.T) {
+		t.Run("MyIntPtr should be serializable", func(t *testing.T) {
 			var (
 				n                               = 5
-				v                               = pkg1.PtrAlias(&n)
-				u UnmarshallerFn[pkg1.PtrAlias] = func(bs []byte) (pkg1.PtrAlias, int, error) {
+				v                               = pkg1.MyIntPtr(&n)
+				u UnmarshallerFn[pkg1.MyIntPtr] = func(bs []byte) (pkg1.MyIntPtr, int, error) {
 					ptr, n, err := ord.NewPtrSer(varint.Int).Unmarshal(bs)
-					return pkg1.PtrAlias(ptr), n, err
+					return pkg1.MyIntPtr(ptr), n, err
 				}
 			)
-			testSerializability(v, pkg1.PtrAliasMUS, u, t)
+			testSerializability(v, pkg1.MyIntPtrMUS, u, t)
 		})
 
-		t.Run("We shoul be able to set Elem.NumEncoding for PtrAlias", func(t *testing.T) {
+		t.Run("We shoul be able to set Elem.NumEncoding for MyIntPtr", func(t *testing.T) {
 			var (
 				num                                              = 5
-				v                                                = pkg1.ElemNumEncodingPtrAlias(&num)
-				u   UnmarshallerFn[pkg1.ElemNumEncodingPtrAlias] = func(bs []byte) (pkg1.ElemNumEncodingPtrAlias, int, error) {
+				v                                                = pkg1.ElemNumEncodingMyIntPtr(&num)
+				u   UnmarshallerFn[pkg1.ElemNumEncodingMyIntPtr] = func(bs []byte) (pkg1.ElemNumEncodingMyIntPtr, int, error) {
 					ptr, n, err := ord.NewPtrSer(raw.Int).Unmarshal(bs)
-					return pkg1.ElemNumEncodingPtrAlias(ptr), n, err
+					return pkg1.ElemNumEncodingMyIntPtr(ptr), n, err
 				}
 			)
-			testSerializability(v, pkg1.ElemNumEncodingPtrAliasMUS, u, t)
+			testSerializability(v, pkg1.ElemNumEncodingMyIntPtrMUS, u, t)
 		})
 
-		t.Run("We should be able to serialize InterfaceDoublePtrAlias", func(t *testing.T) {
+		t.Run("We should be able to serialize InterfaceDoubleMyIntPtr", func(t *testing.T) {
 			var (
 				in    pkg1.Interface               = pkg1.InterfaceImpl1{}
 				inPtr                              = &in
-				v     pkg1.InterfaceDoublePtrAlias = &inPtr
+				v     pkg1.InterfaceDoubleMyIntPtr = &inPtr
 			)
-			testSerializability(v, pkg1.InterfaceDoublePtrAliasMUS, nil, t)
+			testSerializability(v, pkg1.InterfaceDoubleMyIntPtrMUS, nil, t)
 		})
 
 		// TODO ptr validation
@@ -316,9 +317,10 @@ func TestGeneratedCode(t *testing.T) {
 				v = pkg2.ElemStruct{
 					Slice: [][]int{{3}},
 				}
-				innerSer                                 = ord.NewSliceSer(raw.Int)
-				ser                                      = ord.NewValidSliceSer(innerSer, com.ValidatorFn[int](testdata.ValidateLength1), nil)
-				u        UnmarshallerFn[pkg2.ElemStruct] = func(bs []byte) (v pkg2.ElemStruct, n int, err error) {
+				innerSer = ord.NewSliceSer(raw.Int)
+				ser      = ord.NewValidSliceSer(innerSer,
+					slops.WithLenValidator[[]int](com.ValidatorFn[int](testdata.ValidateLength1)))
+				u UnmarshallerFn[pkg2.ElemStruct] = func(bs []byte) (v pkg2.ElemStruct, n int, err error) {
 					n, _ = varint.Float32.Skip(bs)
 					var n1 int
 					n1, _ = varint.Float64.Skip(bs[n:])
@@ -373,7 +375,7 @@ func TestGeneratedCode(t *testing.T) {
 		// })
 
 		// t.Run("We should be able to serialize alias using DTS", func(t *testing.T) {
-		// 	testSerializability(pkg1.IntAlias(10), pkg1.IntAliasDTS, nil, t)
+		// 	testSerializability(pkg1.MyInt(10), pkg1.MyIntDTS, nil, t)
 		// })
 
 		// Test DTS from another package
@@ -504,7 +506,7 @@ func makeCompplexStruct() pkg1.ComplexStruct {
 
 		String: "some",
 
-		Alias: pkg1.SliceAlias{1, 2, 3, 4},
+		Alias: pkg1.MySlice{1, 2, 3, 4},
 		AnotherPkgStruct: pkg2.Struct{
 			Float32: 3.0,
 			Float64: 55.0,
@@ -526,9 +528,9 @@ func makeCompplexStruct() pkg1.ComplexStruct {
 		},
 		NilPtr: nil,
 
-		Map: map[float32]map[pkg1.IntAlias][]pkg1.SimpleStruct{
+		Map: map[float32]map[pkg1.MyInt][]pkg1.SimpleStruct{
 			40.8: {
-				pkg1.IntAlias(11): {
+				pkg1.MyInt(11): {
 					{Int: 30},
 				},
 			},

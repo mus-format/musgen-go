@@ -23,11 +23,11 @@ func TestStreamUnsafeFileGenerator(t *testing.T) {
 
 		// typedef
 
-		err := g.AddTypedef(reflect.TypeFor[pkg1.IntAliasStreamUnsafe]())
+		err := g.AddTypedef(reflect.TypeFor[pkg1.MyIntStreamUnsafe]())
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.SliceAliasStreamUnsafe]())
+		err = g.AddTypedef(reflect.TypeFor[pkg1.MySliceStreamUnsafe]())
 		if err != nil {
 			t.Fatal(err)
 		}

@@ -4,6 +4,7 @@ package pkg2
 
 import (
 	com "github.com/mus-format/common-go"
+	slops "github.com/mus-format/mus-go/options/slice"
 	"github.com/mus-format/mus-go/ord"
 	"github.com/mus-format/mus-go/raw"
 	"github.com/mus-format/mus-go/varint"
@@ -11,8 +12,8 @@ import (
 )
 
 var (
-	slice38BHdMWos2mΣopΔw8EBC4wΞΞ = ord.NewValidSliceSer[[]int](sliceEA4T75wluywAmMa4P9rKBAΞΞ, com.ValidatorFn[int](testdata.ValidateLength1), nil)
-	sliceEA4T75wluywAmMa4P9rKBAΞΞ = ord.NewValidSliceSer[int](raw.Int, com.ValidatorFn[int](testdata.ValidateLength1), nil)
+	slice38BHdMWos2mΣopΔw8EBC4wΞΞ = ord.NewValidSliceSer[[]int](sliceEA4T75wluywAmMa4P9rKBAΞΞ, slops.WithLenValidator[[]int](com.ValidatorFn[int](testdata.ValidateLength1)))
+	sliceEA4T75wluywAmMa4P9rKBAΞΞ = ord.NewValidSliceSer[int](raw.Int, slops.WithLenValidator[int](com.ValidatorFn[int](testdata.ValidateLength1)))
 	sliceXbo5m8EW2RY16Z00mΣBebQΞΞ = ord.NewSliceSer[[]int](sliceyYo56cJmna1pH61A8fbΣLQΞΞ)
 	sliceyYo56cJmna1pH61A8fbΣLQΞΞ = ord.NewSliceSer[int](varint.Int)
 )

@@ -92,7 +92,7 @@ func makeCompplexStructStream() pkg1.ComplexStructStream {
 
 		String: "some",
 
-		Alias: pkg1.SliceAliasStream{1, 2, 3, 4},
+		Alias: pkg1.MySliceStream{1, 2, 3, 4},
 		AnotherPkgStruct: pkg2.StructStream{
 			Float32: 3.0,
 			Float64: 55.0,
@@ -114,9 +114,9 @@ func makeCompplexStructStream() pkg1.ComplexStructStream {
 		},
 		NilPtr: nil,
 
-		Map: map[float32]map[pkg1.IntAliasStream][]pkg1.SimpleStructStream{
+		Map: map[float32]map[pkg1.MyIntStream][]pkg1.SimpleStructStream{
 			40.8: {
-				pkg1.IntAliasStream(11): {
+				pkg1.MyIntStream(11): {
 					{Int: 30},
 				},
 			},

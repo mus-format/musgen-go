@@ -43,7 +43,7 @@ func makeComplexStructUnsafe() pkg1.ComplexStructUnsafe {
 
 		String: "some",
 
-		Alias: pkg1.SliceAliasUnsafe{1, 2, 3, 4},
+		Alias: pkg1.MySliceUnsafe{1, 2, 3, 4},
 		AnotherPkgStruct: pkg2.StructUnsafe{
 			Float32: 3.0,
 			Float64: 55.0,
@@ -65,9 +65,9 @@ func makeComplexStructUnsafe() pkg1.ComplexStructUnsafe {
 		},
 		NilPtr: nil,
 
-		Map: map[float32]map[pkg1.IntAliasUnsafe][]pkg1.SimpleStructUnsafe{
+		Map: map[float32]map[pkg1.MyIntUnsafe][]pkg1.SimpleStructUnsafe{
 			40.8: {
-				pkg1.IntAliasUnsafe(11): {
+				pkg1.MyIntUnsafe(11): {
 					{Int: 30},
 				},
 			},

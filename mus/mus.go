@@ -164,6 +164,11 @@ func registerFuncs(tmpl *template.Template) {
 		"add":               MakeAddFunc(),
 		"minus":             MakeMinusFunc(),
 		"include":           MakeIncludeFunc(tmpl),
+		"MakeStringOps":     MakeStringOps,
+		"MakeArrayOps":      MakeArrayOps,
+		"MakeByteSliceOps":  MakeByteSliceOps,
+		"MakeSliceOps":      MakeSliceOps,
+		"MakeMapOps":        MakeMapOps,
 	})
 }
 

@@ -13,8 +13,8 @@ import (
 
 var (
 	arrayVVcFIJPvOaΣLVKMi652G6wΞΞ = ord.NewArraySer[[3]int, int](3, unsafe.Int)
-	mapYqxsGKNCzufzMrkgK6rkKgΞΞ   = ord.NewMapSer[float32, map[IntAliasUnsafe][]SimpleStructUnsafe](unsafe.Float32, mapzSRbDPTCRop5UIhBIQmHIwΞΞ)
-	mapzSRbDPTCRop5UIhBIQmHIwΞΞ   = ord.NewMapSer[IntAliasUnsafe, []SimpleStructUnsafe](IntAliasUnsafeMUS, sliceHE51HQEviTCic5s1ePPTRgΞΞ)
+	mapVVXjSxO6dXjΔOCΔqLsJO6QΞΞ   = ord.NewMapSer[float32, map[MyIntUnsafe][]SimpleStructUnsafe](unsafe.Float32, mapΣWU7IqDΔwΔv4DQ00uoROsQΞΞ)
+	mapΣWU7IqDΔwΔv4DQ00uoROsQΞΞ   = ord.NewMapSer[MyIntUnsafe, []SimpleStructUnsafe](MyIntUnsafeMUS, sliceHE51HQEviTCic5s1ePPTRgΞΞ)
 	ptrENsHnYOTUSTMKYsaG5TfAAΞΞ   = ord.NewPtrSer[[3]int](arrayVVcFIJPvOaΣLVKMi652G6wΞΞ)
 	ptroNwYbYaFs3k7ΔtMmbsaP5AΞΞ   = ord.NewPtrSer[string](unsafe.String)
 	ptruJYTHhBwQB9O98OsΔGQYcgΞΞ   = ord.NewPtrSer[SimpleStructUnsafe](SimpleStructUnsafeMUS)
@@ -22,53 +22,53 @@ var (
 	sliceR279MBVLlXHpndvGzXvzEQΞΞ = ord.NewSliceSer[int](unsafe.Int)
 )
 
-var IntAliasUnsafeMUS = intAliasUnsafeMUS{}
+var MyIntUnsafeMUS = myIntUnsafeMUS{}
 
-type intAliasUnsafeMUS struct{}
+type myIntUnsafeMUS struct{}
 
-func (s intAliasUnsafeMUS) Marshal(v IntAliasUnsafe, bs []byte) (n int) {
+func (s myIntUnsafeMUS) Marshal(v MyIntUnsafe, bs []byte) (n int) {
 	return unsafe.Int.Marshal(int(v), bs)
 }
 
-func (s intAliasUnsafeMUS) Unmarshal(bs []byte) (v IntAliasUnsafe, n int, err error) {
+func (s myIntUnsafeMUS) Unmarshal(bs []byte) (v MyIntUnsafe, n int, err error) {
 	tmp, n, err := unsafe.Int.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = IntAliasUnsafe(tmp)
+	v = MyIntUnsafe(tmp)
 	return
 }
 
-func (s intAliasUnsafeMUS) Size(v IntAliasUnsafe) (size int) {
+func (s myIntUnsafeMUS) Size(v MyIntUnsafe) (size int) {
 	return unsafe.Int.Size(int(v))
 }
 
-func (s intAliasUnsafeMUS) Skip(bs []byte) (n int, err error) {
+func (s myIntUnsafeMUS) Skip(bs []byte) (n int, err error) {
 	return unsafe.Int.Skip(bs)
 }
 
-var SliceAliasUnsafeMUS = sliceAliasUnsafeMUS{}
+var MySliceUnsafeMUS = mySliceUnsafeMUS{}
 
-type sliceAliasUnsafeMUS struct{}
+type mySliceUnsafeMUS struct{}
 
-func (s sliceAliasUnsafeMUS) Marshal(v SliceAliasUnsafe, bs []byte) (n int) {
+func (s mySliceUnsafeMUS) Marshal(v MySliceUnsafe, bs []byte) (n int) {
 	return sliceR279MBVLlXHpndvGzXvzEQΞΞ.Marshal([]int(v), bs)
 }
 
-func (s sliceAliasUnsafeMUS) Unmarshal(bs []byte) (v SliceAliasUnsafe, n int, err error) {
+func (s mySliceUnsafeMUS) Unmarshal(bs []byte) (v MySliceUnsafe, n int, err error) {
 	tmp, n, err := sliceR279MBVLlXHpndvGzXvzEQΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = SliceAliasUnsafe(tmp)
+	v = MySliceUnsafe(tmp)
 	return
 }
 
-func (s sliceAliasUnsafeMUS) Size(v SliceAliasUnsafe) (size int) {
+func (s mySliceUnsafeMUS) Size(v MySliceUnsafe) (size int) {
 	return sliceR279MBVLlXHpndvGzXvzEQΞΞ.Size([]int(v))
 }
 
-func (s sliceAliasUnsafeMUS) Skip(bs []byte) (n int, err error) {
+func (s mySliceUnsafeMUS) Skip(bs []byte) (n int, err error) {
 	return sliceR279MBVLlXHpndvGzXvzEQΞΞ.Skip(bs)
 }
 
@@ -112,7 +112,7 @@ func (s complexStructUnsafeMUS) Marshal(v ComplexStructUnsafe, bs []byte) (n int
 	n += unsafe.Float32.Marshal(v.Float32, bs[n:])
 	n += unsafe.Float64.Marshal(v.Float64, bs[n:])
 	n += unsafe.String.Marshal(v.String, bs[n:])
-	n += SliceAliasUnsafeMUS.Marshal(v.Alias, bs[n:])
+	n += MySliceUnsafeMUS.Marshal(v.Alias, bs[n:])
 	n += pkg2.StructUnsafeMUS.Marshal(v.AnotherPkgStruct, bs[n:])
 	n += InterfaceUnsafeMUS.Marshal(v.Interface, bs[n:])
 	n += unsafe.ByteSlice.Marshal(v.ByteSlice, bs[n:])
@@ -122,7 +122,7 @@ func (s complexStructUnsafeMUS) Marshal(v ComplexStructUnsafe, bs []byte) (n int
 	n += ptruJYTHhBwQB9O98OsΔGQYcgΞΞ.Marshal(v.PtrStruct, bs[n:])
 	n += ptroNwYbYaFs3k7ΔtMmbsaP5AΞΞ.Marshal(v.NilPtr, bs[n:])
 	n += ptrENsHnYOTUSTMKYsaG5TfAAΞΞ.Marshal(v.PtrArray, bs[n:])
-	return n + mapYqxsGKNCzufzMrkgK6rkKgΞΞ.Marshal(v.Map, bs[n:])
+	return n + mapVVXjSxO6dXjΔOCΔqLsJO6QΞΞ.Marshal(v.Map, bs[n:])
 }
 
 func (s complexStructUnsafeMUS) Unmarshal(bs []byte) (v ComplexStructUnsafe, n int, err error) {
@@ -191,7 +191,7 @@ func (s complexStructUnsafeMUS) Unmarshal(bs []byte) (v ComplexStructUnsafe, n i
 	if err != nil {
 		return
 	}
-	v.Alias, n1, err = SliceAliasUnsafeMUS.Unmarshal(bs[n:])
+	v.Alias, n1, err = MySliceUnsafeMUS.Unmarshal(bs[n:])
 	n += n1
 	if err != nil {
 		return
@@ -241,7 +241,7 @@ func (s complexStructUnsafeMUS) Unmarshal(bs []byte) (v ComplexStructUnsafe, n i
 	if err != nil {
 		return
 	}
-	v.Map, n1, err = mapYqxsGKNCzufzMrkgK6rkKgΞΞ.Unmarshal(bs[n:])
+	v.Map, n1, err = mapVVXjSxO6dXjΔOCΔqLsJO6QΞΞ.Unmarshal(bs[n:])
 	n += n1
 	return
 }
@@ -260,7 +260,7 @@ func (s complexStructUnsafeMUS) Size(v ComplexStructUnsafe) (size int) {
 	size += unsafe.Float32.Size(v.Float32)
 	size += unsafe.Float64.Size(v.Float64)
 	size += unsafe.String.Size(v.String)
-	size += SliceAliasUnsafeMUS.Size(v.Alias)
+	size += MySliceUnsafeMUS.Size(v.Alias)
 	size += pkg2.StructUnsafeMUS.Size(v.AnotherPkgStruct)
 	size += InterfaceUnsafeMUS.Size(v.Interface)
 	size += unsafe.ByteSlice.Size(v.ByteSlice)
@@ -270,7 +270,7 @@ func (s complexStructUnsafeMUS) Size(v ComplexStructUnsafe) (size int) {
 	size += ptruJYTHhBwQB9O98OsΔGQYcgΞΞ.Size(v.PtrStruct)
 	size += ptroNwYbYaFs3k7ΔtMmbsaP5AΞΞ.Size(v.NilPtr)
 	size += ptrENsHnYOTUSTMKYsaG5TfAAΞΞ.Size(v.PtrArray)
-	return size + mapYqxsGKNCzufzMrkgK6rkKgΞΞ.Size(v.Map)
+	return size + mapVVXjSxO6dXjΔOCΔqLsJO6QΞΞ.Size(v.Map)
 }
 
 func (s complexStructUnsafeMUS) Skip(bs []byte) (n int, err error) {
@@ -339,7 +339,7 @@ func (s complexStructUnsafeMUS) Skip(bs []byte) (n int, err error) {
 	if err != nil {
 		return
 	}
-	n1, err = SliceAliasUnsafeMUS.Skip(bs[n:])
+	n1, err = MySliceUnsafeMUS.Skip(bs[n:])
 	n += n1
 	if err != nil {
 		return
@@ -389,7 +389,7 @@ func (s complexStructUnsafeMUS) Skip(bs []byte) (n int, err error) {
 	if err != nil {
 		return
 	}
-	n1, err = mapYqxsGKNCzufzMrkgK6rkKgΞΞ.Skip(bs[n:])
+	n1, err = mapVVXjSxO6dXjΔOCΔqLsJO6QΞΞ.Skip(bs[n:])
 	n += n1
 	return
 }

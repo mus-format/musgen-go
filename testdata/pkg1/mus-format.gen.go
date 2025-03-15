@@ -7,6 +7,11 @@ import (
 
 	com "github.com/mus-format/common-go"
 	dts "github.com/mus-format/mus-dts-go"
+	arrops "github.com/mus-format/mus-go/options/array"
+	bslops "github.com/mus-format/mus-go/options/byte_slice"
+	mapops "github.com/mus-format/mus-go/options/map"
+	slops "github.com/mus-format/mus-go/options/slice"
+	strops "github.com/mus-format/mus-go/options/string"
 	"github.com/mus-format/mus-go/ord"
 	"github.com/mus-format/mus-go/raw"
 	"github.com/mus-format/mus-go/varint"
@@ -16,25 +21,25 @@ import (
 
 var (
 	arrayRuX3ffcBMbWzRHkOFcnegAΞΞ      = ord.NewArraySer[[3]int, int](3, raw.Int)
-	arrayZZrMuafde4zs9nWQ9V29GQΞΞ      = ord.NewValidArraySerWith[[3]int, int](3, raw.Int, raw.Int, com.ValidatorFn[int](testdata.ValidateZeroValue[int]))
-	arraycrM9UZcGb9US7pO18XSo2wΞΞ      = ord.NewArraySerWith[[3]int, int](3, raw.Int, varint.Int)
+	arrayZZrMuafde4zs9nWQ9V29GQΞΞ      = ord.NewValidArraySer[[3]int, int](3, raw.Int, arrops.WithLenSer[int](raw.Int), arrops.WithElemValidator[int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])))
+	arraycrM9UZcGb9US7pO18XSo2wΞΞ      = ord.NewArraySer[[3]int, int](3, varint.Int, arrops.WithLenSer[int](raw.Int))
 	arrayr4wy7nYWZsCSpVj9NWA6awΞΞ      = ord.NewArraySer[[3]int, int](3, varint.Int)
 	arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ      = ord.NewArraySer[[3]int, int](3, varint.Int)
-	arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ      = ord.NewValidArraySer[[3]int, int](3, varint.Int, com.ValidatorFn[int](testdata.ValidateZeroValue[int]))
-	byte_sliceDcCgbxlDhn4GkcmK8YCyΔAΞΞ = ord.NewValidByteSliceSer(com.ValidatorFn[int](testdata.ValidateLength))
-	byte_sliceoQ9IRuMdcV5ml2YRw53jjwΞΞ = ord.NewValidByteSliceSerWith(raw.Int, com.ValidatorFn[int](testdata.ValidateLength))
-	byte_sliceuivYF4GycfHkNaAtJaA7gAΞΞ = ord.NewByteSliceSerWith(raw.Int)
+	arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ      = ord.NewValidArraySer[[3]int, int](3, varint.Int, arrops.WithElemValidator[int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])))
+	byte_sliceDcCgbxlDhn4GkcmK8YCyΔAΞΞ = ord.NewValidByteSliceSer(bslops.WithLenValidator(com.ValidatorFn[int](testdata.ValidateLength)))
+	byte_sliceoQ9IRuMdcV5ml2YRw53jjwΞΞ = ord.NewValidByteSliceSer(bslops.WithLenSer(raw.Int), bslops.WithLenValidator(com.ValidatorFn[int](testdata.ValidateLength)))
+	byte_sliceuivYF4GycfHkNaAtJaA7gAΞΞ = ord.NewByteSliceSer(bslops.WithLenSer(raw.Int))
 	map0LSMnwmCsOA77HuΣMun3JQΞΞ        = ord.NewMapSer[int, int](varint.Int, varint.Int)
-	map3PMuzhUAOypD4DqSnnWKagΞΞ        = ord.NewValidMapSer[int, int](varint.Int, varint.Int, nil, nil, com.ValidatorFn[int](testdata.ValidateZeroValue[int]))
+	map2lsFWNc17ZLpZkUeycFdCwΞΞ        = ord.NewValidMapSer[int, int](raw.Int, raw.Int, mapops.WithLenSer[int, int](raw.Int), mapops.WithLenValidator[int, int](com.ValidatorFn[int](testdata.ValidateLength)), mapops.WithKeyValidator[int, int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])), mapops.WithValueValidator[int, int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])))
+	map3PMuzhUAOypD4DqSnnWKagΞΞ        = ord.NewValidMapSer[int, int](varint.Int, varint.Int, mapops.WithValueValidator[int, int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])))
 	map43fUS2Δt05YvrYGcEuvKNAΞΞ        = ord.NewMapSer[int, int](varint.Int, raw.Int)
-	mapFANab1bxFDU2CxNSnYEESQΞΞ        = ord.NewValidMapSer[int, int](varint.Int, varint.Int, com.ValidatorFn[int](testdata.ValidateLength), nil, nil)
-	mapNJclDG86D52Pjt61euotyQΞΞ        = ord.NewMapSer[float32, map[IntAlias][]SimpleStruct](varint.Float32, mapjyspScQJtnHHo4GtXpfbuwΞΞ)
-	mapVybLwOR8yjz9WUosywSOΔwΞΞ        = ord.NewMapSer[int, int](varint.Int, varint.Int)
-	mapgΔPfXh6ykvALhZI24oΣUwgΞΞ        = ord.NewValidMapSer[int, int](varint.Int, varint.Int, nil, com.ValidatorFn[int](testdata.ValidateZeroValue[int]), nil)
-	maph2OI1HM8rEDN92oicn3y0QΞΞ        = ord.NewMapSerWith[int, int](raw.Int, varint.Int, varint.Int)
-	mapjyspScQJtnHHo4GtXpfbuwΞΞ        = ord.NewMapSer[IntAlias, []SimpleStruct](IntAliasMUS, sliceJ9mM3TwH9NGSRg9dRM34dAΞΞ)
+	mapFANab1bxFDU2CxNSnYEESQΞΞ        = ord.NewValidMapSer[int, int](varint.Int, varint.Int, mapops.WithLenValidator[int, int](com.ValidatorFn[int](testdata.ValidateLength)))
+	mapPzIcvjΣwfJGjQIn9lMmKΔwΞΞ        = ord.NewMapSer[MyInt, []SimpleStruct](MyIntMUS, sliceJ9mM3TwH9NGSRg9dRM34dAΞΞ)
+	mapgΔPfXh6ykvALhZI24oΣUwgΞΞ        = ord.NewValidMapSer[int, int](varint.Int, varint.Int, mapops.WithKeyValidator[int, int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])))
+	maph2OI1HM8rEDN92oicn3y0QΞΞ        = ord.NewMapSer[int, int](varint.Int, varint.Int, mapops.WithLenSer[int, int](raw.Int))
 	mapsHWUiae8MVARLFKhf3bGHwΞΞ        = ord.NewMapSer[int, int](raw.Int, varint.Int)
-	mapx2Di83OYuEH641nztVvsFgΞΞ        = ord.NewValidMapSerWith[int, int](raw.Int, raw.Int, raw.Int, com.ValidatorFn[int](testdata.ValidateLength), com.ValidatorFn[int](testdata.ValidateZeroValue[int]), com.ValidatorFn[int](testdata.ValidateZeroValue[int]))
+	mapuK6uyoyios3ppjQeSCtptAΞΞ        = ord.NewMapSer[int, int](varint.Int, varint.Int)
+	mapwpOMFlKEe81rTT4qnhycUAΞΞ        = ord.NewMapSer[float32, map[MyInt][]SimpleStruct](varint.Float32, mapPzIcvjΣwfJGjQIn9lMmKΔwΞΞ)
 	ptr4ΣGeyl4njXOpw7dXGWlhlwΞΞ        = ord.NewPtrSer[*Interface](ptrRt47LK07JBJ3WPm4bGwgvgΞΞ)
 	ptrLGSRJu6LxqOYCY4EvJlaXgΞΞ        = ord.NewPtrSer[int](varint.Int)
 	ptrNH6kCQLrIU4OIzE2n0WW3gΞΞ        = ord.NewPtrSer[string](ord.String)
@@ -43,1026 +48,1026 @@ var (
 	ptrikbRqA7BO81F7es2ThTZΔgΞΞ        = ord.NewPtrSer[[3]int](arrayr4wy7nYWZsCSpVj9NWA6awΞΞ)
 	ptriwXcXXMJxv0fwmlU8fBUFQΞΞ        = ord.NewPtrSer[int](varint.Int)
 	ptrvDcVHNNl1fY23xdΔryHx7wΞΞ        = ord.NewPtrSer[SimpleStruct](SimpleStructMUS)
-	slice7v8xiCJyDayHEcMoBUAERQΞΞ      = ord.NewSliceSerWith[int](raw.Int, varint.Int)
-	slice8Bmgo57SJrl1jkVk3uFkvwΞΞ      = ord.NewValidSliceSer[int](varint.Int, nil, com.ValidatorFn[int](testdata.ValidateZeroValue[int]))
+	slice7v8xiCJyDayHEcMoBUAERQΞΞ      = ord.NewSliceSer[int](varint.Int, slops.WithLenSer[int](raw.Int))
+	slice8Bmgo57SJrl1jkVk3uFkvwΞΞ      = ord.NewValidSliceSer[int](varint.Int, slops.WithElemValidator[int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])))
 	sliceJ9mM3TwH9NGSRg9dRM34dAΞΞ      = ord.NewSliceSer[SimpleStruct](SimpleStructMUS)
 	sliceRJD1qΔgsYzv84V3Gfz6c0wΞΞ      = ord.NewSliceSer[int](raw.Int)
-	sliceXsiMRO2Fc4hG6R7wrB7GIAΞΞ      = ord.NewValidSliceSer[int](varint.Int, com.ValidatorFn[int](testdata.ValidateLength), nil)
-	slicenXQ4BhwΔjyAbWO9CVN0bXgΞΞ      = ord.NewValidSliceSerWith[int](raw.Int, raw.Int, com.ValidatorFn[int](testdata.ValidateLength), com.ValidatorFn[int](testdata.ValidateZeroValue[int]))
+	sliceXsiMRO2Fc4hG6R7wrB7GIAΞΞ      = ord.NewValidSliceSer[int](varint.Int, slops.WithLenValidator[int](com.ValidatorFn[int](testdata.ValidateLength)))
+	slicenXQ4BhwΔjyAbWO9CVN0bXgΞΞ      = ord.NewValidSliceSer[int](raw.Int, slops.WithLenSer[int](raw.Int), slops.WithLenValidator[int](com.ValidatorFn[int](testdata.ValidateLength)), slops.WithElemValidator[int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])))
 	slicewNkFf0X21pMEy6cgry3oZQΞΞ      = ord.NewSliceSer[int](varint.Int)
-	string6DO1S6ZwcLfItΣZS8XhRmwΞΞ     = ord.NewValidStringSerWith(raw.Int, com.ValidatorFn[int](testdata.ValidateLength))
-	stringoykcSTYdDaq1pqAVTzfp3QΞΞ     = ord.NewValidStringSer(com.ValidatorFn[int](testdata.ValidateLength))
-	stringpoyvVnsIiYmxsyLX8PnMRQΞΞ     = ord.NewStringSerWith(raw.Int)
+	string6DO1S6ZwcLfItΣZS8XhRmwΞΞ     = ord.NewValidStringSer(strops.WithLenSer(raw.Int), strops.WithLenValidator(com.ValidatorFn[int](testdata.ValidateLength)))
+	stringoykcSTYdDaq1pqAVTzfp3QΞΞ     = ord.NewValidStringSer(strops.WithLenValidator(com.ValidatorFn[int](testdata.ValidateLength)))
+	stringpoyvVnsIiYmxsyLX8PnMRQΞΞ     = ord.NewStringSer(strops.WithLenSer(raw.Int))
 )
 
-var IntAliasMUS = intAliasMUS{}
+var MyIntMUS = myIntMUS{}
 
-type intAliasMUS struct{}
+type myIntMUS struct{}
 
-func (s intAliasMUS) Marshal(v IntAlias, bs []byte) (n int) {
+func (s myIntMUS) Marshal(v MyInt, bs []byte) (n int) {
 	return varint.Int.Marshal(int(v), bs)
 }
 
-func (s intAliasMUS) Unmarshal(bs []byte) (v IntAlias, n int, err error) {
+func (s myIntMUS) Unmarshal(bs []byte) (v MyInt, n int, err error) {
 	tmp, n, err := varint.Int.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = IntAlias(tmp)
+	v = MyInt(tmp)
 	return
 }
 
-func (s intAliasMUS) Size(v IntAlias) (size int) {
+func (s myIntMUS) Size(v MyInt) (size int) {
 	return varint.Int.Size(int(v))
 }
 
-func (s intAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s myIntMUS) Skip(bs []byte) (n int, err error) {
 	return varint.Int.Skip(bs)
 }
 
-var RawIntAliasMUS = rawIntAliasMUS{}
+var RawMyIntMUS = rawMyIntMUS{}
 
-type rawIntAliasMUS struct{}
+type rawMyIntMUS struct{}
 
-func (s rawIntAliasMUS) Marshal(v RawIntAlias, bs []byte) (n int) {
+func (s rawMyIntMUS) Marshal(v RawMyInt, bs []byte) (n int) {
 	return raw.Int.Marshal(int(v), bs)
 }
 
-func (s rawIntAliasMUS) Unmarshal(bs []byte) (v RawIntAlias, n int, err error) {
+func (s rawMyIntMUS) Unmarshal(bs []byte) (v RawMyInt, n int, err error) {
 	tmp, n, err := raw.Int.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = RawIntAlias(tmp)
+	v = RawMyInt(tmp)
 	return
 }
 
-func (s rawIntAliasMUS) Size(v RawIntAlias) (size int) {
+func (s rawMyIntMUS) Size(v RawMyInt) (size int) {
 	return raw.Int.Size(int(v))
 }
 
-func (s rawIntAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s rawMyIntMUS) Skip(bs []byte) (n int, err error) {
 	return raw.Int.Skip(bs)
 }
 
-var VarintPositiveIntAliasMUS = varintPositiveIntAliasMUS{}
+var VarintPositiveMyIntMUS = varintPositiveMyIntMUS{}
 
-type varintPositiveIntAliasMUS struct{}
+type varintPositiveMyIntMUS struct{}
 
-func (s varintPositiveIntAliasMUS) Marshal(v VarintPositiveIntAlias, bs []byte) (n int) {
+func (s varintPositiveMyIntMUS) Marshal(v VarintPositiveMyInt, bs []byte) (n int) {
 	return varint.PositiveInt.Marshal(int(v), bs)
 }
 
-func (s varintPositiveIntAliasMUS) Unmarshal(bs []byte) (v VarintPositiveIntAlias, n int, err error) {
+func (s varintPositiveMyIntMUS) Unmarshal(bs []byte) (v VarintPositiveMyInt, n int, err error) {
 	tmp, n, err := varint.PositiveInt.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = VarintPositiveIntAlias(tmp)
+	v = VarintPositiveMyInt(tmp)
 	return
 }
 
-func (s varintPositiveIntAliasMUS) Size(v VarintPositiveIntAlias) (size int) {
+func (s varintPositiveMyIntMUS) Size(v VarintPositiveMyInt) (size int) {
 	return varint.PositiveInt.Size(int(v))
 }
 
-func (s varintPositiveIntAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s varintPositiveMyIntMUS) Skip(bs []byte) (n int, err error) {
 	return varint.PositiveInt.Skip(bs)
 }
 
-var ValidIntAliasMUS = validIntAliasMUS{}
+var ValidMyIntMUS = validMyIntMUS{}
 
-type validIntAliasMUS struct{}
+type validMyIntMUS struct{}
 
-func (s validIntAliasMUS) Marshal(v ValidIntAlias, bs []byte) (n int) {
+func (s validMyIntMUS) Marshal(v ValidMyInt, bs []byte) (n int) {
 	return varint.Int.Marshal(int(v), bs)
 }
 
-func (s validIntAliasMUS) Unmarshal(bs []byte) (v ValidIntAlias, n int, err error) {
+func (s validMyIntMUS) Unmarshal(bs []byte) (v ValidMyInt, n int, err error) {
 	tmp, n, err := varint.Int.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ValidIntAlias(tmp)
+	v = ValidMyInt(tmp)
 	err = testdata.ValidateZeroValue(v)
 	return
 }
 
-func (s validIntAliasMUS) Size(v ValidIntAlias) (size int) {
+func (s validMyIntMUS) Size(v ValidMyInt) (size int) {
 	return varint.Int.Size(int(v))
 }
 
-func (s validIntAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s validMyIntMUS) Skip(bs []byte) (n int, err error) {
 	return varint.Int.Skip(bs)
 }
 
-var AllIntAliasMUS = allIntAliasMUS{}
+var AllMyIntMUS = allMyIntMUS{}
 
-type allIntAliasMUS struct{}
+type allMyIntMUS struct{}
 
-func (s allIntAliasMUS) Marshal(v AllIntAlias, bs []byte) (n int) {
+func (s allMyIntMUS) Marshal(v AllMyInt, bs []byte) (n int) {
 	return raw.Int.Marshal(int(v), bs)
 }
 
-func (s allIntAliasMUS) Unmarshal(bs []byte) (v AllIntAlias, n int, err error) {
+func (s allMyIntMUS) Unmarshal(bs []byte) (v AllMyInt, n int, err error) {
 	tmp, n, err := raw.Int.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = AllIntAlias(tmp)
+	v = AllMyInt(tmp)
 	err = testdata.ValidateZeroValue(v)
 	return
 }
 
-func (s allIntAliasMUS) Size(v AllIntAlias) (size int) {
+func (s allMyIntMUS) Size(v AllMyInt) (size int) {
 	return raw.Int.Size(int(v))
 }
 
-func (s allIntAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s allMyIntMUS) Skip(bs []byte) (n int, err error) {
 	return raw.Int.Skip(bs)
 }
 
-var StringAliasMUS = stringAliasMUS{}
+var MyStringMUS = myStringMUS{}
 
-type stringAliasMUS struct{}
+type myStringMUS struct{}
 
-func (s stringAliasMUS) Marshal(v StringAlias, bs []byte) (n int) {
+func (s myStringMUS) Marshal(v MyString, bs []byte) (n int) {
 	return ord.String.Marshal(string(v), bs)
 }
 
-func (s stringAliasMUS) Unmarshal(bs []byte) (v StringAlias, n int, err error) {
+func (s myStringMUS) Unmarshal(bs []byte) (v MyString, n int, err error) {
 	tmp, n, err := ord.String.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = StringAlias(tmp)
+	v = MyString(tmp)
 	return
 }
 
-func (s stringAliasMUS) Size(v StringAlias) (size int) {
+func (s myStringMUS) Size(v MyString) (size int) {
 	return ord.String.Size(string(v))
 }
 
-func (s stringAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s myStringMUS) Skip(bs []byte) (n int, err error) {
 	return ord.String.Skip(bs)
 }
 
-var LenEncodingStringAliasMUS = lenEncodingStringAliasMUS{}
+var LenEncodingMyStringMUS = lenEncodingMyStringMUS{}
 
-type lenEncodingStringAliasMUS struct{}
+type lenEncodingMyStringMUS struct{}
 
-func (s lenEncodingStringAliasMUS) Marshal(v LenEncodingStringAlias, bs []byte) (n int) {
+func (s lenEncodingMyStringMUS) Marshal(v LenEncodingMyString, bs []byte) (n int) {
 	return stringpoyvVnsIiYmxsyLX8PnMRQΞΞ.Marshal(string(v), bs)
 }
 
-func (s lenEncodingStringAliasMUS) Unmarshal(bs []byte) (v LenEncodingStringAlias, n int, err error) {
+func (s lenEncodingMyStringMUS) Unmarshal(bs []byte) (v LenEncodingMyString, n int, err error) {
 	tmp, n, err := stringpoyvVnsIiYmxsyLX8PnMRQΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = LenEncodingStringAlias(tmp)
+	v = LenEncodingMyString(tmp)
 	return
 }
 
-func (s lenEncodingStringAliasMUS) Size(v LenEncodingStringAlias) (size int) {
+func (s lenEncodingMyStringMUS) Size(v LenEncodingMyString) (size int) {
 	return stringpoyvVnsIiYmxsyLX8PnMRQΞΞ.Size(string(v))
 }
 
-func (s lenEncodingStringAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s lenEncodingMyStringMUS) Skip(bs []byte) (n int, err error) {
 	return stringpoyvVnsIiYmxsyLX8PnMRQΞΞ.Skip(bs)
 }
 
-var LenValidStringAliasMUS = lenValidStringAliasMUS{}
+var LenValidMyStringMUS = lenValidMyStringMUS{}
 
-type lenValidStringAliasMUS struct{}
+type lenValidMyStringMUS struct{}
 
-func (s lenValidStringAliasMUS) Marshal(v LenValidStringAlias, bs []byte) (n int) {
+func (s lenValidMyStringMUS) Marshal(v LenValidMyString, bs []byte) (n int) {
 	return stringoykcSTYdDaq1pqAVTzfp3QΞΞ.Marshal(string(v), bs)
 }
 
-func (s lenValidStringAliasMUS) Unmarshal(bs []byte) (v LenValidStringAlias, n int, err error) {
+func (s lenValidMyStringMUS) Unmarshal(bs []byte) (v LenValidMyString, n int, err error) {
 	tmp, n, err := stringoykcSTYdDaq1pqAVTzfp3QΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = LenValidStringAlias(tmp)
+	v = LenValidMyString(tmp)
 	return
 }
 
-func (s lenValidStringAliasMUS) Size(v LenValidStringAlias) (size int) {
+func (s lenValidMyStringMUS) Size(v LenValidMyString) (size int) {
 	return stringoykcSTYdDaq1pqAVTzfp3QΞΞ.Size(string(v))
 }
 
-func (s lenValidStringAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s lenValidMyStringMUS) Skip(bs []byte) (n int, err error) {
 	return stringoykcSTYdDaq1pqAVTzfp3QΞΞ.Skip(bs)
 }
 
-var ValidStringAliasMUS = validStringAliasMUS{}
+var ValidMyStringMUS = validMyStringMUS{}
 
-type validStringAliasMUS struct{}
+type validMyStringMUS struct{}
 
-func (s validStringAliasMUS) Marshal(v ValidStringAlias, bs []byte) (n int) {
+func (s validMyStringMUS) Marshal(v ValidMyString, bs []byte) (n int) {
 	return ord.String.Marshal(string(v), bs)
 }
 
-func (s validStringAliasMUS) Unmarshal(bs []byte) (v ValidStringAlias, n int, err error) {
+func (s validMyStringMUS) Unmarshal(bs []byte) (v ValidMyString, n int, err error) {
 	tmp, n, err := ord.String.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ValidStringAlias(tmp)
+	v = ValidMyString(tmp)
 	err = testdata.ValidateZeroValue(v)
 	return
 }
 
-func (s validStringAliasMUS) Size(v ValidStringAlias) (size int) {
+func (s validMyStringMUS) Size(v ValidMyString) (size int) {
 	return ord.String.Size(string(v))
 }
 
-func (s validStringAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s validMyStringMUS) Skip(bs []byte) (n int, err error) {
 	return ord.String.Skip(bs)
 }
 
-var AllStringAliasMUS = allStringAliasMUS{}
+var AllMyStringMUS = allMyStringMUS{}
 
-type allStringAliasMUS struct{}
+type allMyStringMUS struct{}
 
-func (s allStringAliasMUS) Marshal(v AllStringAlias, bs []byte) (n int) {
+func (s allMyStringMUS) Marshal(v AllMyString, bs []byte) (n int) {
 	return string6DO1S6ZwcLfItΣZS8XhRmwΞΞ.Marshal(string(v), bs)
 }
 
-func (s allStringAliasMUS) Unmarshal(bs []byte) (v AllStringAlias, n int, err error) {
+func (s allMyStringMUS) Unmarshal(bs []byte) (v AllMyString, n int, err error) {
 	tmp, n, err := string6DO1S6ZwcLfItΣZS8XhRmwΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = AllStringAlias(tmp)
+	v = AllMyString(tmp)
 	err = testdata.ValidateZeroValue(v)
 	return
 }
 
-func (s allStringAliasMUS) Size(v AllStringAlias) (size int) {
+func (s allMyStringMUS) Size(v AllMyString) (size int) {
 	return string6DO1S6ZwcLfItΣZS8XhRmwΞΞ.Size(string(v))
 }
 
-func (s allStringAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s allMyStringMUS) Skip(bs []byte) (n int, err error) {
 	return string6DO1S6ZwcLfItΣZS8XhRmwΞΞ.Skip(bs)
 }
 
-var ByteSliceAliasMUS = byteSliceAliasMUS{}
+var MyByteSliceMUS = myByteSliceMUS{}
 
-type byteSliceAliasMUS struct{}
+type myByteSliceMUS struct{}
 
-func (s byteSliceAliasMUS) Marshal(v ByteSliceAlias, bs []byte) (n int) {
+func (s myByteSliceMUS) Marshal(v MyByteSlice, bs []byte) (n int) {
 	return ord.ByteSlice.Marshal([]uint8(v), bs)
 }
 
-func (s byteSliceAliasMUS) Unmarshal(bs []byte) (v ByteSliceAlias, n int, err error) {
+func (s myByteSliceMUS) Unmarshal(bs []byte) (v MyByteSlice, n int, err error) {
 	tmp, n, err := ord.ByteSlice.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ByteSliceAlias(tmp)
+	v = MyByteSlice(tmp)
 	return
 }
 
-func (s byteSliceAliasMUS) Size(v ByteSliceAlias) (size int) {
+func (s myByteSliceMUS) Size(v MyByteSlice) (size int) {
 	return ord.ByteSlice.Size([]uint8(v))
 }
 
-func (s byteSliceAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s myByteSliceMUS) Skip(bs []byte) (n int, err error) {
 	return ord.ByteSlice.Skip(bs)
 }
 
-var LenEncodingByteSliceAliasMUS = lenEncodingByteSliceAliasMUS{}
+var LenEncodingMyByteSliceMUS = lenEncodingMyByteSliceMUS{}
 
-type lenEncodingByteSliceAliasMUS struct{}
+type lenEncodingMyByteSliceMUS struct{}
 
-func (s lenEncodingByteSliceAliasMUS) Marshal(v LenEncodingByteSliceAlias, bs []byte) (n int) {
+func (s lenEncodingMyByteSliceMUS) Marshal(v LenEncodingMyByteSlice, bs []byte) (n int) {
 	return byte_sliceuivYF4GycfHkNaAtJaA7gAΞΞ.Marshal([]uint8(v), bs)
 }
 
-func (s lenEncodingByteSliceAliasMUS) Unmarshal(bs []byte) (v LenEncodingByteSliceAlias, n int, err error) {
+func (s lenEncodingMyByteSliceMUS) Unmarshal(bs []byte) (v LenEncodingMyByteSlice, n int, err error) {
 	tmp, n, err := byte_sliceuivYF4GycfHkNaAtJaA7gAΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = LenEncodingByteSliceAlias(tmp)
+	v = LenEncodingMyByteSlice(tmp)
 	return
 }
 
-func (s lenEncodingByteSliceAliasMUS) Size(v LenEncodingByteSliceAlias) (size int) {
+func (s lenEncodingMyByteSliceMUS) Size(v LenEncodingMyByteSlice) (size int) {
 	return byte_sliceuivYF4GycfHkNaAtJaA7gAΞΞ.Size([]uint8(v))
 }
 
-func (s lenEncodingByteSliceAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s lenEncodingMyByteSliceMUS) Skip(bs []byte) (n int, err error) {
 	return byte_sliceuivYF4GycfHkNaAtJaA7gAΞΞ.Skip(bs)
 }
 
-var LenValidByteSliceAliasMUS = lenValidByteSliceAliasMUS{}
+var LenValidMyByteSliceMUS = lenValidMyByteSliceMUS{}
 
-type lenValidByteSliceAliasMUS struct{}
+type lenValidMyByteSliceMUS struct{}
 
-func (s lenValidByteSliceAliasMUS) Marshal(v LenValidByteSliceAlias, bs []byte) (n int) {
+func (s lenValidMyByteSliceMUS) Marshal(v LenValidMyByteSlice, bs []byte) (n int) {
 	return byte_sliceDcCgbxlDhn4GkcmK8YCyΔAΞΞ.Marshal([]uint8(v), bs)
 }
 
-func (s lenValidByteSliceAliasMUS) Unmarshal(bs []byte) (v LenValidByteSliceAlias, n int, err error) {
+func (s lenValidMyByteSliceMUS) Unmarshal(bs []byte) (v LenValidMyByteSlice, n int, err error) {
 	tmp, n, err := byte_sliceDcCgbxlDhn4GkcmK8YCyΔAΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = LenValidByteSliceAlias(tmp)
+	v = LenValidMyByteSlice(tmp)
 	return
 }
 
-func (s lenValidByteSliceAliasMUS) Size(v LenValidByteSliceAlias) (size int) {
+func (s lenValidMyByteSliceMUS) Size(v LenValidMyByteSlice) (size int) {
 	return byte_sliceDcCgbxlDhn4GkcmK8YCyΔAΞΞ.Size([]uint8(v))
 }
 
-func (s lenValidByteSliceAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s lenValidMyByteSliceMUS) Skip(bs []byte) (n int, err error) {
 	return byte_sliceDcCgbxlDhn4GkcmK8YCyΔAΞΞ.Skip(bs)
 }
 
-var ValidByteSliceAliasMUS = validByteSliceAliasMUS{}
+var ValidMyByteSliceMUS = validMyByteSliceMUS{}
 
-type validByteSliceAliasMUS struct{}
+type validMyByteSliceMUS struct{}
 
-func (s validByteSliceAliasMUS) Marshal(v ValidByteSliceAlias, bs []byte) (n int) {
+func (s validMyByteSliceMUS) Marshal(v ValidMyByteSlice, bs []byte) (n int) {
 	return ord.ByteSlice.Marshal([]uint8(v), bs)
 }
 
-func (s validByteSliceAliasMUS) Unmarshal(bs []byte) (v ValidByteSliceAlias, n int, err error) {
+func (s validMyByteSliceMUS) Unmarshal(bs []byte) (v ValidMyByteSlice, n int, err error) {
 	tmp, n, err := ord.ByteSlice.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ValidByteSliceAlias(tmp)
+	v = ValidMyByteSlice(tmp)
 	err = ValidateByteSlice1(v)
 	return
 }
 
-func (s validByteSliceAliasMUS) Size(v ValidByteSliceAlias) (size int) {
+func (s validMyByteSliceMUS) Size(v ValidMyByteSlice) (size int) {
 	return ord.ByteSlice.Size([]uint8(v))
 }
 
-func (s validByteSliceAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s validMyByteSliceMUS) Skip(bs []byte) (n int, err error) {
 	return ord.ByteSlice.Skip(bs)
 }
 
-var AllByteSliceAliasMUS = allByteSliceAliasMUS{}
+var AllMyByteSliceMUS = allMyByteSliceMUS{}
 
-type allByteSliceAliasMUS struct{}
+type allMyByteSliceMUS struct{}
 
-func (s allByteSliceAliasMUS) Marshal(v AllByteSliceAlias, bs []byte) (n int) {
+func (s allMyByteSliceMUS) Marshal(v AllMyByteSlice, bs []byte) (n int) {
 	return byte_sliceoQ9IRuMdcV5ml2YRw53jjwΞΞ.Marshal([]uint8(v), bs)
 }
 
-func (s allByteSliceAliasMUS) Unmarshal(bs []byte) (v AllByteSliceAlias, n int, err error) {
+func (s allMyByteSliceMUS) Unmarshal(bs []byte) (v AllMyByteSlice, n int, err error) {
 	tmp, n, err := byte_sliceoQ9IRuMdcV5ml2YRw53jjwΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = AllByteSliceAlias(tmp)
+	v = AllMyByteSlice(tmp)
 	err = ValidateByteSlice2(v)
 	return
 }
 
-func (s allByteSliceAliasMUS) Size(v AllByteSliceAlias) (size int) {
+func (s allMyByteSliceMUS) Size(v AllMyByteSlice) (size int) {
 	return byte_sliceoQ9IRuMdcV5ml2YRw53jjwΞΞ.Size([]uint8(v))
 }
 
-func (s allByteSliceAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s allMyByteSliceMUS) Skip(bs []byte) (n int, err error) {
 	return byte_sliceoQ9IRuMdcV5ml2YRw53jjwΞΞ.Skip(bs)
 }
 
-var SliceAliasMUS = sliceAliasMUS{}
+var MySliceMUS = mySliceMUS{}
 
-type sliceAliasMUS struct{}
+type mySliceMUS struct{}
 
-func (s sliceAliasMUS) Marshal(v SliceAlias, bs []byte) (n int) {
+func (s mySliceMUS) Marshal(v MySlice, bs []byte) (n int) {
 	return slicewNkFf0X21pMEy6cgry3oZQΞΞ.Marshal([]int(v), bs)
 }
 
-func (s sliceAliasMUS) Unmarshal(bs []byte) (v SliceAlias, n int, err error) {
+func (s mySliceMUS) Unmarshal(bs []byte) (v MySlice, n int, err error) {
 	tmp, n, err := slicewNkFf0X21pMEy6cgry3oZQΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = SliceAlias(tmp)
+	v = MySlice(tmp)
 	return
 }
 
-func (s sliceAliasMUS) Size(v SliceAlias) (size int) {
+func (s mySliceMUS) Size(v MySlice) (size int) {
 	return slicewNkFf0X21pMEy6cgry3oZQΞΞ.Size([]int(v))
 }
 
-func (s sliceAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s mySliceMUS) Skip(bs []byte) (n int, err error) {
 	return slicewNkFf0X21pMEy6cgry3oZQΞΞ.Skip(bs)
 }
 
-var LenEncodingSliceAliasMUS = lenEncodingSliceAliasMUS{}
+var LenEncodingMySliceMUS = lenEncodingMySliceMUS{}
 
-type lenEncodingSliceAliasMUS struct{}
+type lenEncodingMySliceMUS struct{}
 
-func (s lenEncodingSliceAliasMUS) Marshal(v LenEncodingSliceAlias, bs []byte) (n int) {
+func (s lenEncodingMySliceMUS) Marshal(v LenEncodingMySlice, bs []byte) (n int) {
 	return slice7v8xiCJyDayHEcMoBUAERQΞΞ.Marshal([]int(v), bs)
 }
 
-func (s lenEncodingSliceAliasMUS) Unmarshal(bs []byte) (v LenEncodingSliceAlias, n int, err error) {
+func (s lenEncodingMySliceMUS) Unmarshal(bs []byte) (v LenEncodingMySlice, n int, err error) {
 	tmp, n, err := slice7v8xiCJyDayHEcMoBUAERQΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = LenEncodingSliceAlias(tmp)
+	v = LenEncodingMySlice(tmp)
 	return
 }
 
-func (s lenEncodingSliceAliasMUS) Size(v LenEncodingSliceAlias) (size int) {
+func (s lenEncodingMySliceMUS) Size(v LenEncodingMySlice) (size int) {
 	return slice7v8xiCJyDayHEcMoBUAERQΞΞ.Size([]int(v))
 }
 
-func (s lenEncodingSliceAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s lenEncodingMySliceMUS) Skip(bs []byte) (n int, err error) {
 	return slice7v8xiCJyDayHEcMoBUAERQΞΞ.Skip(bs)
 }
 
-var LenValidSliceAliasMUS = lenValidSliceAliasMUS{}
+var LenValidMySliceMUS = lenValidMySliceMUS{}
 
-type lenValidSliceAliasMUS struct{}
+type lenValidMySliceMUS struct{}
 
-func (s lenValidSliceAliasMUS) Marshal(v LenValidSliceAlias, bs []byte) (n int) {
+func (s lenValidMySliceMUS) Marshal(v LenValidMySlice, bs []byte) (n int) {
 	return sliceXsiMRO2Fc4hG6R7wrB7GIAΞΞ.Marshal([]int(v), bs)
 }
 
-func (s lenValidSliceAliasMUS) Unmarshal(bs []byte) (v LenValidSliceAlias, n int, err error) {
+func (s lenValidMySliceMUS) Unmarshal(bs []byte) (v LenValidMySlice, n int, err error) {
 	tmp, n, err := sliceXsiMRO2Fc4hG6R7wrB7GIAΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = LenValidSliceAlias(tmp)
+	v = LenValidMySlice(tmp)
 	return
 }
 
-func (s lenValidSliceAliasMUS) Size(v LenValidSliceAlias) (size int) {
+func (s lenValidMySliceMUS) Size(v LenValidMySlice) (size int) {
 	return sliceXsiMRO2Fc4hG6R7wrB7GIAΞΞ.Size([]int(v))
 }
 
-func (s lenValidSliceAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s lenValidMySliceMUS) Skip(bs []byte) (n int, err error) {
 	return sliceXsiMRO2Fc4hG6R7wrB7GIAΞΞ.Skip(bs)
 }
 
-var ElemEncodingSliceAliasMUS = elemEncodingSliceAliasMUS{}
+var ElemEncodingMySliceMUS = elemEncodingMySliceMUS{}
 
-type elemEncodingSliceAliasMUS struct{}
+type elemEncodingMySliceMUS struct{}
 
-func (s elemEncodingSliceAliasMUS) Marshal(v ElemEncodingSliceAlias, bs []byte) (n int) {
+func (s elemEncodingMySliceMUS) Marshal(v ElemEncodingMySlice, bs []byte) (n int) {
 	return sliceRJD1qΔgsYzv84V3Gfz6c0wΞΞ.Marshal([]int(v), bs)
 }
 
-func (s elemEncodingSliceAliasMUS) Unmarshal(bs []byte) (v ElemEncodingSliceAlias, n int, err error) {
+func (s elemEncodingMySliceMUS) Unmarshal(bs []byte) (v ElemEncodingMySlice, n int, err error) {
 	tmp, n, err := sliceRJD1qΔgsYzv84V3Gfz6c0wΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ElemEncodingSliceAlias(tmp)
+	v = ElemEncodingMySlice(tmp)
 	return
 }
 
-func (s elemEncodingSliceAliasMUS) Size(v ElemEncodingSliceAlias) (size int) {
+func (s elemEncodingMySliceMUS) Size(v ElemEncodingMySlice) (size int) {
 	return sliceRJD1qΔgsYzv84V3Gfz6c0wΞΞ.Size([]int(v))
 }
 
-func (s elemEncodingSliceAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s elemEncodingMySliceMUS) Skip(bs []byte) (n int, err error) {
 	return sliceRJD1qΔgsYzv84V3Gfz6c0wΞΞ.Skip(bs)
 }
 
-var ElemValidSliceAliasMUS = elemValidSliceAliasMUS{}
+var ElemValidMySliceMUS = elemValidMySliceMUS{}
 
-type elemValidSliceAliasMUS struct{}
+type elemValidMySliceMUS struct{}
 
-func (s elemValidSliceAliasMUS) Marshal(v ElemValidSliceAlias, bs []byte) (n int) {
+func (s elemValidMySliceMUS) Marshal(v ElemValidMySlice, bs []byte) (n int) {
 	return slice8Bmgo57SJrl1jkVk3uFkvwΞΞ.Marshal([]int(v), bs)
 }
 
-func (s elemValidSliceAliasMUS) Unmarshal(bs []byte) (v ElemValidSliceAlias, n int, err error) {
+func (s elemValidMySliceMUS) Unmarshal(bs []byte) (v ElemValidMySlice, n int, err error) {
 	tmp, n, err := slice8Bmgo57SJrl1jkVk3uFkvwΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ElemValidSliceAlias(tmp)
+	v = ElemValidMySlice(tmp)
 	return
 }
 
-func (s elemValidSliceAliasMUS) Size(v ElemValidSliceAlias) (size int) {
+func (s elemValidMySliceMUS) Size(v ElemValidMySlice) (size int) {
 	return slice8Bmgo57SJrl1jkVk3uFkvwΞΞ.Size([]int(v))
 }
 
-func (s elemValidSliceAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s elemValidMySliceMUS) Skip(bs []byte) (n int, err error) {
 	return slice8Bmgo57SJrl1jkVk3uFkvwΞΞ.Skip(bs)
 }
 
-var AllSliceAliasMUS = allSliceAliasMUS{}
+var AllMySliceMUS = allMySliceMUS{}
 
-type allSliceAliasMUS struct{}
+type allMySliceMUS struct{}
 
-func (s allSliceAliasMUS) Marshal(v AllSliceAlias, bs []byte) (n int) {
+func (s allMySliceMUS) Marshal(v AllMySlice, bs []byte) (n int) {
 	return slicenXQ4BhwΔjyAbWO9CVN0bXgΞΞ.Marshal([]int(v), bs)
 }
 
-func (s allSliceAliasMUS) Unmarshal(bs []byte) (v AllSliceAlias, n int, err error) {
+func (s allMySliceMUS) Unmarshal(bs []byte) (v AllMySlice, n int, err error) {
 	tmp, n, err := slicenXQ4BhwΔjyAbWO9CVN0bXgΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = AllSliceAlias(tmp)
+	v = AllMySlice(tmp)
 	return
 }
 
-func (s allSliceAliasMUS) Size(v AllSliceAlias) (size int) {
+func (s allMySliceMUS) Size(v AllMySlice) (size int) {
 	return slicenXQ4BhwΔjyAbWO9CVN0bXgΞΞ.Size([]int(v))
 }
 
-func (s allSliceAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s allMySliceMUS) Skip(bs []byte) (n int, err error) {
 	return slicenXQ4BhwΔjyAbWO9CVN0bXgΞΞ.Skip(bs)
 }
 
-var ArrayAliasMUS = arrayAliasMUS{}
+var MyArrayMUS = myArrayMUS{}
 
-type arrayAliasMUS struct{}
+type myArrayMUS struct{}
 
-func (s arrayAliasMUS) Marshal(v ArrayAlias, bs []byte) (n int) {
+func (s myArrayMUS) Marshal(v MyArray, bs []byte) (n int) {
 	return arrayr4wy7nYWZsCSpVj9NWA6awΞΞ.Marshal([3]int(v), bs)
 }
 
-func (s arrayAliasMUS) Unmarshal(bs []byte) (v ArrayAlias, n int, err error) {
+func (s myArrayMUS) Unmarshal(bs []byte) (v MyArray, n int, err error) {
 	tmp, n, err := arrayr4wy7nYWZsCSpVj9NWA6awΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ArrayAlias(tmp)
+	v = MyArray(tmp)
 	return
 }
 
-func (s arrayAliasMUS) Size(v ArrayAlias) (size int) {
+func (s myArrayMUS) Size(v MyArray) (size int) {
 	return arrayr4wy7nYWZsCSpVj9NWA6awΞΞ.Size([3]int(v))
 }
 
-func (s arrayAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s myArrayMUS) Skip(bs []byte) (n int, err error) {
 	return arrayr4wy7nYWZsCSpVj9NWA6awΞΞ.Skip(bs)
 }
 
-var LenEncodingArrayAliasMUS = lenEncodingArrayAliasMUS{}
+var LenEncodingMyArrayMUS = lenEncodingMyArrayMUS{}
 
-type lenEncodingArrayAliasMUS struct{}
+type lenEncodingMyArrayMUS struct{}
 
-func (s lenEncodingArrayAliasMUS) Marshal(v LenEncodingArrayAlias, bs []byte) (n int) {
+func (s lenEncodingMyArrayMUS) Marshal(v LenEncodingMyArray, bs []byte) (n int) {
 	return arraycrM9UZcGb9US7pO18XSo2wΞΞ.Marshal([3]int(v), bs)
 }
 
-func (s lenEncodingArrayAliasMUS) Unmarshal(bs []byte) (v LenEncodingArrayAlias, n int, err error) {
+func (s lenEncodingMyArrayMUS) Unmarshal(bs []byte) (v LenEncodingMyArray, n int, err error) {
 	tmp, n, err := arraycrM9UZcGb9US7pO18XSo2wΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = LenEncodingArrayAlias(tmp)
+	v = LenEncodingMyArray(tmp)
 	return
 }
 
-func (s lenEncodingArrayAliasMUS) Size(v LenEncodingArrayAlias) (size int) {
+func (s lenEncodingMyArrayMUS) Size(v LenEncodingMyArray) (size int) {
 	return arraycrM9UZcGb9US7pO18XSo2wΞΞ.Size([3]int(v))
 }
 
-func (s lenEncodingArrayAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s lenEncodingMyArrayMUS) Skip(bs []byte) (n int, err error) {
 	return arraycrM9UZcGb9US7pO18XSo2wΞΞ.Skip(bs)
 }
 
-var ElemEncodingArrayAliasMUS = elemEncodingArrayAliasMUS{}
+var ElemEncodingMyArrayMUS = elemEncodingMyArrayMUS{}
 
-type elemEncodingArrayAliasMUS struct{}
+type elemEncodingMyArrayMUS struct{}
 
-func (s elemEncodingArrayAliasMUS) Marshal(v ElemEncodingArrayAlias, bs []byte) (n int) {
+func (s elemEncodingMyArrayMUS) Marshal(v ElemEncodingMyArray, bs []byte) (n int) {
 	return arrayRuX3ffcBMbWzRHkOFcnegAΞΞ.Marshal([3]int(v), bs)
 }
 
-func (s elemEncodingArrayAliasMUS) Unmarshal(bs []byte) (v ElemEncodingArrayAlias, n int, err error) {
+func (s elemEncodingMyArrayMUS) Unmarshal(bs []byte) (v ElemEncodingMyArray, n int, err error) {
 	tmp, n, err := arrayRuX3ffcBMbWzRHkOFcnegAΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ElemEncodingArrayAlias(tmp)
+	v = ElemEncodingMyArray(tmp)
 	return
 }
 
-func (s elemEncodingArrayAliasMUS) Size(v ElemEncodingArrayAlias) (size int) {
+func (s elemEncodingMyArrayMUS) Size(v ElemEncodingMyArray) (size int) {
 	return arrayRuX3ffcBMbWzRHkOFcnegAΞΞ.Size([3]int(v))
 }
 
-func (s elemEncodingArrayAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s elemEncodingMyArrayMUS) Skip(bs []byte) (n int, err error) {
 	return arrayRuX3ffcBMbWzRHkOFcnegAΞΞ.Skip(bs)
 }
 
-var ElemValidArrayAliasMUS = elemValidArrayAliasMUS{}
+var ElemValidMyArrayMUS = elemValidMyArrayMUS{}
 
-type elemValidArrayAliasMUS struct{}
+type elemValidMyArrayMUS struct{}
 
-func (s elemValidArrayAliasMUS) Marshal(v ElemValidArrayAlias, bs []byte) (n int) {
+func (s elemValidMyArrayMUS) Marshal(v ElemValidMyArray, bs []byte) (n int) {
 	return arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ.Marshal([3]int(v), bs)
 }
 
-func (s elemValidArrayAliasMUS) Unmarshal(bs []byte) (v ElemValidArrayAlias, n int, err error) {
+func (s elemValidMyArrayMUS) Unmarshal(bs []byte) (v ElemValidMyArray, n int, err error) {
 	tmp, n, err := arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ElemValidArrayAlias(tmp)
+	v = ElemValidMyArray(tmp)
 	return
 }
 
-func (s elemValidArrayAliasMUS) Size(v ElemValidArrayAlias) (size int) {
+func (s elemValidMyArrayMUS) Size(v ElemValidMyArray) (size int) {
 	return arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ.Size([3]int(v))
 }
 
-func (s elemValidArrayAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s elemValidMyArrayMUS) Skip(bs []byte) (n int, err error) {
 	return arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ.Skip(bs)
 }
 
-var ValidArrayAliasMUS = validArrayAliasMUS{}
+var ValidMyArrayMUS = validMyArrayMUS{}
 
-type validArrayAliasMUS struct{}
+type validMyArrayMUS struct{}
 
-func (s validArrayAliasMUS) Marshal(v ValidArrayAlias, bs []byte) (n int) {
+func (s validMyArrayMUS) Marshal(v ValidMyArray, bs []byte) (n int) {
 	return arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ.Marshal([3]int(v), bs)
 }
 
-func (s validArrayAliasMUS) Unmarshal(bs []byte) (v ValidArrayAlias, n int, err error) {
+func (s validMyArrayMUS) Unmarshal(bs []byte) (v ValidMyArray, n int, err error) {
 	tmp, n, err := arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ValidArrayAlias(tmp)
+	v = ValidMyArray(tmp)
 	err = testdata.ValidateZeroValue[[3]int](v)
 	return
 }
 
-func (s validArrayAliasMUS) Size(v ValidArrayAlias) (size int) {
+func (s validMyArrayMUS) Size(v ValidMyArray) (size int) {
 	return arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ.Size([3]int(v))
 }
 
-func (s validArrayAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s validMyArrayMUS) Skip(bs []byte) (n int, err error) {
 	return arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ.Skip(bs)
 }
 
-var AllArrayAliasMUS = allArrayAliasMUS{}
+var AllMyArrayMUS = allMyArrayMUS{}
 
-type allArrayAliasMUS struct{}
+type allMyArrayMUS struct{}
 
-func (s allArrayAliasMUS) Marshal(v AllArrayAlias, bs []byte) (n int) {
+func (s allMyArrayMUS) Marshal(v AllMyArray, bs []byte) (n int) {
 	return arrayZZrMuafde4zs9nWQ9V29GQΞΞ.Marshal([3]int(v), bs)
 }
 
-func (s allArrayAliasMUS) Unmarshal(bs []byte) (v AllArrayAlias, n int, err error) {
+func (s allMyArrayMUS) Unmarshal(bs []byte) (v AllMyArray, n int, err error) {
 	tmp, n, err := arrayZZrMuafde4zs9nWQ9V29GQΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = AllArrayAlias(tmp)
+	v = AllMyArray(tmp)
 	err = testdata.ValidateZeroValue[[3]int](v)
 	return
 }
 
-func (s allArrayAliasMUS) Size(v AllArrayAlias) (size int) {
+func (s allMyArrayMUS) Size(v AllMyArray) (size int) {
 	return arrayZZrMuafde4zs9nWQ9V29GQΞΞ.Size([3]int(v))
 }
 
-func (s allArrayAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s allMyArrayMUS) Skip(bs []byte) (n int, err error) {
 	return arrayZZrMuafde4zs9nWQ9V29GQΞΞ.Skip(bs)
 }
 
-var MapAliasMUS = mapAliasMUS{}
+var MyMapMUS = myMapMUS{}
 
-type mapAliasMUS struct{}
+type myMapMUS struct{}
 
-func (s mapAliasMUS) Marshal(v MapAlias, bs []byte) (n int) {
+func (s myMapMUS) Marshal(v MyMap, bs []byte) (n int) {
 	return map0LSMnwmCsOA77HuΣMun3JQΞΞ.Marshal(map[int]int(v), bs)
 }
 
-func (s mapAliasMUS) Unmarshal(bs []byte) (v MapAlias, n int, err error) {
+func (s myMapMUS) Unmarshal(bs []byte) (v MyMap, n int, err error) {
 	tmp, n, err := map0LSMnwmCsOA77HuΣMun3JQΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = MapAlias(tmp)
+	v = MyMap(tmp)
 	return
 }
 
-func (s mapAliasMUS) Size(v MapAlias) (size int) {
+func (s myMapMUS) Size(v MyMap) (size int) {
 	return map0LSMnwmCsOA77HuΣMun3JQΞΞ.Size(map[int]int(v))
 }
 
-func (s mapAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s myMapMUS) Skip(bs []byte) (n int, err error) {
 	return map0LSMnwmCsOA77HuΣMun3JQΞΞ.Skip(bs)
 }
 
-var LenEncodingMapAliasMUS = lenEncodingMapAliasMUS{}
+var LenEncodingMyMapMUS = lenEncodingMyMapMUS{}
 
-type lenEncodingMapAliasMUS struct{}
+type lenEncodingMyMapMUS struct{}
 
-func (s lenEncodingMapAliasMUS) Marshal(v LenEncodingMapAlias, bs []byte) (n int) {
+func (s lenEncodingMyMapMUS) Marshal(v LenEncodingMyMap, bs []byte) (n int) {
 	return maph2OI1HM8rEDN92oicn3y0QΞΞ.Marshal(map[int]int(v), bs)
 }
 
-func (s lenEncodingMapAliasMUS) Unmarshal(bs []byte) (v LenEncodingMapAlias, n int, err error) {
+func (s lenEncodingMyMapMUS) Unmarshal(bs []byte) (v LenEncodingMyMap, n int, err error) {
 	tmp, n, err := maph2OI1HM8rEDN92oicn3y0QΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = LenEncodingMapAlias(tmp)
+	v = LenEncodingMyMap(tmp)
 	return
 }
 
-func (s lenEncodingMapAliasMUS) Size(v LenEncodingMapAlias) (size int) {
+func (s lenEncodingMyMapMUS) Size(v LenEncodingMyMap) (size int) {
 	return maph2OI1HM8rEDN92oicn3y0QΞΞ.Size(map[int]int(v))
 }
 
-func (s lenEncodingMapAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s lenEncodingMyMapMUS) Skip(bs []byte) (n int, err error) {
 	return maph2OI1HM8rEDN92oicn3y0QΞΞ.Skip(bs)
 }
 
-var LenValidMapAliasMUS = lenValidMapAliasMUS{}
+var LenValidMyMapMUS = lenValidMyMapMUS{}
 
-type lenValidMapAliasMUS struct{}
+type lenValidMyMapMUS struct{}
 
-func (s lenValidMapAliasMUS) Marshal(v LenValidMapAlias, bs []byte) (n int) {
+func (s lenValidMyMapMUS) Marshal(v LenValidMyMap, bs []byte) (n int) {
 	return mapFANab1bxFDU2CxNSnYEESQΞΞ.Marshal(map[int]int(v), bs)
 }
 
-func (s lenValidMapAliasMUS) Unmarshal(bs []byte) (v LenValidMapAlias, n int, err error) {
+func (s lenValidMyMapMUS) Unmarshal(bs []byte) (v LenValidMyMap, n int, err error) {
 	tmp, n, err := mapFANab1bxFDU2CxNSnYEESQΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = LenValidMapAlias(tmp)
+	v = LenValidMyMap(tmp)
 	return
 }
 
-func (s lenValidMapAliasMUS) Size(v LenValidMapAlias) (size int) {
+func (s lenValidMyMapMUS) Size(v LenValidMyMap) (size int) {
 	return mapFANab1bxFDU2CxNSnYEESQΞΞ.Size(map[int]int(v))
 }
 
-func (s lenValidMapAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s lenValidMyMapMUS) Skip(bs []byte) (n int, err error) {
 	return mapFANab1bxFDU2CxNSnYEESQΞΞ.Skip(bs)
 }
 
-var KeyEncodingMapAliasMUS = keyEncodingMapAliasMUS{}
+var KeyEncodingMyMapMUS = keyEncodingMyMapMUS{}
 
-type keyEncodingMapAliasMUS struct{}
+type keyEncodingMyMapMUS struct{}
 
-func (s keyEncodingMapAliasMUS) Marshal(v KeyEncodingMapAlias, bs []byte) (n int) {
+func (s keyEncodingMyMapMUS) Marshal(v KeyEncodingMyMap, bs []byte) (n int) {
 	return mapsHWUiae8MVARLFKhf3bGHwΞΞ.Marshal(map[int]int(v), bs)
 }
 
-func (s keyEncodingMapAliasMUS) Unmarshal(bs []byte) (v KeyEncodingMapAlias, n int, err error) {
+func (s keyEncodingMyMapMUS) Unmarshal(bs []byte) (v KeyEncodingMyMap, n int, err error) {
 	tmp, n, err := mapsHWUiae8MVARLFKhf3bGHwΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = KeyEncodingMapAlias(tmp)
+	v = KeyEncodingMyMap(tmp)
 	return
 }
 
-func (s keyEncodingMapAliasMUS) Size(v KeyEncodingMapAlias) (size int) {
+func (s keyEncodingMyMapMUS) Size(v KeyEncodingMyMap) (size int) {
 	return mapsHWUiae8MVARLFKhf3bGHwΞΞ.Size(map[int]int(v))
 }
 
-func (s keyEncodingMapAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s keyEncodingMyMapMUS) Skip(bs []byte) (n int, err error) {
 	return mapsHWUiae8MVARLFKhf3bGHwΞΞ.Skip(bs)
 }
 
-var KeyValidMapAliasMUS = keyValidMapAliasMUS{}
+var KeyValidMyMapMUS = keyValidMyMapMUS{}
 
-type keyValidMapAliasMUS struct{}
+type keyValidMyMapMUS struct{}
 
-func (s keyValidMapAliasMUS) Marshal(v KeyValidMapAlias, bs []byte) (n int) {
+func (s keyValidMyMapMUS) Marshal(v KeyValidMyMap, bs []byte) (n int) {
 	return mapgΔPfXh6ykvALhZI24oΣUwgΞΞ.Marshal(map[int]int(v), bs)
 }
 
-func (s keyValidMapAliasMUS) Unmarshal(bs []byte) (v KeyValidMapAlias, n int, err error) {
+func (s keyValidMyMapMUS) Unmarshal(bs []byte) (v KeyValidMyMap, n int, err error) {
 	tmp, n, err := mapgΔPfXh6ykvALhZI24oΣUwgΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = KeyValidMapAlias(tmp)
+	v = KeyValidMyMap(tmp)
 	return
 }
 
-func (s keyValidMapAliasMUS) Size(v KeyValidMapAlias) (size int) {
+func (s keyValidMyMapMUS) Size(v KeyValidMyMap) (size int) {
 	return mapgΔPfXh6ykvALhZI24oΣUwgΞΞ.Size(map[int]int(v))
 }
 
-func (s keyValidMapAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s keyValidMyMapMUS) Skip(bs []byte) (n int, err error) {
 	return mapgΔPfXh6ykvALhZI24oΣUwgΞΞ.Skip(bs)
 }
 
-var ElemEncodingMapAliasMUS = elemEncodingMapAliasMUS{}
+var ElemEncodingMyMapMUS = elemEncodingMyMapMUS{}
 
-type elemEncodingMapAliasMUS struct{}
+type elemEncodingMyMapMUS struct{}
 
-func (s elemEncodingMapAliasMUS) Marshal(v ElemEncodingMapAlias, bs []byte) (n int) {
+func (s elemEncodingMyMapMUS) Marshal(v ElemEncodingMyMap, bs []byte) (n int) {
 	return map43fUS2Δt05YvrYGcEuvKNAΞΞ.Marshal(map[int]int(v), bs)
 }
 
-func (s elemEncodingMapAliasMUS) Unmarshal(bs []byte) (v ElemEncodingMapAlias, n int, err error) {
+func (s elemEncodingMyMapMUS) Unmarshal(bs []byte) (v ElemEncodingMyMap, n int, err error) {
 	tmp, n, err := map43fUS2Δt05YvrYGcEuvKNAΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ElemEncodingMapAlias(tmp)
+	v = ElemEncodingMyMap(tmp)
 	return
 }
 
-func (s elemEncodingMapAliasMUS) Size(v ElemEncodingMapAlias) (size int) {
+func (s elemEncodingMyMapMUS) Size(v ElemEncodingMyMap) (size int) {
 	return map43fUS2Δt05YvrYGcEuvKNAΞΞ.Size(map[int]int(v))
 }
 
-func (s elemEncodingMapAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s elemEncodingMyMapMUS) Skip(bs []byte) (n int, err error) {
 	return map43fUS2Δt05YvrYGcEuvKNAΞΞ.Skip(bs)
 }
 
-var ElemValidMapAliasMUS = elemValidMapAliasMUS{}
+var ElemValidMyMapMUS = elemValidMyMapMUS{}
 
-type elemValidMapAliasMUS struct{}
+type elemValidMyMapMUS struct{}
 
-func (s elemValidMapAliasMUS) Marshal(v ElemValidMapAlias, bs []byte) (n int) {
+func (s elemValidMyMapMUS) Marshal(v ElemValidMyMap, bs []byte) (n int) {
 	return map3PMuzhUAOypD4DqSnnWKagΞΞ.Marshal(map[int]int(v), bs)
 }
 
-func (s elemValidMapAliasMUS) Unmarshal(bs []byte) (v ElemValidMapAlias, n int, err error) {
+func (s elemValidMyMapMUS) Unmarshal(bs []byte) (v ElemValidMyMap, n int, err error) {
 	tmp, n, err := map3PMuzhUAOypD4DqSnnWKagΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ElemValidMapAlias(tmp)
+	v = ElemValidMyMap(tmp)
 	return
 }
 
-func (s elemValidMapAliasMUS) Size(v ElemValidMapAlias) (size int) {
+func (s elemValidMyMapMUS) Size(v ElemValidMyMap) (size int) {
 	return map3PMuzhUAOypD4DqSnnWKagΞΞ.Size(map[int]int(v))
 }
 
-func (s elemValidMapAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s elemValidMyMapMUS) Skip(bs []byte) (n int, err error) {
 	return map3PMuzhUAOypD4DqSnnWKagΞΞ.Skip(bs)
 }
 
-var ValidMapAliasMUS = validMapAliasMUS{}
+var ValidMyMapMUS = validMyMapMUS{}
 
-type validMapAliasMUS struct{}
+type validMyMapMUS struct{}
 
-func (s validMapAliasMUS) Marshal(v ValidMapAlias, bs []byte) (n int) {
-	return mapVybLwOR8yjz9WUosywSOΔwΞΞ.Marshal(map[int]int(v), bs)
+func (s validMyMapMUS) Marshal(v ValidMyMap, bs []byte) (n int) {
+	return mapuK6uyoyios3ppjQeSCtptAΞΞ.Marshal(map[int]int(v), bs)
 }
 
-func (s validMapAliasMUS) Unmarshal(bs []byte) (v ValidMapAlias, n int, err error) {
-	tmp, n, err := mapVybLwOR8yjz9WUosywSOΔwΞΞ.Unmarshal(bs)
+func (s validMyMapMUS) Unmarshal(bs []byte) (v ValidMyMap, n int, err error) {
+	tmp, n, err := mapuK6uyoyios3ppjQeSCtptAΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ValidMapAlias(tmp)
-	err = ValidateMapAlias1(v)
+	v = ValidMyMap(tmp)
+	err = ValidateMyMap1(v)
 	return
 }
 
-func (s validMapAliasMUS) Size(v ValidMapAlias) (size int) {
-	return mapVybLwOR8yjz9WUosywSOΔwΞΞ.Size(map[int]int(v))
+func (s validMyMapMUS) Size(v ValidMyMap) (size int) {
+	return mapuK6uyoyios3ppjQeSCtptAΞΞ.Size(map[int]int(v))
 }
 
-func (s validMapAliasMUS) Skip(bs []byte) (n int, err error) {
-	return mapVybLwOR8yjz9WUosywSOΔwΞΞ.Skip(bs)
+func (s validMyMapMUS) Skip(bs []byte) (n int, err error) {
+	return mapuK6uyoyios3ppjQeSCtptAΞΞ.Skip(bs)
 }
 
-var AllMapAliasMUS = allMapAliasMUS{}
+var AllMyMapMUS = allMyMapMUS{}
 
-type allMapAliasMUS struct{}
+type allMyMapMUS struct{}
 
-func (s allMapAliasMUS) Marshal(v AllMapAlias, bs []byte) (n int) {
-	return mapx2Di83OYuEH641nztVvsFgΞΞ.Marshal(map[int]int(v), bs)
+func (s allMyMapMUS) Marshal(v AllMyMap, bs []byte) (n int) {
+	return map2lsFWNc17ZLpZkUeycFdCwΞΞ.Marshal(map[int]int(v), bs)
 }
 
-func (s allMapAliasMUS) Unmarshal(bs []byte) (v AllMapAlias, n int, err error) {
-	tmp, n, err := mapx2Di83OYuEH641nztVvsFgΞΞ.Unmarshal(bs)
+func (s allMyMapMUS) Unmarshal(bs []byte) (v AllMyMap, n int, err error) {
+	tmp, n, err := map2lsFWNc17ZLpZkUeycFdCwΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = AllMapAlias(tmp)
-	err = ValidateMapAlias2(v)
+	v = AllMyMap(tmp)
+	err = ValidateMyMap2(v)
 	return
 }
 
-func (s allMapAliasMUS) Size(v AllMapAlias) (size int) {
-	return mapx2Di83OYuEH641nztVvsFgΞΞ.Size(map[int]int(v))
+func (s allMyMapMUS) Size(v AllMyMap) (size int) {
+	return map2lsFWNc17ZLpZkUeycFdCwΞΞ.Size(map[int]int(v))
 }
 
-func (s allMapAliasMUS) Skip(bs []byte) (n int, err error) {
-	return mapx2Di83OYuEH641nztVvsFgΞΞ.Skip(bs)
+func (s allMyMapMUS) Skip(bs []byte) (n int, err error) {
+	return map2lsFWNc17ZLpZkUeycFdCwΞΞ.Skip(bs)
 }
 
-var PtrAliasMUS = ptrAliasMUS{}
+var MyIntPtrMUS = myIntPtrMUS{}
 
-type ptrAliasMUS struct{}
+type myIntPtrMUS struct{}
 
-func (s ptrAliasMUS) Marshal(v PtrAlias, bs []byte) (n int) {
+func (s myIntPtrMUS) Marshal(v MyIntPtr, bs []byte) (n int) {
 	return ptriwXcXXMJxv0fwmlU8fBUFQΞΞ.Marshal((*int)(v), bs)
 }
 
-func (s ptrAliasMUS) Unmarshal(bs []byte) (v PtrAlias, n int, err error) {
+func (s myIntPtrMUS) Unmarshal(bs []byte) (v MyIntPtr, n int, err error) {
 	tmp, n, err := ptriwXcXXMJxv0fwmlU8fBUFQΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = PtrAlias(tmp)
+	v = MyIntPtr(tmp)
 	return
 }
 
-func (s ptrAliasMUS) Size(v PtrAlias) (size int) {
+func (s myIntPtrMUS) Size(v MyIntPtr) (size int) {
 	return ptriwXcXXMJxv0fwmlU8fBUFQΞΞ.Size((*int)(v))
 }
 
-func (s ptrAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s myIntPtrMUS) Skip(bs []byte) (n int, err error) {
 	return ptriwXcXXMJxv0fwmlU8fBUFQΞΞ.Skip(bs)
 }
 
-var ElemNumEncodingPtrAliasMUS = elemNumEncodingPtrAliasMUS{}
+var ElemNumEncodingMyIntPtrMUS = elemNumEncodingMyIntPtrMUS{}
 
-type elemNumEncodingPtrAliasMUS struct{}
+type elemNumEncodingMyIntPtrMUS struct{}
 
-func (s elemNumEncodingPtrAliasMUS) Marshal(v ElemNumEncodingPtrAlias, bs []byte) (n int) {
+func (s elemNumEncodingMyIntPtrMUS) Marshal(v ElemNumEncodingMyIntPtr, bs []byte) (n int) {
 	return ptreTXEΔQvZPl1AWyH50l7g8QΞΞ.Marshal((*int)(v), bs)
 }
 
-func (s elemNumEncodingPtrAliasMUS) Unmarshal(bs []byte) (v ElemNumEncodingPtrAlias, n int, err error) {
+func (s elemNumEncodingMyIntPtrMUS) Unmarshal(bs []byte) (v ElemNumEncodingMyIntPtr, n int, err error) {
 	tmp, n, err := ptreTXEΔQvZPl1AWyH50l7g8QΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ElemNumEncodingPtrAlias(tmp)
+	v = ElemNumEncodingMyIntPtr(tmp)
 	return
 }
 
-func (s elemNumEncodingPtrAliasMUS) Size(v ElemNumEncodingPtrAlias) (size int) {
+func (s elemNumEncodingMyIntPtrMUS) Size(v ElemNumEncodingMyIntPtr) (size int) {
 	return ptreTXEΔQvZPl1AWyH50l7g8QΞΞ.Size((*int)(v))
 }
 
-func (s elemNumEncodingPtrAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s elemNumEncodingMyIntPtrMUS) Skip(bs []byte) (n int, err error) {
 	return ptreTXEΔQvZPl1AWyH50l7g8QΞΞ.Skip(bs)
 }
 
-var ValidPtrAliasMUS = validPtrAliasMUS{}
+var ValidMyIntPtrMUS = validMyIntPtrMUS{}
 
-type validPtrAliasMUS struct{}
+type validMyIntPtrMUS struct{}
 
-func (s validPtrAliasMUS) Marshal(v ValidPtrAlias, bs []byte) (n int) {
+func (s validMyIntPtrMUS) Marshal(v ValidMyIntPtr, bs []byte) (n int) {
 	return ptrLGSRJu6LxqOYCY4EvJlaXgΞΞ.Marshal((*int)(v), bs)
 }
 
-func (s validPtrAliasMUS) Unmarshal(bs []byte) (v ValidPtrAlias, n int, err error) {
+func (s validMyIntPtrMUS) Unmarshal(bs []byte) (v ValidMyIntPtr, n int, err error) {
 	tmp, n, err := ptrLGSRJu6LxqOYCY4EvJlaXgΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = ValidPtrAlias(tmp)
+	v = ValidMyIntPtr(tmp)
 	err = testdata.ValidateZeroValue[*int](v)
 	return
 }
 
-func (s validPtrAliasMUS) Size(v ValidPtrAlias) (size int) {
+func (s validMyIntPtrMUS) Size(v ValidMyIntPtr) (size int) {
 	return ptrLGSRJu6LxqOYCY4EvJlaXgΞΞ.Size((*int)(v))
 }
 
-func (s validPtrAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s validMyIntPtrMUS) Skip(bs []byte) (n int, err error) {
 	return ptrLGSRJu6LxqOYCY4EvJlaXgΞΞ.Skip(bs)
 }
 
-var SimpleStructPtrAliasMUS = simpleStructPtrAliasMUS{}
+var SimpleStructMyIntPtrMUS = simpleStructMyIntPtrMUS{}
 
-type simpleStructPtrAliasMUS struct{}
+type simpleStructMyIntPtrMUS struct{}
 
-func (s simpleStructPtrAliasMUS) Marshal(v SimpleStructPtrAlias, bs []byte) (n int) {
+func (s simpleStructMyIntPtrMUS) Marshal(v SimpleStructMyIntPtr, bs []byte) (n int) {
 	return ptrvDcVHNNl1fY23xdΔryHx7wΞΞ.Marshal((*SimpleStruct)(v), bs)
 }
 
-func (s simpleStructPtrAliasMUS) Unmarshal(bs []byte) (v SimpleStructPtrAlias, n int, err error) {
+func (s simpleStructMyIntPtrMUS) Unmarshal(bs []byte) (v SimpleStructMyIntPtr, n int, err error) {
 	tmp, n, err := ptrvDcVHNNl1fY23xdΔryHx7wΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = SimpleStructPtrAlias(tmp)
+	v = SimpleStructMyIntPtr(tmp)
 	return
 }
 
-func (s simpleStructPtrAliasMUS) Size(v SimpleStructPtrAlias) (size int) {
+func (s simpleStructMyIntPtrMUS) Size(v SimpleStructMyIntPtr) (size int) {
 	return ptrvDcVHNNl1fY23xdΔryHx7wΞΞ.Size((*SimpleStruct)(v))
 }
 
-func (s simpleStructPtrAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s simpleStructMyIntPtrMUS) Skip(bs []byte) (n int, err error) {
 	return ptrvDcVHNNl1fY23xdΔryHx7wΞΞ.Skip(bs)
 }
 
@@ -1128,7 +1133,7 @@ func (s complexStructMUS) Marshal(v ComplexStruct, bs []byte) (n int) {
 	n += varint.Float32.Marshal(v.Float32, bs[n:])
 	n += varint.Float64.Marshal(v.Float64, bs[n:])
 	n += ord.String.Marshal(v.String, bs[n:])
-	n += SliceAliasMUS.Marshal(v.Alias, bs[n:])
+	n += MySliceMUS.Marshal(v.Alias, bs[n:])
 	n += pkg2.StructMUS.Marshal(v.AnotherPkgStruct, bs[n:])
 	n += InterfaceMUS.Marshal(v.Interface, bs[n:])
 	n += ord.ByteSlice.Marshal(v.ByteSlice, bs[n:])
@@ -1138,7 +1143,7 @@ func (s complexStructMUS) Marshal(v ComplexStruct, bs []byte) (n int) {
 	n += ptrvDcVHNNl1fY23xdΔryHx7wΞΞ.Marshal(v.PtrStruct, bs[n:])
 	n += ptrNH6kCQLrIU4OIzE2n0WW3gΞΞ.Marshal(v.NilPtr, bs[n:])
 	n += ptrikbRqA7BO81F7es2ThTZΔgΞΞ.Marshal(v.PtrArray, bs[n:])
-	return n + mapNJclDG86D52Pjt61euotyQΞΞ.Marshal(v.Map, bs[n:])
+	return n + mapwpOMFlKEe81rTT4qnhycUAΞΞ.Marshal(v.Map, bs[n:])
 }
 
 func (s complexStructMUS) Unmarshal(bs []byte) (v ComplexStruct, n int, err error) {
@@ -1207,7 +1212,7 @@ func (s complexStructMUS) Unmarshal(bs []byte) (v ComplexStruct, n int, err erro
 	if err != nil {
 		return
 	}
-	v.Alias, n1, err = SliceAliasMUS.Unmarshal(bs[n:])
+	v.Alias, n1, err = MySliceMUS.Unmarshal(bs[n:])
 	n += n1
 	if err != nil {
 		return
@@ -1257,7 +1262,7 @@ func (s complexStructMUS) Unmarshal(bs []byte) (v ComplexStruct, n int, err erro
 	if err != nil {
 		return
 	}
-	v.Map, n1, err = mapNJclDG86D52Pjt61euotyQΞΞ.Unmarshal(bs[n:])
+	v.Map, n1, err = mapwpOMFlKEe81rTT4qnhycUAΞΞ.Unmarshal(bs[n:])
 	n += n1
 	return
 }
@@ -1276,7 +1281,7 @@ func (s complexStructMUS) Size(v ComplexStruct) (size int) {
 	size += varint.Float32.Size(v.Float32)
 	size += varint.Float64.Size(v.Float64)
 	size += ord.String.Size(v.String)
-	size += SliceAliasMUS.Size(v.Alias)
+	size += MySliceMUS.Size(v.Alias)
 	size += pkg2.StructMUS.Size(v.AnotherPkgStruct)
 	size += InterfaceMUS.Size(v.Interface)
 	size += ord.ByteSlice.Size(v.ByteSlice)
@@ -1286,7 +1291,7 @@ func (s complexStructMUS) Size(v ComplexStruct) (size int) {
 	size += ptrvDcVHNNl1fY23xdΔryHx7wΞΞ.Size(v.PtrStruct)
 	size += ptrNH6kCQLrIU4OIzE2n0WW3gΞΞ.Size(v.NilPtr)
 	size += ptrikbRqA7BO81F7es2ThTZΔgΞΞ.Size(v.PtrArray)
-	return size + mapNJclDG86D52Pjt61euotyQΞΞ.Size(v.Map)
+	return size + mapwpOMFlKEe81rTT4qnhycUAΞΞ.Size(v.Map)
 }
 
 func (s complexStructMUS) Skip(bs []byte) (n int, err error) {
@@ -1355,7 +1360,7 @@ func (s complexStructMUS) Skip(bs []byte) (n int, err error) {
 	if err != nil {
 		return
 	}
-	n1, err = SliceAliasMUS.Skip(bs[n:])
+	n1, err = MySliceMUS.Skip(bs[n:])
 	n += n1
 	if err != nil {
 		return
@@ -1405,7 +1410,7 @@ func (s complexStructMUS) Skip(bs []byte) (n int, err error) {
 	if err != nil {
 		return
 	}
-	n1, err = mapNJclDG86D52Pjt61euotyQΞΞ.Skip(bs[n:])
+	n1, err = mapwpOMFlKEe81rTT4qnhycUAΞΞ.Skip(bs[n:])
 	n += n1
 	return
 }
@@ -1588,27 +1593,27 @@ func (s anotherInterfaceMUS) Skip(bs []byte) (n int, err error) {
 	return
 }
 
-var InterfaceDoublePtrAliasMUS = interfaceDoublePtrAliasMUS{}
+var InterfaceDoubleMyIntPtrMUS = interfaceDoubleMyIntPtrMUS{}
 
-type interfaceDoublePtrAliasMUS struct{}
+type interfaceDoubleMyIntPtrMUS struct{}
 
-func (s interfaceDoublePtrAliasMUS) Marshal(v InterfaceDoublePtrAlias, bs []byte) (n int) {
+func (s interfaceDoubleMyIntPtrMUS) Marshal(v InterfaceDoubleMyIntPtr, bs []byte) (n int) {
 	return ptr4ΣGeyl4njXOpw7dXGWlhlwΞΞ.Marshal((**Interface)(v), bs)
 }
 
-func (s interfaceDoublePtrAliasMUS) Unmarshal(bs []byte) (v InterfaceDoublePtrAlias, n int, err error) {
+func (s interfaceDoubleMyIntPtrMUS) Unmarshal(bs []byte) (v InterfaceDoubleMyIntPtr, n int, err error) {
 	tmp, n, err := ptr4ΣGeyl4njXOpw7dXGWlhlwΞΞ.Unmarshal(bs)
 	if err != nil {
 		return
 	}
-	v = InterfaceDoublePtrAlias(tmp)
+	v = InterfaceDoubleMyIntPtr(tmp)
 	return
 }
 
-func (s interfaceDoublePtrAliasMUS) Size(v InterfaceDoublePtrAlias) (size int) {
+func (s interfaceDoubleMyIntPtrMUS) Size(v InterfaceDoubleMyIntPtr) (size int) {
 	return ptr4ΣGeyl4njXOpw7dXGWlhlwΞΞ.Size((**Interface)(v))
 }
 
-func (s interfaceDoublePtrAliasMUS) Skip(bs []byte) (n int, err error) {
+func (s interfaceDoubleMyIntPtrMUS) Skip(bs []byte) (n int, err error) {
 	return ptr4ΣGeyl4njXOpw7dXGWlhlwΞΞ.Skip(bs)
 }

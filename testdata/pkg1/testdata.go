@@ -10,64 +10,64 @@ const (
 	InterfaceImpl1DTM = 1
 	InterfaceImpl2DTM = 2
 	SimpleStructDTM   = 3
-	IntAliasDTM       = 4
+	MyIntDTM          = 4
 )
 
-type BoolAlias bool
-type ByteAlias byte
-type Float32Alias float32
+type MyBool bool
+type MyByte byte
+type MyFloat32 float32
 
-type IntAlias int
-type RawIntAlias int
-type VarintPositiveIntAlias int
-type ValidIntAlias int
-type AllIntAlias int
+type MyInt int
+type RawMyInt int
+type VarintPositiveMyInt int
+type ValidMyInt int
+type AllMyInt int
 
-type StringAlias string
-type LenEncodingStringAlias string
-type LenValidStringAlias string
-type ValidStringAlias string
-type AllStringAlias string
+type MyString string
+type LenEncodingMyString string
+type LenValidMyString string
+type ValidMyString string
+type AllMyString string
 
-type ByteSliceAlias []byte
-type LenEncodingByteSliceAlias []byte
-type LenValidByteSliceAlias []byte
-type ValidByteSliceAlias []byte
-type AllByteSliceAlias []byte
+type MyByteSlice []byte
+type LenEncodingMyByteSlice []byte
+type LenValidMyByteSlice []byte
+type ValidMyByteSlice []byte
+type AllMyByteSlice []byte
 
-type SliceAlias []int
-type LenEncodingSliceAlias []int
-type LenValidSliceAlias []int
-type ElemEncodingSliceAlias []int
-type ElemValidSliceAlias []int
-type ValidSliceAlias []int
-type AllSliceAlias []int
+type MySlice []int
+type LenEncodingMySlice []int
+type LenValidMySlice []int
+type ElemEncodingMySlice []int
+type ElemValidMySlice []int
+type ValidMySlice []int
+type AllMySlice []int
 
-type ArrayAlias [3]int
-type LenEncodingArrayAlias [3]int
-type ElemEncodingArrayAlias [3]int
-type ElemValidArrayAlias [3]int
-type ValidArrayAlias [3]int
-type AllArrayAlias [3]int
+type MyArray [3]int
+type LenEncodingMyArray [3]int
+type ElemEncodingMyArray [3]int
+type ElemValidMyArray [3]int
+type ValidMyArray [3]int
+type AllMyArray [3]int
 
-type MapAlias map[int]int
-type LenEncodingMapAlias map[int]int
-type LenValidMapAlias map[int]int
-type KeyEncodingMapAlias map[int]int
-type KeyValidMapAlias map[int]int
-type ElemEncodingMapAlias map[int]int
-type ElemValidMapAlias map[int]int
-type ValidMapAlias map[int]int
-type AllMapAlias map[int]int
+type MyMap map[int]int
+type LenEncodingMyMap map[int]int
+type LenValidMyMap map[int]int
+type KeyEncodingMyMap map[int]int
+type KeyValidMyMap map[int]int
+type ElemEncodingMyMap map[int]int
+type ElemValidMyMap map[int]int
+type ValidMyMap map[int]int
+type AllMyMap map[int]int
 
-type PtrAlias *int
-type ElemNumEncodingPtrAlias *int
+type MyIntPtr *int
+type ElemNumEncodingMyIntPtr *int
 
-type ValidPtrAlias *int
+type ValidMyIntPtr *int
 
-type SimpleStructPtrAlias *SimpleStruct
+type SimpleStructMyIntPtr *SimpleStruct
 
-type InterfaceDoublePtrAlias **Interface
+type InterfaceDoubleMyIntPtr **Interface
 
 type StructAlias SimpleStruct
 
@@ -101,7 +101,7 @@ type ComplexStruct struct {
 
 	String string
 
-	Alias            SliceAlias
+	Alias            MySlice
 	AnotherPkgStruct pkg2.Struct
 	Interface        Interface
 
@@ -115,7 +115,7 @@ type ComplexStruct struct {
 	NilPtr    *string
 	PtrArray  *[3]int
 
-	Map map[float32]map[IntAlias][]SimpleStruct
+	Map map[float32]map[MyInt][]SimpleStruct
 }
 
 // -----------------------------------------------------------------------------

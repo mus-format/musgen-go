@@ -14,8 +14,8 @@ import (
 
 var (
 	arrayΔEUbR5kxK3Xh8nZpMbBMΣgΞΞ = ord.NewArraySer[[3]int, int](3, unsafe.Int)
-	mapJ5jFrgsF5Bg00snS5OmKcwΞΞ   = ord.NewMapSer[IntAliasStreamUnsafe, []SimpleStructStreamUnsafe](IntAliasStreamUnsafeMUS, slice4JrZ808sg28u396h2wj3PAΞΞ)
-	mapVΔEGfo1juwjtmAΣn1luvcgΞΞ   = ord.NewMapSer[float32, map[IntAliasStreamUnsafe][]SimpleStructStreamUnsafe](unsafe.Float32, mapJ5jFrgsF5Bg00snS5OmKcwΞΞ)
+	mapONAdCODA5Δ3WvvEjVZWP6gΞΞ   = ord.NewMapSer[float32, map[MyIntStreamUnsafe][]SimpleStructStreamUnsafe](unsafe.Float32, mapdF4uv9TsHkTsV6KUΔV1DYgΞΞ)
+	mapdF4uv9TsHkTsV6KUΔV1DYgΞΞ   = ord.NewMapSer[MyIntStreamUnsafe, []SimpleStructStreamUnsafe](MyIntStreamUnsafeMUS, slice4JrZ808sg28u396h2wj3PAΞΞ)
 	ptrAΔt28sCfGLΔUiT2SaΔLeΣAΞΞ   = ord.NewPtrSer[string](unsafe.String)
 	ptrKZLDWq303uOh5H5ΣUzp3NwΞΞ   = ord.NewPtrSer[[3]int](arrayΔEUbR5kxK3Xh8nZpMbBMΣgΞΞ)
 	ptrzQDVI7StkgLPuOzDeCU5AAΞΞ   = ord.NewPtrSer[SimpleStructStreamUnsafe](SimpleStructStreamUnsafeMUS)
@@ -23,53 +23,53 @@ var (
 	sliceΔvbmkqqYOtekMVNIDoc5oQΞΞ = ord.NewSliceSer[int](unsafe.Int)
 )
 
-var IntAliasStreamUnsafeMUS = intAliasStreamUnsafeMUS{}
+var MyIntStreamUnsafeMUS = myIntStreamUnsafeMUS{}
 
-type intAliasStreamUnsafeMUS struct{}
+type myIntStreamUnsafeMUS struct{}
 
-func (s intAliasStreamUnsafeMUS) Marshal(v IntAliasStreamUnsafe, w muss.Writer) (n int, err error) {
+func (s myIntStreamUnsafeMUS) Marshal(v MyIntStreamUnsafe, w muss.Writer) (n int, err error) {
 	return unsafe.Int.Marshal(int(v), w)
 }
 
-func (s intAliasStreamUnsafeMUS) Unmarshal(r muss.Reader) (v IntAliasStreamUnsafe, n int, err error) {
+func (s myIntStreamUnsafeMUS) Unmarshal(r muss.Reader) (v MyIntStreamUnsafe, n int, err error) {
 	tmp, n, err := unsafe.Int.Unmarshal(r)
 	if err != nil {
 		return
 	}
-	v = IntAliasStreamUnsafe(tmp)
+	v = MyIntStreamUnsafe(tmp)
 	return
 }
 
-func (s intAliasStreamUnsafeMUS) Size(v IntAliasStreamUnsafe) (size int) {
+func (s myIntStreamUnsafeMUS) Size(v MyIntStreamUnsafe) (size int) {
 	return unsafe.Int.Size(int(v))
 }
 
-func (s intAliasStreamUnsafeMUS) Skip(r muss.Reader) (n int, err error) {
+func (s myIntStreamUnsafeMUS) Skip(r muss.Reader) (n int, err error) {
 	return unsafe.Int.Skip(r)
 }
 
-var SliceAliasStreamUnsafeMUS = sliceAliasStreamUnsafeMUS{}
+var MySliceStreamUnsafeMUS = mySliceStreamUnsafeMUS{}
 
-type sliceAliasStreamUnsafeMUS struct{}
+type mySliceStreamUnsafeMUS struct{}
 
-func (s sliceAliasStreamUnsafeMUS) Marshal(v SliceAliasStreamUnsafe, w muss.Writer) (n int, err error) {
+func (s mySliceStreamUnsafeMUS) Marshal(v MySliceStreamUnsafe, w muss.Writer) (n int, err error) {
 	return sliceΔvbmkqqYOtekMVNIDoc5oQΞΞ.Marshal([]int(v), w)
 }
 
-func (s sliceAliasStreamUnsafeMUS) Unmarshal(r muss.Reader) (v SliceAliasStreamUnsafe, n int, err error) {
+func (s mySliceStreamUnsafeMUS) Unmarshal(r muss.Reader) (v MySliceStreamUnsafe, n int, err error) {
 	tmp, n, err := sliceΔvbmkqqYOtekMVNIDoc5oQΞΞ.Unmarshal(r)
 	if err != nil {
 		return
 	}
-	v = SliceAliasStreamUnsafe(tmp)
+	v = MySliceStreamUnsafe(tmp)
 	return
 }
 
-func (s sliceAliasStreamUnsafeMUS) Size(v SliceAliasStreamUnsafe) (size int) {
+func (s mySliceStreamUnsafeMUS) Size(v MySliceStreamUnsafe) (size int) {
 	return sliceΔvbmkqqYOtekMVNIDoc5oQΞΞ.Size([]int(v))
 }
 
-func (s sliceAliasStreamUnsafeMUS) Skip(r muss.Reader) (n int, err error) {
+func (s mySliceStreamUnsafeMUS) Skip(r muss.Reader) (n int, err error) {
 	return sliceΔvbmkqqYOtekMVNIDoc5oQΞΞ.Skip(r)
 }
 
@@ -165,7 +165,7 @@ func (s complexStructStreamUnsafeMUS) Marshal(v ComplexStructStreamUnsafe, w mus
 	if err != nil {
 		return
 	}
-	n1, err = SliceAliasStreamUnsafeMUS.Marshal(v.Alias, w)
+	n1, err = MySliceStreamUnsafeMUS.Marshal(v.Alias, w)
 	n += n1
 	if err != nil {
 		return
@@ -215,7 +215,7 @@ func (s complexStructStreamUnsafeMUS) Marshal(v ComplexStructStreamUnsafe, w mus
 	if err != nil {
 		return
 	}
-	n1, err = mapVΔEGfo1juwjtmAΣn1luvcgΞΞ.Marshal(v.Map, w)
+	n1, err = mapONAdCODA5Δ3WvvEjVZWP6gΞΞ.Marshal(v.Map, w)
 	n += n1
 	return
 }
@@ -286,7 +286,7 @@ func (s complexStructStreamUnsafeMUS) Unmarshal(r muss.Reader) (v ComplexStructS
 	if err != nil {
 		return
 	}
-	v.Alias, n1, err = SliceAliasStreamUnsafeMUS.Unmarshal(r)
+	v.Alias, n1, err = MySliceStreamUnsafeMUS.Unmarshal(r)
 	n += n1
 	if err != nil {
 		return
@@ -336,7 +336,7 @@ func (s complexStructStreamUnsafeMUS) Unmarshal(r muss.Reader) (v ComplexStructS
 	if err != nil {
 		return
 	}
-	v.Map, n1, err = mapVΔEGfo1juwjtmAΣn1luvcgΞΞ.Unmarshal(r)
+	v.Map, n1, err = mapONAdCODA5Δ3WvvEjVZWP6gΞΞ.Unmarshal(r)
 	n += n1
 	return
 }
@@ -355,7 +355,7 @@ func (s complexStructStreamUnsafeMUS) Size(v ComplexStructStreamUnsafe) (size in
 	size += unsafe.Float32.Size(v.Float32)
 	size += unsafe.Float64.Size(v.Float64)
 	size += unsafe.String.Size(v.String)
-	size += SliceAliasStreamUnsafeMUS.Size(v.Alias)
+	size += MySliceStreamUnsafeMUS.Size(v.Alias)
 	size += pkg2.StructStreamUnsafeMUS.Size(v.AnotherPkgStruct)
 	size += InterfaceStreamUnsafeMUS.Size(v.Interface)
 	size += ord.ByteSlice.Size(v.ByteSlice)
@@ -365,7 +365,7 @@ func (s complexStructStreamUnsafeMUS) Size(v ComplexStructStreamUnsafe) (size in
 	size += ptrzQDVI7StkgLPuOzDeCU5AAΞΞ.Size(v.PtrStruct)
 	size += ptrAΔt28sCfGLΔUiT2SaΔLeΣAΞΞ.Size(v.NilPtr)
 	size += ptrKZLDWq303uOh5H5ΣUzp3NwΞΞ.Size(v.PtrArray)
-	return size + mapVΔEGfo1juwjtmAΣn1luvcgΞΞ.Size(v.Map)
+	return size + mapONAdCODA5Δ3WvvEjVZWP6gΞΞ.Size(v.Map)
 }
 
 func (s complexStructStreamUnsafeMUS) Skip(r muss.Reader) (n int, err error) {
@@ -434,7 +434,7 @@ func (s complexStructStreamUnsafeMUS) Skip(r muss.Reader) (n int, err error) {
 	if err != nil {
 		return
 	}
-	n1, err = SliceAliasStreamUnsafeMUS.Skip(r)
+	n1, err = MySliceStreamUnsafeMUS.Skip(r)
 	n += n1
 	if err != nil {
 		return
@@ -484,7 +484,7 @@ func (s complexStructStreamUnsafeMUS) Skip(r muss.Reader) (n int, err error) {
 	if err != nil {
 		return
 	}
-	n1, err = mapVΔEGfo1juwjtmAΣn1luvcgΞΞ.Skip(r)
+	n1, err = mapONAdCODA5Δ3WvvEjVZWP6gΞΞ.Skip(r)
 	n += n1
 	return
 }

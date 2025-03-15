@@ -22,11 +22,11 @@ func TestUnsafeFileGenerator(t *testing.T) {
 
 		// typedef
 
-		err := g.AddTypedef(reflect.TypeFor[pkg1.IntAliasUnsafe]())
+		err := g.AddTypedef(reflect.TypeFor[pkg1.MyIntUnsafe]())
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.SliceAliasUnsafe]())
+		err = g.AddTypedef(reflect.TypeFor[pkg1.MySliceUnsafe]())
 		if err != nil {
 			t.Fatal(err)
 		}
