@@ -76,6 +76,11 @@ func TestStreamUnsafeFileGenerator(t *testing.T) {
 			t.Fatal(err)
 		}
 
+		err = g.AddStruct(reflect.TypeFor[pkg2.TimeStructStreamUnsafe]())
+		if err != nil {
+			t.Fatal(err)
+		}
+
 		bs, err := g.Generate()
 		if err != nil {
 			t.Fatal(err)

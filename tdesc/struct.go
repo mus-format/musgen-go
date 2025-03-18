@@ -15,7 +15,7 @@ func MakeStructDesc(t reflect.Type, sops structops.Options,
 	if err != nil {
 		return
 	}
-	if sops != nil && len(sops) != len(fieldTypes) {
+	if sops.Fields != nil && len(sops.Fields) != len(fieldTypes) {
 		err = ErrWrongOptionsAmount
 		return
 	}
@@ -33,8 +33,8 @@ func buildStructFields(t reflect.Type, types []string, sops structops.Options) (
 			Name: t.Field(i).Name,
 			Type: types[i],
 		}
-		if len(sops) > 0 {
-			fields[i].Tops = (*typeops.Options)(sops[i])
+		if len(sops.Fields) > 0 {
+			fields[i].Tops = (*typeops.Options)(sops.Fields[i])
 		}
 	}
 	return

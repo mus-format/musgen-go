@@ -63,3 +63,51 @@ func (s structUnsafeMUS) Skip(bs []byte) (n int, err error) {
 	n += n1
 	return
 }
+
+var TimeStructUnsafeMUS = timeStructUnsafeMUS{}
+
+type timeStructUnsafeMUS struct{}
+
+func (s timeStructUnsafeMUS) Marshal(v TimeStructUnsafe, bs []byte) (n int) {
+	n = unsafe.Float32.Marshal(v.Float32, bs)
+	n += unsafe.TimeUnix.Marshal(v.Time, bs[n:])
+	return n + unsafe.String.Marshal(v.String, bs[n:])
+}
+
+func (s timeStructUnsafeMUS) Unmarshal(bs []byte) (v TimeStructUnsafe, n int, err error) {
+	v.Float32, n, err = unsafe.Float32.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	var n1 int
+	v.Time, n1, err = unsafe.TimeUnix.Unmarshal(bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	v.String, n1, err = unsafe.String.Unmarshal(bs[n:])
+	n += n1
+	return
+}
+
+func (s timeStructUnsafeMUS) Size(v TimeStructUnsafe) (size int) {
+	size = unsafe.Float32.Size(v.Float32)
+	size += unsafe.TimeUnix.Size(v.Time)
+	return size + unsafe.String.Size(v.String)
+}
+
+func (s timeStructUnsafeMUS) Skip(bs []byte) (n int, err error) {
+	n, err = unsafe.Float32.Skip(bs)
+	if err != nil {
+		return
+	}
+	var n1 int
+	n1, err = unsafe.TimeUnix.Skip(bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	n1, err = unsafe.String.Skip(bs[n:])
+	n += n1
+	return
+}

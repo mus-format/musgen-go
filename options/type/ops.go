@@ -8,6 +8,7 @@ import (
 type Options struct {
 	Ignore       bool
 	NumEncoding  NumEncoding
+	TimeUnit     TimeUnit
 	Validator    string
 	LenEncoding  NumEncoding
 	LenValidator string
@@ -32,9 +33,6 @@ func (o Options) Hash() [16]byte {
 		bs = append(bs, []byte("elem")...)
 		bs = append(bs, eh[:]...)
 	}
-	// for i := range o.Oneof {
-	// 	bs = append(bs, []byte(o.Oneof[i].Name())...)
-	// }
 	return md5.Sum(bs)
 }
 
@@ -50,6 +48,10 @@ func WithIgnore() SetOption {
 
 func WithNumEncoding(enc NumEncoding) SetOption {
 	return func(o *Options) { o.NumEncoding = enc }
+}
+
+func WithTimeUnit(tu TimeUnit) SetOption {
+	return func(o *Options) { o.TimeUnit = tu }
 }
 
 func WithValidator(validator string) SetOption {

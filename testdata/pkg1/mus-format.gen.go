@@ -4,6 +4,7 @@ package pkg1
 
 import (
 	"fmt"
+	"time"
 
 	com "github.com/mus-format/common-go"
 	dts "github.com/mus-format/mus-dts-go"
@@ -314,6 +315,383 @@ func (s allMyStringMUS) Skip(bs []byte) (n int, err error) {
 	return string6DO1S6ZwcLfItΣZS8XhRmwΞΞ.Skip(bs)
 }
 
+var MyTimeMUS = myTimeMUS{}
+
+type myTimeMUS struct{}
+
+func (s myTimeMUS) Marshal(v MyTime, bs []byte) (n int) {
+	return raw.TimeUnix.Marshal(time.Time(v), bs)
+}
+
+func (s myTimeMUS) Unmarshal(bs []byte) (v MyTime, n int, err error) {
+	tmp, n, err := raw.TimeUnix.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = MyTime(tmp)
+	return
+}
+
+func (s myTimeMUS) Size(v MyTime) (size int) {
+	return raw.TimeUnix.Size(time.Time(v))
+}
+
+func (s myTimeMUS) Skip(bs []byte) (n int, err error) {
+	return raw.TimeUnix.Skip(bs)
+}
+
+var MyTimeSecMUS = myTimeSecMUS{}
+
+type myTimeSecMUS struct{}
+
+func (s myTimeSecMUS) Marshal(v MyTimeSec, bs []byte) (n int) {
+	return raw.TimeUnix.Marshal(time.Time(v), bs)
+}
+
+func (s myTimeSecMUS) Unmarshal(bs []byte) (v MyTimeSec, n int, err error) {
+	tmp, n, err := raw.TimeUnix.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = MyTimeSec(tmp)
+	return
+}
+
+func (s myTimeSecMUS) Size(v MyTimeSec) (size int) {
+	return raw.TimeUnix.Size(time.Time(v))
+}
+
+func (s myTimeSecMUS) Skip(bs []byte) (n int, err error) {
+	return raw.TimeUnix.Skip(bs)
+}
+
+var MyTimeMilliMUS = myTimeMilliMUS{}
+
+type myTimeMilliMUS struct{}
+
+func (s myTimeMilliMUS) Marshal(v MyTimeMilli, bs []byte) (n int) {
+	return raw.TimeUnixMilli.Marshal(time.Time(v), bs)
+}
+
+func (s myTimeMilliMUS) Unmarshal(bs []byte) (v MyTimeMilli, n int, err error) {
+	tmp, n, err := raw.TimeUnixMilli.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = MyTimeMilli(tmp)
+	return
+}
+
+func (s myTimeMilliMUS) Size(v MyTimeMilli) (size int) {
+	return raw.TimeUnixMilli.Size(time.Time(v))
+}
+
+func (s myTimeMilliMUS) Skip(bs []byte) (n int, err error) {
+	return raw.TimeUnixMilli.Skip(bs)
+}
+
+var MyTimeMicroMUS = myTimeMicroMUS{}
+
+type myTimeMicroMUS struct{}
+
+func (s myTimeMicroMUS) Marshal(v MyTimeMicro, bs []byte) (n int) {
+	return raw.TimeUnixMicro.Marshal(time.Time(v), bs)
+}
+
+func (s myTimeMicroMUS) Unmarshal(bs []byte) (v MyTimeMicro, n int, err error) {
+	tmp, n, err := raw.TimeUnixMicro.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = MyTimeMicro(tmp)
+	return
+}
+
+func (s myTimeMicroMUS) Size(v MyTimeMicro) (size int) {
+	return raw.TimeUnixMicro.Size(time.Time(v))
+}
+
+func (s myTimeMicroMUS) Skip(bs []byte) (n int, err error) {
+	return raw.TimeUnixMicro.Skip(bs)
+}
+
+var MyTimeNanoMUS = myTimeNanoMUS{}
+
+type myTimeNanoMUS struct{}
+
+func (s myTimeNanoMUS) Marshal(v MyTimeNano, bs []byte) (n int) {
+	return raw.TimeUnixNano.Marshal(time.Time(v), bs)
+}
+
+func (s myTimeNanoMUS) Unmarshal(bs []byte) (v MyTimeNano, n int, err error) {
+	tmp, n, err := raw.TimeUnixNano.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = MyTimeNano(tmp)
+	return
+}
+
+func (s myTimeNanoMUS) Size(v MyTimeNano) (size int) {
+	return raw.TimeUnixNano.Size(time.Time(v))
+}
+
+func (s myTimeNanoMUS) Skip(bs []byte) (n int, err error) {
+	return raw.TimeUnixNano.Skip(bs)
+}
+
+var MyTimeSecUTCMUS = myTimeSecUTCMUS{}
+
+type myTimeSecUTCMUS struct{}
+
+func (s myTimeSecUTCMUS) Marshal(v MyTimeSecUTC, bs []byte) (n int) {
+	return raw.TimeUnixUTC.Marshal(time.Time(v), bs)
+}
+
+func (s myTimeSecUTCMUS) Unmarshal(bs []byte) (v MyTimeSecUTC, n int, err error) {
+	tmp, n, err := raw.TimeUnixUTC.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = MyTimeSecUTC(tmp)
+	return
+}
+
+func (s myTimeSecUTCMUS) Size(v MyTimeSecUTC) (size int) {
+	return raw.TimeUnixUTC.Size(time.Time(v))
+}
+
+func (s myTimeSecUTCMUS) Skip(bs []byte) (n int, err error) {
+	return raw.TimeUnixUTC.Skip(bs)
+}
+
+var MyTimeMilliUTCMUS = myTimeMilliUTCMUS{}
+
+type myTimeMilliUTCMUS struct{}
+
+func (s myTimeMilliUTCMUS) Marshal(v MyTimeMilliUTC, bs []byte) (n int) {
+	return raw.TimeUnixMilliUTC.Marshal(time.Time(v), bs)
+}
+
+func (s myTimeMilliUTCMUS) Unmarshal(bs []byte) (v MyTimeMilliUTC, n int, err error) {
+	tmp, n, err := raw.TimeUnixMilliUTC.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = MyTimeMilliUTC(tmp)
+	return
+}
+
+func (s myTimeMilliUTCMUS) Size(v MyTimeMilliUTC) (size int) {
+	return raw.TimeUnixMilliUTC.Size(time.Time(v))
+}
+
+func (s myTimeMilliUTCMUS) Skip(bs []byte) (n int, err error) {
+	return raw.TimeUnixMilliUTC.Skip(bs)
+}
+
+var MyTimeMicroUTCMUS = myTimeMicroUTCMUS{}
+
+type myTimeMicroUTCMUS struct{}
+
+func (s myTimeMicroUTCMUS) Marshal(v MyTimeMicroUTC, bs []byte) (n int) {
+	return raw.TimeUnixMicroUTC.Marshal(time.Time(v), bs)
+}
+
+func (s myTimeMicroUTCMUS) Unmarshal(bs []byte) (v MyTimeMicroUTC, n int, err error) {
+	tmp, n, err := raw.TimeUnixMicroUTC.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = MyTimeMicroUTC(tmp)
+	return
+}
+
+func (s myTimeMicroUTCMUS) Size(v MyTimeMicroUTC) (size int) {
+	return raw.TimeUnixMicroUTC.Size(time.Time(v))
+}
+
+func (s myTimeMicroUTCMUS) Skip(bs []byte) (n int, err error) {
+	return raw.TimeUnixMicroUTC.Skip(bs)
+}
+
+var MyTimeNanoUTCMUS = myTimeNanoUTCMUS{}
+
+type myTimeNanoUTCMUS struct{}
+
+func (s myTimeNanoUTCMUS) Marshal(v MyTimeNanoUTC, bs []byte) (n int) {
+	return raw.TimeUnixNanoUTC.Marshal(time.Time(v), bs)
+}
+
+func (s myTimeNanoUTCMUS) Unmarshal(bs []byte) (v MyTimeNanoUTC, n int, err error) {
+	tmp, n, err := raw.TimeUnixNanoUTC.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = MyTimeNanoUTC(tmp)
+	return
+}
+
+func (s myTimeNanoUTCMUS) Size(v MyTimeNanoUTC) (size int) {
+	return raw.TimeUnixNanoUTC.Size(time.Time(v))
+}
+
+func (s myTimeNanoUTCMUS) Skip(bs []byte) (n int, err error) {
+	return raw.TimeUnixNanoUTC.Skip(bs)
+}
+
+var MyArrayMUS = myArrayMUS{}
+
+type myArrayMUS struct{}
+
+func (s myArrayMUS) Marshal(v MyArray, bs []byte) (n int) {
+	return arrayr4wy7nYWZsCSpVj9NWA6awΞΞ.Marshal([3]int(v), bs)
+}
+
+func (s myArrayMUS) Unmarshal(bs []byte) (v MyArray, n int, err error) {
+	tmp, n, err := arrayr4wy7nYWZsCSpVj9NWA6awΞΞ.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = MyArray(tmp)
+	return
+}
+
+func (s myArrayMUS) Size(v MyArray) (size int) {
+	return arrayr4wy7nYWZsCSpVj9NWA6awΞΞ.Size([3]int(v))
+}
+
+func (s myArrayMUS) Skip(bs []byte) (n int, err error) {
+	return arrayr4wy7nYWZsCSpVj9NWA6awΞΞ.Skip(bs)
+}
+
+var LenEncodingMyArrayMUS = lenEncodingMyArrayMUS{}
+
+type lenEncodingMyArrayMUS struct{}
+
+func (s lenEncodingMyArrayMUS) Marshal(v LenEncodingMyArray, bs []byte) (n int) {
+	return arraycrM9UZcGb9US7pO18XSo2wΞΞ.Marshal([3]int(v), bs)
+}
+
+func (s lenEncodingMyArrayMUS) Unmarshal(bs []byte) (v LenEncodingMyArray, n int, err error) {
+	tmp, n, err := arraycrM9UZcGb9US7pO18XSo2wΞΞ.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = LenEncodingMyArray(tmp)
+	return
+}
+
+func (s lenEncodingMyArrayMUS) Size(v LenEncodingMyArray) (size int) {
+	return arraycrM9UZcGb9US7pO18XSo2wΞΞ.Size([3]int(v))
+}
+
+func (s lenEncodingMyArrayMUS) Skip(bs []byte) (n int, err error) {
+	return arraycrM9UZcGb9US7pO18XSo2wΞΞ.Skip(bs)
+}
+
+var ElemEncodingMyArrayMUS = elemEncodingMyArrayMUS{}
+
+type elemEncodingMyArrayMUS struct{}
+
+func (s elemEncodingMyArrayMUS) Marshal(v ElemEncodingMyArray, bs []byte) (n int) {
+	return arrayRuX3ffcBMbWzRHkOFcnegAΞΞ.Marshal([3]int(v), bs)
+}
+
+func (s elemEncodingMyArrayMUS) Unmarshal(bs []byte) (v ElemEncodingMyArray, n int, err error) {
+	tmp, n, err := arrayRuX3ffcBMbWzRHkOFcnegAΞΞ.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = ElemEncodingMyArray(tmp)
+	return
+}
+
+func (s elemEncodingMyArrayMUS) Size(v ElemEncodingMyArray) (size int) {
+	return arrayRuX3ffcBMbWzRHkOFcnegAΞΞ.Size([3]int(v))
+}
+
+func (s elemEncodingMyArrayMUS) Skip(bs []byte) (n int, err error) {
+	return arrayRuX3ffcBMbWzRHkOFcnegAΞΞ.Skip(bs)
+}
+
+var ElemValidMyArrayMUS = elemValidMyArrayMUS{}
+
+type elemValidMyArrayMUS struct{}
+
+func (s elemValidMyArrayMUS) Marshal(v ElemValidMyArray, bs []byte) (n int) {
+	return arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ.Marshal([3]int(v), bs)
+}
+
+func (s elemValidMyArrayMUS) Unmarshal(bs []byte) (v ElemValidMyArray, n int, err error) {
+	tmp, n, err := arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = ElemValidMyArray(tmp)
+	return
+}
+
+func (s elemValidMyArrayMUS) Size(v ElemValidMyArray) (size int) {
+	return arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ.Size([3]int(v))
+}
+
+func (s elemValidMyArrayMUS) Skip(bs []byte) (n int, err error) {
+	return arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ.Skip(bs)
+}
+
+var ValidMyArrayMUS = validMyArrayMUS{}
+
+type validMyArrayMUS struct{}
+
+func (s validMyArrayMUS) Marshal(v ValidMyArray, bs []byte) (n int) {
+	return arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ.Marshal([3]int(v), bs)
+}
+
+func (s validMyArrayMUS) Unmarshal(bs []byte) (v ValidMyArray, n int, err error) {
+	tmp, n, err := arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = ValidMyArray(tmp)
+	err = testdata.ValidateZeroValue[[3]int](v)
+	return
+}
+
+func (s validMyArrayMUS) Size(v ValidMyArray) (size int) {
+	return arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ.Size([3]int(v))
+}
+
+func (s validMyArrayMUS) Skip(bs []byte) (n int, err error) {
+	return arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ.Skip(bs)
+}
+
+var AllMyArrayMUS = allMyArrayMUS{}
+
+type allMyArrayMUS struct{}
+
+func (s allMyArrayMUS) Marshal(v AllMyArray, bs []byte) (n int) {
+	return arrayZZrMuafde4zs9nWQ9V29GQΞΞ.Marshal([3]int(v), bs)
+}
+
+func (s allMyArrayMUS) Unmarshal(bs []byte) (v AllMyArray, n int, err error) {
+	tmp, n, err := arrayZZrMuafde4zs9nWQ9V29GQΞΞ.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	v = AllMyArray(tmp)
+	err = testdata.ValidateZeroValue[[3]int](v)
+	return
+}
+
+func (s allMyArrayMUS) Size(v AllMyArray) (size int) {
+	return arrayZZrMuafde4zs9nWQ9V29GQΞΞ.Size([3]int(v))
+}
+
+func (s allMyArrayMUS) Skip(bs []byte) (n int, err error) {
+	return arrayZZrMuafde4zs9nWQ9V29GQΞΞ.Skip(bs)
+}
+
 var MyByteSliceMUS = myByteSliceMUS{}
 
 type myByteSliceMUS struct{}
@@ -589,158 +967,6 @@ func (s allMySliceMUS) Size(v AllMySlice) (size int) {
 
 func (s allMySliceMUS) Skip(bs []byte) (n int, err error) {
 	return slicenXQ4BhwΔjyAbWO9CVN0bXgΞΞ.Skip(bs)
-}
-
-var MyArrayMUS = myArrayMUS{}
-
-type myArrayMUS struct{}
-
-func (s myArrayMUS) Marshal(v MyArray, bs []byte) (n int) {
-	return arrayr4wy7nYWZsCSpVj9NWA6awΞΞ.Marshal([3]int(v), bs)
-}
-
-func (s myArrayMUS) Unmarshal(bs []byte) (v MyArray, n int, err error) {
-	tmp, n, err := arrayr4wy7nYWZsCSpVj9NWA6awΞΞ.Unmarshal(bs)
-	if err != nil {
-		return
-	}
-	v = MyArray(tmp)
-	return
-}
-
-func (s myArrayMUS) Size(v MyArray) (size int) {
-	return arrayr4wy7nYWZsCSpVj9NWA6awΞΞ.Size([3]int(v))
-}
-
-func (s myArrayMUS) Skip(bs []byte) (n int, err error) {
-	return arrayr4wy7nYWZsCSpVj9NWA6awΞΞ.Skip(bs)
-}
-
-var LenEncodingMyArrayMUS = lenEncodingMyArrayMUS{}
-
-type lenEncodingMyArrayMUS struct{}
-
-func (s lenEncodingMyArrayMUS) Marshal(v LenEncodingMyArray, bs []byte) (n int) {
-	return arraycrM9UZcGb9US7pO18XSo2wΞΞ.Marshal([3]int(v), bs)
-}
-
-func (s lenEncodingMyArrayMUS) Unmarshal(bs []byte) (v LenEncodingMyArray, n int, err error) {
-	tmp, n, err := arraycrM9UZcGb9US7pO18XSo2wΞΞ.Unmarshal(bs)
-	if err != nil {
-		return
-	}
-	v = LenEncodingMyArray(tmp)
-	return
-}
-
-func (s lenEncodingMyArrayMUS) Size(v LenEncodingMyArray) (size int) {
-	return arraycrM9UZcGb9US7pO18XSo2wΞΞ.Size([3]int(v))
-}
-
-func (s lenEncodingMyArrayMUS) Skip(bs []byte) (n int, err error) {
-	return arraycrM9UZcGb9US7pO18XSo2wΞΞ.Skip(bs)
-}
-
-var ElemEncodingMyArrayMUS = elemEncodingMyArrayMUS{}
-
-type elemEncodingMyArrayMUS struct{}
-
-func (s elemEncodingMyArrayMUS) Marshal(v ElemEncodingMyArray, bs []byte) (n int) {
-	return arrayRuX3ffcBMbWzRHkOFcnegAΞΞ.Marshal([3]int(v), bs)
-}
-
-func (s elemEncodingMyArrayMUS) Unmarshal(bs []byte) (v ElemEncodingMyArray, n int, err error) {
-	tmp, n, err := arrayRuX3ffcBMbWzRHkOFcnegAΞΞ.Unmarshal(bs)
-	if err != nil {
-		return
-	}
-	v = ElemEncodingMyArray(tmp)
-	return
-}
-
-func (s elemEncodingMyArrayMUS) Size(v ElemEncodingMyArray) (size int) {
-	return arrayRuX3ffcBMbWzRHkOFcnegAΞΞ.Size([3]int(v))
-}
-
-func (s elemEncodingMyArrayMUS) Skip(bs []byte) (n int, err error) {
-	return arrayRuX3ffcBMbWzRHkOFcnegAΞΞ.Skip(bs)
-}
-
-var ElemValidMyArrayMUS = elemValidMyArrayMUS{}
-
-type elemValidMyArrayMUS struct{}
-
-func (s elemValidMyArrayMUS) Marshal(v ElemValidMyArray, bs []byte) (n int) {
-	return arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ.Marshal([3]int(v), bs)
-}
-
-func (s elemValidMyArrayMUS) Unmarshal(bs []byte) (v ElemValidMyArray, n int, err error) {
-	tmp, n, err := arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ.Unmarshal(bs)
-	if err != nil {
-		return
-	}
-	v = ElemValidMyArray(tmp)
-	return
-}
-
-func (s elemValidMyArrayMUS) Size(v ElemValidMyArray) (size int) {
-	return arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ.Size([3]int(v))
-}
-
-func (s elemValidMyArrayMUS) Skip(bs []byte) (n int, err error) {
-	return arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ.Skip(bs)
-}
-
-var ValidMyArrayMUS = validMyArrayMUS{}
-
-type validMyArrayMUS struct{}
-
-func (s validMyArrayMUS) Marshal(v ValidMyArray, bs []byte) (n int) {
-	return arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ.Marshal([3]int(v), bs)
-}
-
-func (s validMyArrayMUS) Unmarshal(bs []byte) (v ValidMyArray, n int, err error) {
-	tmp, n, err := arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ.Unmarshal(bs)
-	if err != nil {
-		return
-	}
-	v = ValidMyArray(tmp)
-	err = testdata.ValidateZeroValue[[3]int](v)
-	return
-}
-
-func (s validMyArrayMUS) Size(v ValidMyArray) (size int) {
-	return arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ.Size([3]int(v))
-}
-
-func (s validMyArrayMUS) Skip(bs []byte) (n int, err error) {
-	return arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ.Skip(bs)
-}
-
-var AllMyArrayMUS = allMyArrayMUS{}
-
-type allMyArrayMUS struct{}
-
-func (s allMyArrayMUS) Marshal(v AllMyArray, bs []byte) (n int) {
-	return arrayZZrMuafde4zs9nWQ9V29GQΞΞ.Marshal([3]int(v), bs)
-}
-
-func (s allMyArrayMUS) Unmarshal(bs []byte) (v AllMyArray, n int, err error) {
-	tmp, n, err := arrayZZrMuafde4zs9nWQ9V29GQΞΞ.Unmarshal(bs)
-	if err != nil {
-		return
-	}
-	v = AllMyArray(tmp)
-	err = testdata.ValidateZeroValue[[3]int](v)
-	return
-}
-
-func (s allMyArrayMUS) Size(v AllMyArray) (size int) {
-	return arrayZZrMuafde4zs9nWQ9V29GQΞΞ.Size([3]int(v))
-}
-
-func (s allMyArrayMUS) Skip(bs []byte) (n int, err error) {
-	return arrayZZrMuafde4zs9nWQ9V29GQΞΞ.Skip(bs)
 }
 
 var MyMapMUS = myMapMUS{}

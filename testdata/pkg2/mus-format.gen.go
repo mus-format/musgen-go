@@ -297,3 +297,51 @@ func (s elemStructMUS) Skip(bs []byte) (n int, err error) {
 	n += n1
 	return
 }
+
+var TimeStructMUS = timeStructMUS{}
+
+type timeStructMUS struct{}
+
+func (s timeStructMUS) Marshal(v TimeStruct, bs []byte) (n int) {
+	n = varint.Float32.Marshal(v.Float32, bs)
+	n += raw.TimeUnix.Marshal(v.Time, bs[n:])
+	return n + ord.String.Marshal(v.String, bs[n:])
+}
+
+func (s timeStructMUS) Unmarshal(bs []byte) (v TimeStruct, n int, err error) {
+	v.Float32, n, err = varint.Float32.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	var n1 int
+	v.Time, n1, err = raw.TimeUnix.Unmarshal(bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	v.String, n1, err = ord.String.Unmarshal(bs[n:])
+	n += n1
+	return
+}
+
+func (s timeStructMUS) Size(v TimeStruct) (size int) {
+	size = varint.Float32.Size(v.Float32)
+	size += raw.TimeUnix.Size(v.Time)
+	return size + ord.String.Size(v.String)
+}
+
+func (s timeStructMUS) Skip(bs []byte) (n int, err error) {
+	n, err = varint.Float32.Skip(bs)
+	if err != nil {
+		return
+	}
+	var n1 int
+	n1, err = raw.TimeUnix.Skip(bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	n1, err = ord.String.Skip(bs[n:])
+	n += n1
+	return
+}

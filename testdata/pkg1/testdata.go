@@ -2,6 +2,7 @@ package pkg1
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/mus-format/musgen-go/testdata/pkg2"
 )
@@ -12,6 +13,10 @@ const (
 	SimpleStructDTM   = 3
 	MyIntDTM          = 4
 )
+
+type TimeTypedef interface {
+	Time() time.Time
+}
 
 type MyBool bool
 type MyByte byte
@@ -29,6 +34,67 @@ type LenValidMyString string
 type ValidMyString string
 type AllMyString string
 
+type MyTime time.Time
+
+func (t MyTime) Time() time.Time {
+	return time.Time(t)
+}
+
+type MyTimeSec time.Time
+
+func (t MyTimeSec) Time() time.Time {
+	return time.Time(t)
+}
+
+type MyTimeMilli time.Time
+
+func (t MyTimeMilli) Time() time.Time {
+	return time.Time(t)
+}
+
+type MyTimeMicro time.Time
+
+func (t MyTimeMicro) Time() time.Time {
+	return time.Time(t)
+}
+
+type MyTimeNano time.Time
+
+func (t MyTimeNano) Time() time.Time {
+	return time.Time(t)
+}
+
+type MyTimeSecUTC time.Time
+
+func (t MyTimeSecUTC) Time() time.Time {
+	return time.Time(t)
+}
+
+type MyTimeMilliUTC time.Time
+
+func (t MyTimeMilliUTC) Time() time.Time {
+	return time.Time(t)
+}
+
+type MyTimeMicroUTC time.Time
+
+func (t MyTimeMicroUTC) Time() time.Time {
+	return time.Time(t)
+}
+
+type MyTimeNanoUTC time.Time
+
+func (t MyTimeNanoUTC) Time() time.Time {
+	return time.Time(t)
+}
+
+type MyArray [3]int
+type LenEncodingMyArray [3]int
+type ElemEncodingMyArray [3]int
+type ElemValidMyArray [3]int
+type ValidMyArray [3]int
+type AllMyArray [3]int
+
 type MyByteSlice []byte
 type LenEncodingMyByteSlice []byte
 type LenValidMyByteSlice []byte
@@ -42,13 +108,6 @@ type ElemEncodingMySlice []int
 type ElemValidMySlice []int
 type ValidMySlice []int
 type AllMySlice []int
-
-type MyArray [3]int
-type LenEncodingMyArray [3]int
-type ElemEncodingMyArray [3]int
-type ElemValidMyArray [3]int
-type ValidMyArray [3]int
-type AllMyArray [3]int
 
 type MyMap map[int]int
 type LenEncodingMyMap map[int]int

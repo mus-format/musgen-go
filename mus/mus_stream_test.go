@@ -102,6 +102,11 @@ func TestStreamFileGenerator(t *testing.T) {
 			t.Fatal(err)
 		}
 
+		err = g.AddStruct(reflect.TypeFor[pkg2.TimeStructStream]())
+		if err != nil {
+			t.Fatal(err)
+		}
+
 		bs, err := g.Generate()
 		if err != nil {
 			t.Fatal(err)

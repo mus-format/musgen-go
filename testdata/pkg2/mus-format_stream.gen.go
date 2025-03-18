@@ -5,6 +5,7 @@ package pkg2
 import (
 	muss "github.com/mus-format/mus-stream-go"
 	"github.com/mus-format/mus-stream-go/ord"
+	"github.com/mus-format/mus-stream-go/raw"
 	"github.com/mus-format/mus-stream-go/varint"
 )
 
@@ -78,6 +79,64 @@ func (s structStreamMUS) Skip(r muss.Reader) (n int, err error) {
 		return
 	}
 	n1, err = ord.Bool.Skip(r)
+	n += n1
+	return
+}
+
+var TimeStructStreamMUS = timeStructStreamMUS{}
+
+type timeStructStreamMUS struct{}
+
+func (s timeStructStreamMUS) Marshal(v TimeStructStream, w muss.Writer) (n int, err error) {
+	n, err = varint.Float32.Marshal(v.Float32, w)
+	if err != nil {
+		return
+	}
+	var n1 int
+	n1, err = raw.TimeUnix.Marshal(v.Time, w)
+	n += n1
+	if err != nil {
+		return
+	}
+	n1, err = ord.String.Marshal(v.String, w)
+	n += n1
+	return
+}
+
+func (s timeStructStreamMUS) Unmarshal(r muss.Reader) (v TimeStructStream, n int, err error) {
+	v.Float32, n, err = varint.Float32.Unmarshal(r)
+	if err != nil {
+		return
+	}
+	var n1 int
+	v.Time, n1, err = raw.TimeUnix.Unmarshal(r)
+	n += n1
+	if err != nil {
+		return
+	}
+	v.String, n1, err = ord.String.Unmarshal(r)
+	n += n1
+	return
+}
+
+func (s timeStructStreamMUS) Size(v TimeStructStream) (size int) {
+	size = varint.Float32.Size(v.Float32)
+	size += raw.TimeUnix.Size(v.Time)
+	return size + ord.String.Size(v.String)
+}
+
+func (s timeStructStreamMUS) Skip(r muss.Reader) (n int, err error) {
+	n, err = varint.Float32.Skip(r)
+	if err != nil {
+		return
+	}
+	var n1 int
+	n1, err = raw.TimeUnix.Skip(r)
+	n += n1
+	if err != nil {
+		return
+	}
+	n1, err = ord.String.Skip(r)
 	n += n1
 	return
 }

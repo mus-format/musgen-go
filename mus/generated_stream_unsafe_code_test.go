@@ -2,6 +2,7 @@ package musgen
 
 import (
 	"testing"
+	"time"
 
 	"github.com/mus-format/musgen-go/testdata/pkg1"
 	"github.com/mus-format/musgen-go/testdata/pkg2"
@@ -15,6 +16,15 @@ func TestGeneratedStramUnsafeCode(t *testing.T) {
 			testStreamSerializability(makeComplexStructStreamUnsafe(),
 				pkg1.ComplexStructStreamUnsafeMUS,
 				t)
+		})
+
+		t.Run("TimeStruct should be serializable", func(t *testing.T) {
+			v := pkg2.TimeStructStreamUnsafe{
+				Float32: 10.3,
+				Time:    time.Unix(time.Now().Unix(), 0),
+				String:  "abs",
+			}
+			testStreamSerializability(v, pkg2.TimeStructStreamUnsafeMUS, t)
 		})
 
 	})

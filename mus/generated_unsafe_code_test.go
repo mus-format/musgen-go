@@ -2,6 +2,7 @@ package musgen
 
 import (
 	"testing"
+	"time"
 
 	"github.com/mus-format/musgen-go/testdata/pkg1"
 	"github.com/mus-format/musgen-go/testdata/pkg2"
@@ -16,6 +17,15 @@ func TestGeneratedUnsafeCode(t *testing.T) {
 				pkg1.ComplexStructUnsafeMUS,
 				nil,
 				t)
+		})
+
+		t.Run("TimeStruct should be serializable", func(t *testing.T) {
+			v := pkg2.TimeStructUnsafe{
+				Float32: 10.3,
+				Time:    time.Unix(time.Now().Unix(), 0),
+				String:  "abs",
+			}
+			testSerializability(v, pkg2.TimeStructUnsafeMUS, nil, t)
 		})
 
 	})

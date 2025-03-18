@@ -6,52 +6,6 @@ var templates map[string]string
 
 func init() {
 	templates = make(map[string]string)
-	templates["alias_ser.tmpl"] = `{{/* tdesc.TypeDesc */}}
-{{- $serType := SerType . }}
-{{- $serVar := SerVar . }}
-{{- $f := index .Fields 0 }}
-{{- $fieldSer := SerializerOf $f .Gops }}
-{{- $v := VarName .Name }}
-{{- $Type := .FullName}}
-{{- $tmp := TmpVarName .Name }}
-{{- $mslp := .Gops.MarshalSignatureLastParam }}
-{{- $mlp := .Gops.MarshalLastParam true }}
-{{- $uslp := .Gops.UnmarshalSignatureLastParam }}
-{{- $ulp := .Gops.UnmarshalLastParam true}}
-{{- $gops := .Gops }}
-
-{{- $ft := $f.Type }}
-{{- if PtrType $f.Type }}
-  {{- $ft = print "(" $f.Type ")" }}
-{{- end }}
-
-var {{ $serVar }} = {{ $serType }}{}
-
-type {{ $serType }} struct{}
-
-func (s {{ $serType }}) Marshal({{ $v }} {{ $Type }}, {{ $mslp }}) (n int {{ if $gops.Stream }} , err error {{ end }}) {
-  return {{ $fieldSer }}.Marshal({{ $ft }}({{ $v }}), {{ $mlp }})
-}
-
-func (s {{ $serType }}) Unmarshal({{ $uslp }}) ({{ $v }} {{ $Type }}, n int, err error) {
-  {{ $tmp }}, n, err := {{ $fieldSer }}.Unmarshal({{ $ulp }})
-    if err != nil {
-      return
-    }
-  {{ $v }} = {{ $Type }}({{ $tmp }})
-  {{- if and $f.Tops (ne $f.Tops.Validator "") }}
-    err = {{ $f.Tops.Validator }}({{ $v }})
-  {{- end }}
-  return
-}
-
-func (s {{ $serType }}) Size({{ $v }} {{ $Type }}) (size int) {
-  return {{ $fieldSer }}.Size({{ $ft }}({{ $v }}))
-}
-
-func (s {{ $serType }}) Skip({{ $uslp }}) (n int, err error) {
-  return {{ $fieldSer }}.Skip({{ $ulp }})
-}`
 	templates["anonymous_definitions.tmpl"] = `{{/* {Map: map[adesc.AnonymousName]adesc.AnonymousDesc, Ops: genops.Options} */}}
 {{- if gt (len .Map)  0 }}
 	{{- $gops := .Ops }}
@@ -402,5 +356,51 @@ func (s {{ $serType }}) Skip({{ $uslp }}) (n int, err error) {
 		{{- include "field_skip.tmpl" (MakeFieldTmplPipe $td $f $i $gops) }}		
 	{{- end }}
 	return
+}`
+	templates["typedef_ser.tmpl"] = `{{/* tdesc.TypeDesc */}}
+{{- $serType := SerType . }}
+{{- $serVar := SerVar . }}
+{{- $f := index .Fields 0 }}
+{{- $fieldSer := SerializerOf $f .Gops }}
+{{- $v := VarName .Name }}
+{{- $Type := .FullName}}
+{{- $tmp := TmpVarName .Name }}
+{{- $mslp := .Gops.MarshalSignatureLastParam }}
+{{- $mlp := .Gops.MarshalLastParam true }}
+{{- $uslp := .Gops.UnmarshalSignatureLastParam }}
+{{- $ulp := .Gops.UnmarshalLastParam true}}
+{{- $gops := .Gops }}
+
+{{- $ft := $f.Type }}
+{{- if PtrType $f.Type }}
+  {{- $ft = print "(" $f.Type ")" }}
+{{- end }}
+
+var {{ $serVar }} = {{ $serType }}{}
+
+type {{ $serType }} struct{}
+
+func (s {{ $serType }}) Marshal({{ $v }} {{ $Type }}, {{ $mslp }}) (n int {{ if $gops.Stream }} , err error {{ end }}) {
+  return {{ $fieldSer }}.Marshal({{ $ft }}({{ $v }}), {{ $mlp }})
+}
+
+func (s {{ $serType }}) Unmarshal({{ $uslp }}) ({{ $v }} {{ $Type }}, n int, err error) {
+  {{ $tmp }}, n, err := {{ $fieldSer }}.Unmarshal({{ $ulp }})
+    if err != nil {
+      return
+    }
+  {{ $v }} = {{ $Type }}({{ $tmp }})
+  {{- if and $f.Tops (ne $f.Tops.Validator "") }}
+    err = {{ $f.Tops.Validator }}({{ $v }})
+  {{- end }}
+  return
+}
+
+func (s {{ $serType }}) Size({{ $v }} {{ $Type }}) (size int) {
+  return {{ $fieldSer }}.Size({{ $ft }}({{ $v }}))
+}
+
+func (s {{ $serType }}) Skip({{ $uslp }}) (n int, err error) {
+  return {{ $fieldSer }}.Skip({{ $ulp }})
 }`
 }

@@ -80,3 +80,61 @@ func (s structStreamUnsafeMUS) Skip(r muss.Reader) (n int, err error) {
 	n += n1
 	return
 }
+
+var TimeStructStreamUnsafeMUS = timeStructStreamUnsafeMUS{}
+
+type timeStructStreamUnsafeMUS struct{}
+
+func (s timeStructStreamUnsafeMUS) Marshal(v TimeStructStreamUnsafe, w muss.Writer) (n int, err error) {
+	n, err = unsafe.Float32.Marshal(v.Float32, w)
+	if err != nil {
+		return
+	}
+	var n1 int
+	n1, err = unsafe.TimeUnix.Marshal(v.Time, w)
+	n += n1
+	if err != nil {
+		return
+	}
+	n1, err = unsafe.String.Marshal(v.String, w)
+	n += n1
+	return
+}
+
+func (s timeStructStreamUnsafeMUS) Unmarshal(r muss.Reader) (v TimeStructStreamUnsafe, n int, err error) {
+	v.Float32, n, err = unsafe.Float32.Unmarshal(r)
+	if err != nil {
+		return
+	}
+	var n1 int
+	v.Time, n1, err = unsafe.TimeUnix.Unmarshal(r)
+	n += n1
+	if err != nil {
+		return
+	}
+	v.String, n1, err = unsafe.String.Unmarshal(r)
+	n += n1
+	return
+}
+
+func (s timeStructStreamUnsafeMUS) Size(v TimeStructStreamUnsafe) (size int) {
+	size = unsafe.Float32.Size(v.Float32)
+	size += unsafe.TimeUnix.Size(v.Time)
+	return size + unsafe.String.Size(v.String)
+}
+
+func (s timeStructStreamUnsafeMUS) Skip(r muss.Reader) (n int, err error) {
+	n, err = unsafe.Float32.Skip(r)
+	if err != nil {
+		return
+	}
+	var n1 int
+	n1, err = unsafe.TimeUnix.Skip(r)
+	n += n1
+	if err != nil {
+		return
+	}
+	n1, err = unsafe.String.Skip(r)
+	n += n1
+	return
+}

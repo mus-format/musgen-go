@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/google/go-cmp/cmp"
 	muss "github.com/mus-format/mus-stream-go"
@@ -20,6 +21,15 @@ func TestGeneratedStreamCode(t *testing.T) {
 			testStreamSerializability(makeCompplexStructStream(),
 				pkg1.ComplexStructStreamMUS,
 				t)
+		})
+
+		t.Run("TimeStruct should be serializable", func(t *testing.T) {
+			v := pkg2.TimeStructStream{
+				Float32: 10.3,
+				Time:    time.Unix(time.Now().Unix(), 0),
+				String:  "abs",
+			}
+			testStreamSerializability(v, pkg2.TimeStructStreamMUS, t)
 		})
 
 	})

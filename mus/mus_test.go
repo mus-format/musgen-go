@@ -86,6 +86,91 @@ func TestFileGenerator(t *testing.T) {
 			t.Fatal(err)
 		}
 
+		err = g.AddStruct(reflect.TypeFor[pkg1.MyTime](),
+			structops.WithSourceType(structops.Time))
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddStruct(reflect.TypeFor[pkg1.MyTimeSec](),
+			structops.WithSourceType(structops.Time, typeops.WithTimeUnit(typeops.Sec)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddStruct(reflect.TypeFor[pkg1.MyTimeMilli](),
+			structops.WithSourceType(structops.Time, typeops.WithTimeUnit(typeops.Milli)))
+
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddStruct(reflect.TypeFor[pkg1.MyTimeMicro](),
+			structops.WithSourceType(structops.Time, typeops.WithTimeUnit(typeops.Micro)))
+
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddStruct(reflect.TypeFor[pkg1.MyTimeNano](),
+			structops.WithSourceType(structops.Time, typeops.WithTimeUnit(typeops.Nano)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddStruct(reflect.TypeFor[pkg1.MyTimeSecUTC](),
+			structops.WithSourceType(structops.Time, typeops.WithTimeUnit(typeops.SecUTC)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddStruct(reflect.TypeFor[pkg1.MyTimeMilliUTC](),
+			structops.WithSourceType(structops.Time, typeops.WithTimeUnit(typeops.MilliUTC)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddStruct(reflect.TypeFor[pkg1.MyTimeMicroUTC](),
+			structops.WithSourceType(structops.Time, typeops.WithTimeUnit(typeops.MicroUTC)))
+
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddStruct(reflect.TypeFor[pkg1.MyTimeNanoUTC](),
+			structops.WithSourceType(structops.Time, typeops.WithTimeUnit(typeops.NanoUTC)))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// array
+
+		err = g.AddTypedef(reflect.TypeFor[pkg1.MyArray]())
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddTypedef(reflect.TypeFor[pkg1.LenEncodingMyArray](),
+			typeops.WithLenEncoding(typeops.Raw))
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddTypedef(reflect.TypeFor[pkg1.ElemEncodingMyArray](),
+			typeops.WithElem(typeops.WithNumEncoding(typeops.Raw)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddTypedef(reflect.TypeFor[pkg1.ElemValidMyArray](),
+			typeops.WithElem(typeops.WithValidator("testdata.ValidateZeroValue[int]")))
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddTypedef(reflect.TypeFor[pkg1.ValidMyArray](),
+			typeops.WithValidator("testdata.ValidateZeroValue[[3]int]"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = g.AddTypedef(reflect.TypeFor[pkg1.AllMyArray](),
+			typeops.WithLenEncoding(typeops.Raw),
+			typeops.WithValidator("testdata.ValidateZeroValue[[3]int]"),
+			typeops.WithElem(
+				typeops.WithNumEncoding(typeops.Raw),
+				typeops.WithValidator("testdata.ValidateZeroValue[int]")))
+		if err != nil {
+			t.Fatal(err)
+		}
+
 		// byte_slice
 
 		err = g.AddTypedef(reflect.TypeFor[pkg1.MyByteSlice]())
@@ -144,42 +229,6 @@ func TestFileGenerator(t *testing.T) {
 		err = g.AddTypedef(reflect.TypeFor[pkg1.AllMySlice](),
 			typeops.WithLenEncoding(typeops.Raw),
 			typeops.WithLenValidator("testdata.ValidateLength"),
-			typeops.WithElem(
-				typeops.WithNumEncoding(typeops.Raw),
-				typeops.WithValidator("testdata.ValidateZeroValue[int]")))
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		// array
-
-		err = g.AddTypedef(reflect.TypeFor[pkg1.MyArray]())
-		if err != nil {
-			t.Fatal(err)
-		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.LenEncodingMyArray](),
-			typeops.WithLenEncoding(typeops.Raw))
-		if err != nil {
-			t.Fatal(err)
-		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ElemEncodingMyArray](),
-			typeops.WithElem(typeops.WithNumEncoding(typeops.Raw)))
-		if err != nil {
-			t.Fatal(err)
-		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ElemValidMyArray](),
-			typeops.WithElem(typeops.WithValidator("testdata.ValidateZeroValue[int]")))
-		if err != nil {
-			t.Fatal(err)
-		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ValidMyArray](),
-			typeops.WithValidator("testdata.ValidateZeroValue[[3]int]"))
-		if err != nil {
-			t.Fatal(err)
-		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.AllMyArray](),
-			typeops.WithLenEncoding(typeops.Raw),
-			typeops.WithValidator("testdata.ValidateZeroValue[[3]int]"),
 			typeops.WithElem(
 				typeops.WithNumEncoding(typeops.Raw),
 				typeops.WithValidator("testdata.ValidateZeroValue[int]")))
@@ -394,7 +443,14 @@ func TestFileGenerator(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		// TODo WithField()
+		// struct with time field
+
+		err = g.AddStruct(reflect.TypeFor[pkg2.TimeStruct]())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// TODO WithField()
 
 		// generate
 

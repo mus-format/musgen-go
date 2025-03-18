@@ -55,9 +55,23 @@ func (g *FileGenerator) AddTypedef(t reflect.Type, ops ...typeops.SetOption) (
 		return
 	}
 	adesc.Collect(td.Fields[0].Type, tops, g.gops, g.m)
-	g.bs = append(g.bs, g.generatePart("alias_ser.tmpl", td)...)
+	g.bs = append(g.bs, g.generatePart("typedef_ser.tmpl", td)...)
 	return
 }
+
+// func (g *FileGenerator) AddTimeTypedef(t reflect.Type, ops ...typeops.SetOption) (
+// 	err error) {
+// 	var tops *typeops.Options
+// 	if len(ops) > 0 {
+// 		tops = &typeops.Options{}
+// 		if len(ops) > 0 {
+// 			typeops.Apply(ops, tops)
+// 		}
+// 	}
+// 	td := tdesc.MakeTimeDesc(t, tops, g.gops)
+// 	g.bs = append(g.bs, g.generatePart("typedef_ser.tmpl", td)...)
+// 	return
+// }
 
 func (g *FileGenerator) AddStruct(t reflect.Type, ops ...structops.SetOption) (
 	err error) {
@@ -65,6 +79,13 @@ func (g *FileGenerator) AddStruct(t reflect.Type, ops ...structops.SetOption) (
 	if len(ops) > 0 {
 		sops = structops.Apply(ops, structops.NewOptions())
 	}
+
+	if sops.Type != nil && sops.Type.SourceType == structops.Time {
+		td := tdesc.MakeTimeDesc(t, sops.Type.Ops, g.gops)
+		g.bs = append(g.bs, g.generatePart("typedef_ser.tmpl", td)...)
+		return
+	}
+
 	td, err := tdesc.MakeStructDesc(t, sops, g.gops)
 	if err != nil {
 		return
@@ -75,15 +96,6 @@ func (g *FileGenerator) AddStruct(t reflect.Type, ops ...structops.SetOption) (
 	g.bs = append(g.bs, g.generatePart("struct_ser.tmpl", td)...)
 	return
 }
-
-// func (g *FileGenerator) AddTypedefDTS(tp reflect.Type) (bs []byte, err error) {
-// 	td, err := tdesc.MakeTypeDefDesc(tp, &typeops.Options{}, g.gops)
-// 	if err != nil {
-// 		return
-// 	}
-// 	g.bs = append(g.bs, g.generatePart("dts.tmpl", td)...)
-// 	return
-// }
 
 func (g *FileGenerator) AddDTS(t reflect.Type) (err error) {
 	td, err := tdesc.MakeDTSDesc(t, g.gops)

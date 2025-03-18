@@ -263,18 +263,24 @@ func MakeMapOps(ad adesc.AnonymousDesc) string {
 
 func numPkg(tops *typeops.Options) (pkg string) {
 	if tops == nil {
+		return "varint"
+	}
+	switch tops.NumEncoding {
+	case typeops.UndefinedNumEncoding, typeops.Varint, typeops.VarintPositive:
 		pkg = "varint"
-	} else {
-		switch tops.NumEncoding {
-		case typeops.UndefinedNumEncoding, typeops.Varint, typeops.VarintPositive:
-			pkg = "varint"
-		case typeops.Raw:
-			pkg = "raw"
-		default:
-			panic(fmt.Sprintf("unexpected NumEnccoding %v", tops.NumEncoding))
-		}
+	case typeops.Raw:
+		pkg = "raw"
+	default:
+		panic(fmt.Sprintf("unexpected NumEnccoding %v", tops.NumEncoding))
 	}
 	return
+}
+
+func timeSer(tops *typeops.Options) (ser string) {
+	if tops == nil {
+		return "TimeUnix"
+	}
+	return tops.TimeUnit.Ser()
 }
 
 func serializerOf(tp string, tops *typeops.Options, gops genops.Options) string {
@@ -298,6 +304,9 @@ func serializerOf(tp string, tops *typeops.Options, gops genops.Options) string 
 	case "[]byte", "[]uint8":
 		pkg = "ord"
 		serName = "ByteSlice"
+	case "time.Time":
+		pkg = "raw"
+		serName = timeSer(tops)
 	default:
 		return tp + SuffixMUS
 	}

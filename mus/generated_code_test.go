@@ -2,8 +2,10 @@ package musgen
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/google/go-cmp/cmp"
 	com "github.com/mus-format/common-go"
@@ -29,7 +31,7 @@ func (u UnmarshallerFn[T]) Unmarshal(bs []byte) (T, int, error) {
 
 func TestGeneratedCode(t *testing.T) {
 
-	t.Run("Test alias serializability and Options impact", func(t *testing.T) {
+	t.Run("Test typedef serializability and Options impact", func(t *testing.T) {
 
 		t.Run("MyInt should be serializable", func(t *testing.T) {
 			var (
@@ -89,6 +91,141 @@ func TestGeneratedCode(t *testing.T) {
 		t.Run("We should be able to set Validator for MyString", func(t *testing.T) {
 			v := pkg1.ValidMyString("")
 			testValidation(v, pkg1.ValidMyStringMUS, testdata.ErrZeroValue, []int{1}, t)
+		})
+
+		t.Run("MyTime should be serializable", func(t *testing.T) {
+			var (
+				v                             = pkg1.MyTime(time.Unix(time.Now().Unix(), 0))
+				u UnmarshallerFn[pkg1.MyTime] = func(bs []byte) (tm pkg1.MyTime, n int, err error) {
+					sec, n, err := raw.Int64.Unmarshal(bs)
+					if err != nil {
+						return
+					}
+					tm = pkg1.MyTime(time.Unix(sec, 0))
+					return
+				}
+			)
+			testSerializability(v, pkg1.MyTimeMUS, u, t)
+		})
+
+		t.Run("MyTimeSec should be serializable", func(t *testing.T) {
+			var (
+				v                                = pkg1.MyTimeSec(time.Unix(time.Now().Unix(), 0))
+				u UnmarshallerFn[pkg1.MyTimeSec] = func(bs []byte) (tm pkg1.MyTimeSec, n int, err error) {
+					sec, n, err := raw.Int64.Unmarshal(bs)
+					if err != nil {
+						return
+					}
+					tm = pkg1.MyTimeSec(time.Unix(sec, 0))
+					return
+				}
+			)
+			testSerializability(v, pkg1.MyTimeSecMUS, u, t)
+		})
+
+		t.Run("MyTimeMilli should be serializable", func(t *testing.T) {
+			var (
+				v                                  = pkg1.MyTimeMilli(time.Unix(time.Now().Unix(), 0))
+				u UnmarshallerFn[pkg1.MyTimeMilli] = func(bs []byte) (tm pkg1.MyTimeMilli, n int, err error) {
+					milli, n, err := raw.Int64.Unmarshal(bs)
+					if err != nil {
+						return
+					}
+					tm = pkg1.MyTimeMilli(time.UnixMilli(milli))
+					return
+				}
+			)
+			testSerializability(v, pkg1.MyTimeMilliMUS, u, t)
+		})
+
+		t.Run("MyTimeMicro should be serializable", func(t *testing.T) {
+			var (
+				v                                  = pkg1.MyTimeMicro(time.Unix(time.Now().Unix(), 0))
+				u UnmarshallerFn[pkg1.MyTimeMicro] = func(bs []byte) (tm pkg1.MyTimeMicro, n int, err error) {
+					micro, n, err := raw.Int64.Unmarshal(bs)
+					if err != nil {
+						return
+					}
+					tm = pkg1.MyTimeMicro(time.UnixMicro(micro))
+					return
+				}
+			)
+			testSerializability(v, pkg1.MyTimeMicroMUS, u, t)
+		})
+
+		t.Run("MyTimeNano should be serializable", func(t *testing.T) {
+			var (
+				v                                 = pkg1.MyTimeNano(time.Unix(time.Now().Unix(), 0))
+				u UnmarshallerFn[pkg1.MyTimeNano] = func(bs []byte) (tm pkg1.MyTimeNano, n int, err error) {
+					nano, n, err := raw.Int64.Unmarshal(bs)
+					if err != nil {
+						return
+					}
+					tm = pkg1.MyTimeNano(time.Unix(0, nano))
+					return
+				}
+			)
+			testSerializability(v, pkg1.MyTimeNanoMUS, u, t)
+		})
+
+		t.Run("MyTimeSecUTC should be serializable", func(t *testing.T) {
+			var (
+				v                                   = pkg1.MyTimeSecUTC(time.Unix(time.Now().Unix(), 0).UTC())
+				u UnmarshallerFn[pkg1.MyTimeSecUTC] = func(bs []byte) (tm pkg1.MyTimeSecUTC, n int, err error) {
+					sec, n, err := raw.Int64.Unmarshal(bs)
+					if err != nil {
+						return
+					}
+					tm = pkg1.MyTimeSecUTC(time.Unix(sec, 0))
+					return
+				}
+			)
+			testSerializability(v, pkg1.MyTimeSecUTCMUS, u, t)
+		})
+
+		t.Run("MyTimeMilliUTC should be serializable", func(t *testing.T) {
+			var (
+				v                                     = pkg1.MyTimeMilliUTC(time.Unix(time.Now().Unix(), 0).UTC())
+				u UnmarshallerFn[pkg1.MyTimeMilliUTC] = func(bs []byte) (tm pkg1.MyTimeMilliUTC, n int, err error) {
+					milli, n, err := raw.Int64.Unmarshal(bs)
+					if err != nil {
+						return
+					}
+					tm = pkg1.MyTimeMilliUTC(time.UnixMilli(milli))
+					return
+				}
+			)
+			testSerializability(v, pkg1.MyTimeMilliUTCMUS, u, t)
+		})
+
+		t.Run("MyTimeMicroUTC should be serializable", func(t *testing.T) {
+			var (
+				v                                     = pkg1.MyTimeMicroUTC(time.Unix(time.Now().Unix(), 0).UTC())
+				u UnmarshallerFn[pkg1.MyTimeMicroUTC] = func(bs []byte) (tm pkg1.MyTimeMicroUTC, n int, err error) {
+					milli, n, err := raw.Int64.Unmarshal(bs)
+					if err != nil {
+						return
+					}
+					tm = pkg1.MyTimeMicroUTC(time.UnixMicro(milli))
+					return
+				}
+			)
+			testSerializability(v, pkg1.MyTimeMicroUTCMUS, u, t)
+		})
+
+		t.Run("MyTimeNanoUTC should be serializable", func(t *testing.T) {
+			var (
+				v                                    = pkg1.MyTimeNanoUTC(time.Unix(time.Now().Unix(), 0).UTC())
+				u UnmarshallerFn[pkg1.MyTimeNanoUTC] = func(bs []byte) (tm pkg1.MyTimeNanoUTC, n int, err error) {
+					nano, n, err := raw.Int64.Unmarshal(bs)
+					if err != nil {
+						return
+					}
+					tm = pkg1.MyTimeNanoUTC(time.Unix(0, nano))
+					return
+				}
+			)
+			testSerializability(v, pkg1.MyTimeNanoUTCMUS, u, t)
 		})
 
 		t.Run("MySlice should be serializable", func(t *testing.T) {
@@ -313,6 +450,7 @@ func TestGeneratedCode(t *testing.T) {
 		})
 
 		t.Run("We should be able to set options for field's inner slice", func(t *testing.T) {
+			os.Setenv("TZ", "UTC")
 			var (
 				v = pkg2.ElemStruct{
 					Slice: [][]int{{3}},
@@ -330,6 +468,8 @@ func TestGeneratedCode(t *testing.T) {
 					n1, _ = ord.Bool.Skip(bs[n:])
 					n += n1
 					v.Slice, n1, err = ser.Unmarshal(bs[n:])
+					n += n1
+					n1, _ = raw.TimeUnixNanoUTC.Skip(bs[n:])
 					n += n1
 					return
 				}
@@ -369,6 +509,15 @@ func TestGeneratedCode(t *testing.T) {
 			testSerializability(v, pkg1.AnotherStructMUS, nil, t)
 		})
 
+		t.Run("We should be able to serialize TimeStruct", func(t *testing.T) {
+			v := pkg2.TimeStruct{
+				Float32: 10.3,
+				Time:    time.Unix(time.Now().Unix(), 0),
+				String:  "abs",
+			}
+			testSerializability(v, pkg2.TimeStructMUS, nil, t)
+		})
+
 		// t.Run("We should be able to serialize struct using DTS", func(t *testing.T) {
 		// 	testSerializability(pkg1.SimpleStruct{Int: 10}, pkg1.SimpleStructDTS, nil,
 		// 		t)
@@ -397,18 +546,9 @@ func TestGeneratedCode(t *testing.T) {
 	})
 }
 
-func testSerializability[T any](v T, ser mus.Serializer[T], u UnmarshallerFn[T], t *testing.T) {
-	bs := make([]byte, ser.Size(v))
-	ser.Marshal(v, bs)
-	v1, n1, err := ser.Unmarshal(bs)
-	if err != nil {
-		t.Fatal(err)
-	}
-	n2, err := ser.Skip(bs)
-	if err != nil {
-		t.Fatal(err)
-	}
-	opt := cmp.FilterValues(func(x1, x2 interface{}) bool {
+func testSerializability[T any](v T, ser mus.Serializer[T], u UnmarshallerFn[T],
+	t *testing.T) {
+	opt := cmp.FilterValues(func(x1, x2 any) bool {
 		var (
 			t1        = reflect.TypeOf(x1)
 			t2        = reflect.TypeOf(x2)
@@ -421,20 +561,52 @@ func testSerializability[T any](v T, ser mus.Serializer[T], u UnmarshallerFn[T],
 			(t1.Kind() == reflect.Map && t2.Kind() == reflect.Map) {
 			return true
 		}
+		_, ok1 := x1.(pkg1.TimeTypedef)
+		_, ok2 := x2.(pkg1.TimeTypedef)
+		if ok1 && ok2 {
+			return true
+		}
 		return false
-	}, cmp.Comparer(func(i1, i2 interface{}) bool {
+	}, cmp.Comparer(func(i1, i2 any) bool {
 		_, ok1 := i1.(pkg1.InterfaceImpl1)
 		_, ok2 := i2.(pkg1.InterfaceImpl1)
 		if ok1 && ok2 {
 			return true
 		}
+		var (
+			tm1 pkg1.TimeTypedef
+			tm2 pkg1.TimeTypedef
+		)
+		tm1, ok1 = i1.(pkg1.TimeTypedef)
+		tm2, ok2 = i2.(pkg1.TimeTypedef)
+		if ok1 && ok2 {
+			return tm1.Time().Equal(tm2.Time())
+		}
 		return fmt.Sprint(i1) == fmt.Sprint(i2)
 	}))
-	if !cmp.Equal(v, v1, opt) {
-		t.Errorf("unexpected value %v", v1)
+	equal := func(v, v1 T) bool {
+		return cmp.Equal(v, v1, opt)
+	}
+	testGeneralSerializability(v, ser, u, equal, t)
+}
+
+func testGeneralSerializability[T any](v T, ser mus.Serializer[T],
+	u UnmarshallerFn[T], equal func(v, v1 T) bool, t *testing.T) {
+	bs := make([]byte, ser.Size(v))
+	ser.Marshal(v, bs)
+	v1, n1, err := ser.Unmarshal(bs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	n2, err := ser.Skip(bs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !equal(v, v1) {
+		t.Errorf("unexpected value, want %v actual %v", v, v1)
 	}
 	if n1 != n2 {
-		t.Errorf("unexpected value %v", n2)
+		t.Errorf("unexpected n, want %v actual %v", n1, n2)
 	}
 
 	if u != nil {
@@ -442,11 +614,11 @@ func testSerializability[T any](v T, ser mus.Serializer[T], u UnmarshallerFn[T],
 		if err != nil {
 			t.Fatal(err)
 		}
-		if !cmp.Equal(v, v1, opt) {
-			t.Errorf("unexpected value %v", v1)
+		if !equal(v, v1) {
+			t.Errorf("unexpected value, want %v actual %v", v, v1)
 		}
 		if n1 != n2 {
-			t.Errorf("unexpected value %v", n2)
+			t.Errorf("unexpected n, want %v actual %v", n1, n2)
 		}
 	}
 }
