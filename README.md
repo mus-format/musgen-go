@@ -235,6 +235,18 @@ err := g.AddStruct(reflect.TypeFor[MyStruct](),
 )
 ```
 
+With `time.Time` type definition:
+```go
+type MyTime time.Time
+// ...
+err = g.AddStruct(reflect.TypeFor[MyTime](),
+  structops.WithSourceType(structops.Time, typeops.WithTimeUnit(typeops.Milli)), 
+  // The raw.TimeUnixMilli serializer will be used  to serialize a time.Time 
+  // value.
+)
+
+```
+
 Supports struct types.
 
 #### AddDTS()
@@ -319,9 +331,13 @@ is specified for a type, the worst that can happen is that it will be ignored.
 - `typeops.WithElem`
 - `typeops.WithValidator`
 
+### time.Time
+- `typeops.WithTimeUnit`
+
 ## MUS Format
 Defauls:
 - Varint encoding is used for numbers.
 - Varint without ZigZag encoding is used for the length of variable-length data 
   types, such as `string`, `array`, `slice`, or `map`.
 - Varint without ZigZag encoding is used for DTM (Data Type Metadata).
+- `raw.TimeUnix` is used for `time.Time`.
