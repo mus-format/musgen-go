@@ -6,10 +6,11 @@ import (
 )
 
 type Options struct {
-	Package string   // Defines the package of the generated file.
-	Unsafe  bool     // If true, an unsafe code will be generated.
-	Stream  bool     // If true, a streaming code will be generated.
-	Imports []string // These strings will be added to the imports of the generated file.
+	Package   string   // Defines the package of the generated file.
+	Unsafe    bool     // If true, an unsafe code will be generated.
+	NotUnsafe bool     // If true, a not unsafe code will be generated.
+	Stream    bool     // If true, a streaming code will be generated.
+	Imports   []string // These strings will be added to the imports of the generated file.
 }
 
 func (o Options) ModImportName() string {
@@ -35,13 +36,6 @@ func (o Options) MarshalLastParam(first bool) string {
 	}
 	return "bs[n:]"
 }
-
-// func (o Options) MarshalReturnValues() string {
-// 	if o.Stream {
-// 		return "(n int, err error)"
-// 	}
-// 	return "(n int)"
-// }
 
 func (o Options) UnmarshalSignatureLastParam() string {
 	if o.Stream {
@@ -96,6 +90,12 @@ func WithPackage(p string) SetOption {
 func WithUnsafe() SetOption {
 	return func(o *Options) {
 		o.Unsafe = true
+	}
+}
+
+func WithNotUnsafe() SetOption {
+	return func(o *Options) {
+		o.NotUnsafe = true
 	}
 }
 

@@ -126,6 +126,7 @@ import (
 g := musgen.NewFileGenerator(genops.WithPackage("package_name"),
   genops.WithStream())
 ```
+
 In this case mus-stream-go library will be used instead of mus-go.
 
 #### Unsafe Code
@@ -139,6 +140,20 @@ import (
 g := musgen.NewFileGenerator(genops.WithPackage("package_name"),
   genops.WithUnsafe())
 ```
+
+#### NotUnsafe Code
+In this mode, the unsafe package will be used for all types except string:
+```go
+import (
+  musgen "github.com/mus-format/musgen-go/mus"
+  genops "github.com/mus-format/musgen-go/options/generate"
+)
+
+g := musgen.NewFileGenerator(genops.WithPackage("package_name"),
+  genops.WithNotUnsafe())
+```
+
+It produces the fastest serialization code without unsafe side effects.
 
 #### Imports
 In some cases import statement of the generated file can miss one or more

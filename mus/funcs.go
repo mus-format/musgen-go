@@ -310,6 +310,9 @@ func serializerOf(tp string, tops *typeops.Options, gops genops.Options) string 
 	default:
 		return tp + SuffixMUS
 	}
+	if gops.NotUnsafe && !streamByteSlice(tp, gops) && tp != "string" {
+		pkg = "unsafe"
+	}
 	if gops.Unsafe && !streamByteSlice(tp, gops) {
 		pkg = "unsafe"
 	}

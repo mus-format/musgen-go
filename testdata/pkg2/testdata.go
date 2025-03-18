@@ -31,8 +31,3 @@ type TimeStruct struct {
 	Time    time.Time
 	String  string
 }
-
-// type AnotherStruct struct {
-// 	Struct1 Struct
-// 	Struct2 Struct
-// }
