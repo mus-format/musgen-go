@@ -5,7 +5,7 @@ import (
 )
 
 func ParseTypedef(t reflect.Type) (sourceType string, err error) {
-	if !supportedTypeDef(t) {
+	if !supportedDefinedType(t) {
 		err = NewUnsupportedType(t)
 		return
 	}

@@ -8,7 +8,7 @@ import (
 	"github.com/mus-format/musgen-go/parser"
 )
 
-func MakeTypeDefDesc(t reflect.Type, tops *typeops.Options,
+func MakeDefinedTypeDesc(t reflect.Type, tops *typeops.Options,
 	gops genops.Options) (td TypeDesc, err error) {
 	sourceType, err := parser.ParseTypedef(t)
 	if err != nil {

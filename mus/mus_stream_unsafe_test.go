@@ -21,13 +21,13 @@ func TestStreamUnsafeFileGenerator(t *testing.T) {
 			genops.WithStream(),
 		)
 
-		// typedef
+		// defined_type
 
-		err := g.AddTypedef(reflect.TypeFor[pkg1.MyIntStreamUnsafe]())
+		err := g.AddDefinedType(reflect.TypeFor[pkg1.MyIntStreamUnsafe]())
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.MySliceStreamUnsafe]())
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.MySliceStreamUnsafe]())
 		if err != nil {
 			t.Fatal(err)
 		}

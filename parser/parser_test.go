@@ -184,7 +184,7 @@ func TestParseStructType(t *testing.T) {
 			PtrPkgStructSlice []*big.Int
 			Interface         Interface
 			PkgInterface      io.Reader
-			TypeDef           IntDef
+			DefinedType       IntDef
 			Ptr               *int
 			StructPtr         *Struct
 			InterfacePtr      *Interface

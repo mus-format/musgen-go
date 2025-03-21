@@ -20,13 +20,13 @@ func TestUnsafeFileGenerator(t *testing.T) {
 			genops.WithUnsafe(),
 		)
 
-		// typedef
+		// defined_type
 
-		err := g.AddTypedef(reflect.TypeFor[pkg1.MyIntUnsafe]())
+		err := g.AddDefinedType(reflect.TypeFor[pkg1.MyIntUnsafe]())
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.MySliceUnsafe]())
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.MySliceUnsafe]())
 		if err != nil {
 			t.Fatal(err)
 		}

@@ -7,7 +7,7 @@ import (
 
 func parseType(t reflect.Type, currPkg string) (str string, err error) {
 	stars, t := parsePtrType(t)
-	if supportedTypeDef(t) || definedStructType(t) || interfaceType(t) {
+	if supportedDefinedType(t) || definedStructType(t) || interfaceType(t) {
 		if currPkg == t.PkgPath() {
 			str = stars + t.Name()
 			return

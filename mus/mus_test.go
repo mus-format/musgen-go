@@ -29,28 +29,28 @@ func TestFileGenerator(t *testing.T) {
 
 		// int
 
-		err := g.AddTypedef(reflect.TypeFor[pkg1.MyInt]())
+		err := g.AddDefinedType(reflect.TypeFor[pkg1.MyInt]())
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.RawMyInt](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.RawMyInt](),
 			typeops.WithNumEncoding(typeops.Raw),
 		)
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.VarintPositiveMyInt](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.VarintPositiveMyInt](),
 			typeops.WithNumEncoding(typeops.VarintPositive),
 		)
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ValidMyInt](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.ValidMyInt](),
 			typeops.WithValidator("testdata.ValidateZeroValue"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.AllMyInt](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.AllMyInt](),
 			typeops.WithNumEncoding(typeops.Raw),
 			typeops.WithValidator("testdata.ValidateZeroValue"))
 		if err != nil {
@@ -59,26 +59,26 @@ func TestFileGenerator(t *testing.T) {
 
 		// string
 
-		err = g.AddTypedef(reflect.TypeFor[pkg1.MyString]())
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.MyString]())
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.LenEncodingMyString](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.LenEncodingMyString](),
 			typeops.WithLenEncoding(typeops.Raw))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.LenValidMyString](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.LenValidMyString](),
 			typeops.WithLenValidator("testdata.ValidateLength"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ValidMyString](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.ValidMyString](),
 			typeops.WithValidator("testdata.ValidateZeroValue"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.AllMyString](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.AllMyString](),
 			typeops.WithLenEncoding(typeops.Raw),
 			typeops.WithLenValidator("testdata.ValidateLength"),
 			typeops.WithValidator("testdata.ValidateZeroValue"))
@@ -137,31 +137,31 @@ func TestFileGenerator(t *testing.T) {
 
 		// array
 
-		err = g.AddTypedef(reflect.TypeFor[pkg1.MyArray]())
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.MyArray]())
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.LenEncodingMyArray](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.LenEncodingMyArray](),
 			typeops.WithLenEncoding(typeops.Raw))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ElemEncodingMyArray](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.ElemEncodingMyArray](),
 			typeops.WithElem(typeops.WithNumEncoding(typeops.Raw)))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ElemValidMyArray](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.ElemValidMyArray](),
 			typeops.WithElem(typeops.WithValidator("testdata.ValidateZeroValue[int]")))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ValidMyArray](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.ValidMyArray](),
 			typeops.WithValidator("testdata.ValidateZeroValue[[3]int]"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.AllMyArray](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.AllMyArray](),
 			typeops.WithLenEncoding(typeops.Raw),
 			typeops.WithValidator("testdata.ValidateZeroValue[[3]int]"),
 			typeops.WithElem(
@@ -173,26 +173,26 @@ func TestFileGenerator(t *testing.T) {
 
 		// byte_slice
 
-		err = g.AddTypedef(reflect.TypeFor[pkg1.MyByteSlice]())
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.MyByteSlice]())
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.LenEncodingMyByteSlice](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.LenEncodingMyByteSlice](),
 			typeops.WithLenEncoding(typeops.Raw))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.LenValidMyByteSlice](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.LenValidMyByteSlice](),
 			typeops.WithLenValidator("testdata.ValidateLength"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ValidMyByteSlice](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.ValidMyByteSlice](),
 			typeops.WithValidator("ValidateByteSlice1"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.AllMyByteSlice](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.AllMyByteSlice](),
 			typeops.WithLenEncoding(typeops.Raw),
 			typeops.WithLenValidator("testdata.ValidateLength"),
 			typeops.WithValidator("ValidateByteSlice2"))
@@ -202,31 +202,31 @@ func TestFileGenerator(t *testing.T) {
 
 		// slice
 
-		err = g.AddTypedef(reflect.TypeFor[pkg1.MySlice]())
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.MySlice]())
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.LenEncodingMySlice](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.LenEncodingMySlice](),
 			typeops.WithLenEncoding(typeops.Raw))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.LenValidMySlice](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.LenValidMySlice](),
 			typeops.WithLenValidator("testdata.ValidateLength"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ElemEncodingMySlice](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.ElemEncodingMySlice](),
 			typeops.WithElem(typeops.WithNumEncoding(typeops.Raw)))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ElemValidMySlice](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.ElemValidMySlice](),
 			typeops.WithElem(typeops.WithValidator("testdata.ValidateZeroValue[int]")))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.AllMySlice](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.AllMySlice](),
 			typeops.WithLenEncoding(typeops.Raw),
 			typeops.WithLenValidator("testdata.ValidateLength"),
 			typeops.WithElem(
@@ -238,46 +238,46 @@ func TestFileGenerator(t *testing.T) {
 
 		// map
 
-		err = g.AddTypedef(reflect.TypeFor[pkg1.MyMap]())
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.MyMap]())
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.LenEncodingMyMap](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.LenEncodingMyMap](),
 			typeops.WithLenEncoding(typeops.Raw))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.LenValidMyMap](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.LenValidMyMap](),
 			typeops.WithLenValidator("testdata.ValidateLength"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.KeyEncodingMyMap](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.KeyEncodingMyMap](),
 			typeops.WithKey(typeops.WithNumEncoding(typeops.Raw)))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.KeyValidMyMap](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.KeyValidMyMap](),
 			typeops.WithKey(typeops.WithValidator("testdata.ValidateZeroValue[int]")))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ElemEncodingMyMap](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.ElemEncodingMyMap](),
 			typeops.WithElem(typeops.WithNumEncoding(typeops.Raw)))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ElemValidMyMap](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.ElemValidMyMap](),
 			typeops.WithElem(typeops.WithValidator("testdata.ValidateZeroValue[int]")))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ValidMyMap](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.ValidMyMap](),
 			typeops.WithValidator("ValidateMyMap1"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.AllMyMap](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.AllMyMap](),
 			typeops.WithLenEncoding(typeops.Raw),
 			typeops.WithLenValidator("testdata.ValidateLength"),
 			typeops.WithValidator("ValidateMyMap2"),
@@ -293,16 +293,16 @@ func TestFileGenerator(t *testing.T) {
 
 		// ptr
 
-		err = g.AddTypedef(reflect.TypeFor[pkg1.MyIntPtr]())
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.MyIntPtr]())
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ElemNumEncodingMyIntPtr](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.ElemNumEncodingMyIntPtr](),
 			typeops.WithElem(typeops.WithNumEncoding(typeops.Raw)))
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.ValidMyIntPtr](),
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.ValidMyIntPtr](),
 			typeops.WithValidator("testdata.ValidateZeroValue[*int]"))
 		if err != nil {
 			t.Fatal(err)
@@ -310,7 +310,7 @@ func TestFileGenerator(t *testing.T) {
 
 		// struct
 
-		err = g.AddTypedef(reflect.TypeFor[pkg1.SimpleStructMyIntPtr]())
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.SimpleStructMyIntPtr]())
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -351,7 +351,7 @@ func TestFileGenerator(t *testing.T) {
 				err)
 		}
 
-		err = g.AddTypedef(reflect.TypeFor[pkg1.InterfaceDoubleMyIntPtr]())
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.InterfaceDoubleMyIntPtr]())
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -503,7 +503,7 @@ func addInterface(intr, impl1, impl2 reflect.Type, g *FileGenerator) (err error)
 	if err != nil {
 		return
 	}
-	err = g.AddTypedef(impl2)
+	err = g.AddDefinedType(impl2)
 	if err != nil {
 		return
 	}

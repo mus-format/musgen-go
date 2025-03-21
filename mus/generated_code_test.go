@@ -31,7 +31,7 @@ func (u UnmarshallerFn[T]) Unmarshal(bs []byte) (T, int, error) {
 
 func TestGeneratedCode(t *testing.T) {
 
-	t.Run("Test typedef serializability and Options impact", func(t *testing.T) {
+	t.Run("Test defined_type serializability and Options impact", func(t *testing.T) {
 
 		t.Run("MyInt should be serializable", func(t *testing.T) {
 			var (

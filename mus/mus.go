@@ -34,6 +34,8 @@ func NewFileGenerator(ops ...genops.SetOption) *FileGenerator {
 	}
 }
 
+// FileGenerator is responsible for generating MUS serialization code. Add one
+// or more types to it and call Generate.
 type FileGenerator struct {
 	gops     genops.Options
 	baseTmpl *template.Template
@@ -41,7 +43,10 @@ type FileGenerator struct {
 	bs       []byte
 }
 
-func (g *FileGenerator) AddTypedef(t reflect.Type, ops ...typeops.SetOption) (
+// AddDefinedType adds the specified type to the FileGenerator to produce a
+// serializer for it. This method supports types defined with the following
+// source types: number, string, array, slice, map, pointer.
+func (g *FileGenerator) AddDefinedType(t reflect.Type, ops ...typeops.SetOption) (
 	err error) {
 	var tops *typeops.Options
 	if len(ops) > 0 {
@@ -50,29 +55,18 @@ func (g *FileGenerator) AddTypedef(t reflect.Type, ops ...typeops.SetOption) (
 			typeops.Apply(ops, tops)
 		}
 	}
-	td, err := tdesc.MakeTypeDefDesc(t, tops, g.gops)
+	td, err := tdesc.MakeDefinedTypeDesc(t, tops, g.gops)
 	if err != nil {
 		return
 	}
 	adesc.Collect(td.Fields[0].Type, tops, g.gops, g.m)
-	g.bs = append(g.bs, g.generatePart("typedef_ser.tmpl", td)...)
+	g.bs = append(g.bs, g.generatePart("defined_type_ser.tmpl", td)...)
 	return
 }
 
-// func (g *FileGenerator) AddTimeTypedef(t reflect.Type, ops ...typeops.SetOption) (
-// 	err error) {
-// 	var tops *typeops.Options
-// 	if len(ops) > 0 {
-// 		tops = &typeops.Options{}
-// 		if len(ops) > 0 {
-// 			typeops.Apply(ops, tops)
-// 		}
-// 	}
-// 	td := tdesc.MakeTimeDesc(t, tops, g.gops)
-// 	g.bs = append(g.bs, g.generatePart("typedef_ser.tmpl", td)...)
-// 	return
-// }
-
+// AddStruct adds the specified type to the FileGenerator to produce a
+// serializer for it. This method supports types definined with the struct
+// source type.
 func (g *FileGenerator) AddStruct(t reflect.Type, ops ...structops.SetOption) (
 	err error) {
 	var sops structops.Options
@@ -82,7 +76,7 @@ func (g *FileGenerator) AddStruct(t reflect.Type, ops ...structops.SetOption) (
 
 	if sops.Type != nil && sops.Type.SourceType == structops.Time {
 		td := tdesc.MakeTimeDesc(t, sops.Type.Ops, g.gops)
-		g.bs = append(g.bs, g.generatePart("typedef_ser.tmpl", td)...)
+		g.bs = append(g.bs, g.generatePart("defined_type_ser.tmpl", td)...)
 		return
 	}
 
@@ -97,6 +91,9 @@ func (g *FileGenerator) AddStruct(t reflect.Type, ops ...structops.SetOption) (
 	return
 }
 
+// AddDTS adds the specified type to the FileGenerator to produce a DTS
+// definition for it. This method supports all types acceptable by the
+// AddDefinedType, AddStruct, and AddInterface methods.
 func (g *FileGenerator) AddDTS(t reflect.Type) (err error) {
 	td, err := tdesc.MakeDTSDesc(t, g.gops)
 	if err != nil {
@@ -106,6 +103,9 @@ func (g *FileGenerator) AddDTS(t reflect.Type) (err error) {
 	return
 }
 
+// AddInterface adds the specified type to the FileGenerator to produce a
+// serializer for it. This method supports types definined with the interface
+// source type.
 func (g *FileGenerator) AddInterface(t reflect.Type, ops ...introps.SetOption) (
 	err error) {
 	iops := introps.NewOptions()
@@ -120,6 +120,8 @@ func (g *FileGenerator) AddInterface(t reflect.Type, ops ...introps.SetOption) (
 	return
 }
 
+// Generate produces the serialization code. The result should then be saved to
+// a file.
 func (g *FileGenerator) Generate() (bs []byte, err error) {
 	bs = g.generatePackage()
 	bs = append(bs, g.generateImports()...)

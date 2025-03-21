@@ -2,7 +2,7 @@ package parser
 
 import "reflect"
 
-func supportedTypeDef(t reflect.Type) (ok bool) {
+func supportedDefinedType(t reflect.Type) (ok bool) {
 	return t.PkgPath() != "" && (basicType(t) || containerType(t) || ptrType(t))
 }
 

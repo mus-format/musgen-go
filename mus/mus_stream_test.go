@@ -22,40 +22,40 @@ func TestStreamFileGenerator(t *testing.T) {
 			genops.WithStream(),
 		)
 
-		// typedef
+		// defined_type
 
-		err := g.AddTypedef(reflect.TypeFor[pkg1.MyIntStream]())
+		err := g.AddDefinedType(reflect.TypeFor[pkg1.MyIntStream]())
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = g.AddTypedef(reflect.TypeFor[pkg1.MySliceStream]())
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.MySliceStream]())
 		if err != nil {
 			t.Fatal(err)
 		}
 
 		t.Run("Import statement should contain options packages for valid constructors",
 			func(t *testing.T) {
-				err = g.AddTypedef(reflect.TypeFor[pkg1.ValidMyStringStream](),
+				err = g.AddDefinedType(reflect.TypeFor[pkg1.ValidMyStringStream](),
 					typeops.WithLenValidator("testdata.ValidateLength"))
 				if err != nil {
 					t.Fatal(err)
 				}
-				err = g.AddTypedef(reflect.TypeFor[pkg1.ValidMyArrayStream](),
+				err = g.AddDefinedType(reflect.TypeFor[pkg1.ValidMyArrayStream](),
 					typeops.WithElem(typeops.WithValidator("testdata.ValidateZeroValue[int]")))
 				if err != nil {
 					t.Fatal(err)
 				}
-				err = g.AddTypedef(reflect.TypeFor[pkg1.ValidMyByteSliceStream](),
+				err = g.AddDefinedType(reflect.TypeFor[pkg1.ValidMyByteSliceStream](),
 					typeops.WithLenValidator("testdata.ValidateLength"))
 				if err != nil {
 					t.Fatal(err)
 				}
-				err = g.AddTypedef(reflect.TypeFor[pkg1.ValidMySliceStream](),
+				err = g.AddDefinedType(reflect.TypeFor[pkg1.ValidMySliceStream](),
 					typeops.WithLenValidator("testdata.ValidateLength"))
 				if err != nil {
 					t.Fatal(err)
 				}
-				err = g.AddTypedef(reflect.TypeFor[pkg1.ValidMyMapStream](),
+				err = g.AddDefinedType(reflect.TypeFor[pkg1.ValidMyMapStream](),
 					typeops.WithLenValidator("testdata.ValidateLength"))
 				if err != nil {
 					t.Fatal(err)
