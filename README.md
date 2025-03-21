@@ -45,7 +45,7 @@ import (
 
 func main() {
   g := musgen.NewFileGenerator(genops.WithPackage("foo"))
-  err := g.AddTypedef(reflect.TypeFor[foo.MyInt]())
+  err := g.AddDefinedType(reflect.TypeFor[foo.MyInt]())
   if err != nil {
     panic(err)
   }
@@ -169,7 +169,24 @@ g := musgen.NewFileGenerator(genops.WithPackage("package_name"),
 ```
 
 ### Methods
-#### AddTypedef()
+#### AddDefinedType()
+Supports types defined with the following source types:
+- Number (`uint`, `uint64`, `uint32`, `uint16`, `uint8`, `int`, `int64`, 
+  `int32`, `int16`, `int8`, `float64`, `float32`)
+- String
+- Array
+- Slice
+- Map
+- Pointer
+
+For example:
+```go
+type MyInt int
+type MyStringSlice []string
+type MyUintPtr *uint
+// ...
+```
+
 It can be used as follows:
 ```go
 import (
@@ -182,27 +199,25 @@ type MyInt int // Where int is the source type of MyInt.
 
 // ...
 
-err := g.AddTypedef(reflect.TypeFor[MyInt]())
+err := g.AddDefinedType(reflect.TypeFor[MyInt]())
 ```
 
 Or with serialization options, for example:
 ```go
-err := g.AddTypedef(reflect.TypeFor[MyInt](),
+err := g.AddDefinedType(reflect.TypeFor[MyInt](),
   typeops.WithNumEncoding(typeops.Raw), // The raw.Int serializer will be used
   // to serialize the source int type.
   typeops.WithValidator("ValidateMyInt")) // After unmarshalling, the MyInt
   // value will be validated using the ValidateMyInt function.
 ```
 
-Supported source types:
-- Numbers
-- String
-- Array
-- Slice
-- Map
-- Pointer
-
 #### AddStruct()
+Supports types defined with the `struct` source type, such as:
+```go
+type MyStruct struct { ... }
+type MyAnotherStruct MyStruct
+```
+
 It can be used as follows:
 ```go
 import (
@@ -250,7 +265,7 @@ err := g.AddStruct(reflect.TypeFor[MyStruct](),
 )
 ```
 
-With `time.Time` type definition:
+A special case for the `time.Time` source type:
 ```go
 type MyTime time.Time
 // ...
@@ -259,12 +274,12 @@ err = g.AddStruct(reflect.TypeFor[MyTime](),
   // The raw.TimeUnixMilli serializer will be used  to serialize a time.Time 
   // value.
 )
-
 ```
 
-Supports struct types.
-
 #### AddDTS()
+Supports all types acceptable by the `AddDefinedType`, `AddStruct`, and 
+`AddInterface` methods.
+
 It can be used as follows:
 ```go
 import (
@@ -276,15 +291,19 @@ type MyInt int
 // ...
 
 t := reflect.TypeFor[MyInt]()
-err := g.AddTypedef(t)
+err := g.AddDefinedType(t)
 // ...
 err = g.AddDTS(t)  // Generator will generate a DTS definition for the specified 
 // type.
 ```
 
-Supports typedef, struct and interface types.
-
 #### AddInterface()
+Supports types defined with the `interface` source type, such as:
+```go
+type MyInterface interface { ... }
+type MyAnotherInterface MyInterface
+```
+
 It can be used as follows:
 ```go
 type MyInterface interface {...}
@@ -304,7 +323,7 @@ err := g.AddStruct(t1)
 // ...
 err = g.AddDTS(t1)
 // ...
-err = g.AddTypedef(t2)
+err = g.AddDefinedType(t2)
 // ...
 err = g.AddDTS(t2)
 // ...
@@ -312,8 +331,6 @@ err = g.AddInterface(reflect.TypeFor[MyInterface](),
   introps.WithImplType(t1),
   introps.WithImplType(t2))
 ```
-
-Supports interface types.
 
 ## Serialization Options
 Different types support different serialization options. If an incorrect option 
