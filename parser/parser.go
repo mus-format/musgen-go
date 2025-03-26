@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-func ParseTypedef(t reflect.Type) (sourceType string, err error) {
+func ParseDefinedType(t reflect.Type) (sourceType string, err error) {
 	if !supportedDefinedType(t) {
 		err = NewUnsupportedType(t)
 		return
@@ -60,7 +60,7 @@ func ParseInterfaceType(t reflect.Type) (err error) {
 }
 
 func SupportedType(t reflect.Type) (err error) {
-	_, err = ParseTypedef(t)
+	_, err = ParseDefinedType(t)
 	if err == nil {
 		return
 	}

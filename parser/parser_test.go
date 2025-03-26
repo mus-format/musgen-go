@@ -9,7 +9,7 @@ import (
 	assert "github.com/ymz-ncnk/assert/error"
 )
 
-func TestParseTypedef(t *testing.T) {
+func TestParseDefinedType(t *testing.T) {
 
 	t.Run("Should work for basic types", func(t *testing.T) {
 		type IntDef int
@@ -18,7 +18,7 @@ func TestParseTypedef(t *testing.T) {
 			wantSourceType       = "int"
 			wantErr        error = nil
 		)
-		sourceType, err := ParseTypedef(tp)
+		sourceType, err := ParseDefinedType(tp)
 		assert.EqualError(err, wantErr, t)
 		assert.Equal(sourceType, wantSourceType, t)
 	})
@@ -30,7 +30,7 @@ func TestParseTypedef(t *testing.T) {
 			wantSourceType       = "[3]int"
 			wantErr        error = nil
 		)
-		sourceType, err := ParseTypedef(tp)
+		sourceType, err := ParseDefinedType(tp)
 		assert.EqualError(err, wantErr, t)
 		assert.Equal(sourceType, wantSourceType, t)
 	})
@@ -42,7 +42,7 @@ func TestParseTypedef(t *testing.T) {
 			wantSourceType       = "[]int"
 			wantErr        error = nil
 		)
-		sourceType, err := ParseTypedef(tp)
+		sourceType, err := ParseDefinedType(tp)
 		assert.EqualError(err, wantErr, t)
 		assert.Equal(sourceType, wantSourceType, t)
 	})
@@ -55,7 +55,7 @@ func TestParseTypedef(t *testing.T) {
 			wantSourceType       = "[]Struct"
 			wantErr        error = nil
 		)
-		sourceType, err := ParseTypedef(tp)
+		sourceType, err := ParseDefinedType(tp)
 		assert.EqualError(err, wantErr, t)
 		assert.Equal(sourceType, wantSourceType, t)
 	})
@@ -68,7 +68,7 @@ func TestParseTypedef(t *testing.T) {
 				wantSourceType       = "[]big.Int"
 				wantErr        error = nil
 			)
-			sourceType, err := ParseTypedef(tp)
+			sourceType, err := ParseDefinedType(tp)
 			assert.EqualError(err, wantErr, t)
 			assert.Equal(sourceType, wantSourceType, t)
 		})
@@ -80,7 +80,7 @@ func TestParseTypedef(t *testing.T) {
 			wantSourceType       = "map[int]string"
 			wantErr        error = nil
 		)
-		sourceType, err := ParseTypedef(tp)
+		sourceType, err := ParseDefinedType(tp)
 		assert.EqualError(err, wantErr, t)
 		assert.Equal(sourceType, wantSourceType, t)
 	})
@@ -92,7 +92,7 @@ func TestParseTypedef(t *testing.T) {
 			wantSourceType       = "*int"
 			wantErr        error = nil
 		)
-		sourceType, err := ParseTypedef(tp)
+		sourceType, err := ParseDefinedType(tp)
 		assert.EqualError(err, wantErr, t)
 		assert.Equal(sourceType, wantSourceType, t)
 	})
@@ -103,7 +103,7 @@ func TestParseTypedef(t *testing.T) {
 			tp      = reflect.TypeOf(v)
 			wantErr = NewUnsupportedType(tp)
 		)
-		_, err := ParseTypedef(tp)
+		_, err := ParseDefinedType(tp)
 		assert.EqualError(err, wantErr, t)
 	})
 
@@ -113,7 +113,7 @@ func TestParseTypedef(t *testing.T) {
 			tp      = reflect.TypeFor[Struct]()
 			wantErr = NewUnsupportedType(tp)
 		)
-		_, err := ParseTypedef(tp)
+		_, err := ParseDefinedType(tp)
 		assert.EqualError(err, wantErr, t)
 	})
 
@@ -124,7 +124,7 @@ func TestParseTypedef(t *testing.T) {
 			tp      = reflect.TypeFor[StructDef]()
 			wantErr = NewUnsupportedType(tp)
 		)
-		_, err := ParseTypedef(tp)
+		_, err := ParseDefinedType(tp)
 		assert.EqualError(err, wantErr, t)
 	})
 
@@ -136,7 +136,7 @@ func TestParseTypedef(t *testing.T) {
 			tp      = reflect.TypeFor[Interface]()
 			wantErr = NewUnsupportedType(tp)
 		)
-		_, err := ParseTypedef(tp)
+		_, err := ParseDefinedType(tp)
 		assert.EqualError(err, wantErr, t)
 	})
 
@@ -149,7 +149,7 @@ func TestParseTypedef(t *testing.T) {
 			tp      = reflect.TypeFor[InterfaceDef]()
 			wantErr = NewUnsupportedType(tp)
 		)
-		_, err := ParseTypedef(tp)
+		_, err := ParseDefinedType(tp)
 		assert.EqualError(err, wantErr, t)
 	})
 
@@ -158,7 +158,7 @@ func TestParseTypedef(t *testing.T) {
 			tp      = reflect.TypeFor[any]()
 			wantErr = NewUnsupportedType(tp)
 		)
-		_, err := ParseTypedef(tp)
+		_, err := ParseDefinedType(tp)
 		assert.EqualError(err, wantErr, t)
 
 	})

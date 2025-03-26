@@ -10,7 +10,7 @@ import (
 
 func MakeDefinedTypeDesc(t reflect.Type, tops *typeops.Options,
 	gops genops.Options) (td TypeDesc, err error) {
-	sourceType, err := parser.ParseTypedef(t)
+	sourceType, err := parser.ParseDefinedType(t)
 	if err != nil {
 		return
 	}
