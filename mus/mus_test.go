@@ -356,6 +356,13 @@ func TestFileGenerator(t *testing.T) {
 			t.Fatal(err)
 		}
 
+		err = g.AddDefinedType(reflect.TypeFor[pkg1.UnsuportedChanType]())
+		assert.EqualError(err,
+			parser.NewUnsupportedType(reflect.TypeFor[pkg1.UnsuportedChanType]()), t)
+
+		err = g.AddStruct(reflect.TypeFor[pkg1.UnsupportedFuncFieldStruct]())
+		assert.EqualError(err, parser.NewUnsupportedTypeStr("func()"), t)
+
 		// generate
 
 		bs, err := g.Generate()

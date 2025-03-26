@@ -135,7 +135,13 @@ type InterfaceAlias Interface
 type AnotherStruct SimpleStruct
 type AnotherInterface Interface
 
+type UnsuportedChanType chan int
+
 // -----------------------------------------------------------------------------
+
+type UnsupportedFuncFieldStruct struct {
+	Fn func()
+}
 
 type SimpleStruct struct {
 	Int int
