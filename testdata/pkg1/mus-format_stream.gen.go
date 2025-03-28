@@ -20,8 +20,8 @@ import (
 )
 
 var (
-	arrayTmIΔ0PpG8w7aD1a6FYb8ΔQΞΞ      = ord.NewArraySer[[3]int, int](3, varint.Int)
-	arrayd3UCTuS0HΔTyQFB1AR47mwΞΞ      = ord.NewValidArraySer[[3]int, int](3, varint.Int, arrops.WithElemValidator[int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])))
+	arrayTmIΔ0PpG8w7aD1a6FYb8ΔQΞΞ      = ord.NewArraySer[[3]int, int](varint.Int)
+	arrayd3UCTuS0HΔTyQFB1AR47mwΞΞ      = ord.NewValidArraySer[[3]int, int](varint.Int, arrops.WithElemValidator[int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])))
 	byte_sliceuvZKF7pSWKcTOpuVCUtR6wΞΞ = ord.NewValidByteSliceSer(bslops.WithLenValidator(com.ValidatorFn[int](testdata.ValidateLength)))
 	mapWY5BjxP7fZfΔ8y3u5ΣyNAwΞΞ        = ord.NewValidMapSer[int, int](varint.Int, varint.Int, mapops.WithLenValidator[int, int](com.ValidatorFn[int](testdata.ValidateLength)))
 	mapoo8ΣM84YHYspIΣOQWKrAbgΞΞ        = ord.NewMapSer[float32, map[MyIntStream][]SimpleStructStream](varint.Float32, mapΔqVacXL5gHBZo7mX1Q8ΔKQΞΞ)

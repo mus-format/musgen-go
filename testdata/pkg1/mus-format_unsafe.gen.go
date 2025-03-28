@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	arrayVVcFIJPvOaΣLVKMi652G6wΞΞ = ord.NewArraySer[[3]int, int](3, unsafe.Int)
+	arrayVVcFIJPvOaΣLVKMi652G6wΞΞ = ord.NewArraySer[[3]int, int](unsafe.Int)
 	mapVVXjSxO6dXjΔOCΔqLsJO6QΞΞ   = ord.NewMapSer[float32, map[MyIntUnsafe][]SimpleStructUnsafe](unsafe.Float32, mapΣWU7IqDΔwΔv4DQ00uoROsQΞΞ)
 	mapΣWU7IqDΔwΔv4DQ00uoROsQΞΞ   = ord.NewMapSer[MyIntUnsafe, []SimpleStructUnsafe](MyIntUnsafeMUS, sliceHE51HQEviTCic5s1ePPTRgΞΞ)
 	ptrENsHnYOTUSTMKYsaG5TfAAΞΞ   = ord.NewPtrSer[[3]int](arrayVVcFIJPvOaΣLVKMi652G6wΞΞ)

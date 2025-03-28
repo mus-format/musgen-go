@@ -300,7 +300,7 @@ func TestGeneratedCode(t *testing.T) {
 			var (
 				v                                          = pkg1.ElemEncodingMyArray([3]int{1, 2, 3})
 				u UnmarshallerFn[pkg1.ElemEncodingMyArray] = func(bs []byte) (pkg1.ElemEncodingMyArray, int, error) {
-					ser := ord.NewArraySer[[3]int, int](3, raw.Int)
+					ser := ord.NewArraySer[[3]int, int](raw.Int)
 					arr, n, err := ser.Unmarshal(bs)
 					return pkg1.ElemEncodingMyArray(arr), n, err
 				}

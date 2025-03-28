@@ -21,12 +21,12 @@ import (
 )
 
 var (
-	arrayRuX3ffcBMbWzRHkOFcnegAΞΞ      = ord.NewArraySer[[3]int, int](3, raw.Int)
-	arrayZZrMuafde4zs9nWQ9V29GQΞΞ      = ord.NewValidArraySer[[3]int, int](3, raw.Int, arrops.WithLenSer[int](raw.Int), arrops.WithElemValidator[int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])))
-	arraycrM9UZcGb9US7pO18XSo2wΞΞ      = ord.NewArraySer[[3]int, int](3, varint.Int, arrops.WithLenSer[int](raw.Int))
-	arrayr4wy7nYWZsCSpVj9NWA6awΞΞ      = ord.NewArraySer[[3]int, int](3, varint.Int)
-	arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ      = ord.NewArraySer[[3]int, int](3, varint.Int)
-	arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ      = ord.NewValidArraySer[[3]int, int](3, varint.Int, arrops.WithElemValidator[int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])))
+	arrayRuX3ffcBMbWzRHkOFcnegAΞΞ      = ord.NewArraySer[[3]int, int](raw.Int)
+	arrayZZrMuafde4zs9nWQ9V29GQΞΞ      = ord.NewValidArraySer[[3]int, int](raw.Int, arrops.WithLenSer[int](raw.Int), arrops.WithElemValidator[int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])))
+	arraycrM9UZcGb9US7pO18XSo2wΞΞ      = ord.NewArraySer[[3]int, int](varint.Int, arrops.WithLenSer[int](raw.Int))
+	arrayr4wy7nYWZsCSpVj9NWA6awΞΞ      = ord.NewArraySer[[3]int, int](varint.Int)
+	arrayrGTVpvMKsXWK7EdLjJ2VwQΞΞ      = ord.NewArraySer[[3]int, int](varint.Int)
+	arrayrwzdrNpi3ynΔqO1zΔn7rmwΞΞ      = ord.NewValidArraySer[[3]int, int](varint.Int, arrops.WithElemValidator[int](com.ValidatorFn[int](testdata.ValidateZeroValue[int])))
 	byte_sliceDcCgbxlDhn4GkcmK8YCyΔAΞΞ = ord.NewValidByteSliceSer(bslops.WithLenValidator(com.ValidatorFn[int](testdata.ValidateLength)))
 	byte_sliceoQ9IRuMdcV5ml2YRw53jjwΞΞ = ord.NewValidByteSliceSer(bslops.WithLenSer(raw.Int), bslops.WithLenValidator(com.ValidatorFn[int](testdata.ValidateLength)))
 	byte_sliceuivYF4GycfHkNaAtJaA7gAΞΞ = ord.NewByteSliceSer(bslops.WithLenSer(raw.Int))

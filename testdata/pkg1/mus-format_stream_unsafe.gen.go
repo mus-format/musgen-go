@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	arrayΔEUbR5kxK3Xh8nZpMbBMΣgΞΞ = ord.NewArraySer[[3]int, int](3, unsafe.Int)
+	arrayΔEUbR5kxK3Xh8nZpMbBMΣgΞΞ = ord.NewArraySer[[3]int, int](unsafe.Int)
 	mapONAdCODA5Δ3WvvEjVZWP6gΞΞ   = ord.NewMapSer[float32, map[MyIntStreamUnsafe][]SimpleStructStreamUnsafe](unsafe.Float32, mapdF4uv9TsHkTsV6KUΔV1DYgΞΞ)
 	mapdF4uv9TsHkTsV6KUΔV1DYgΞΞ   = ord.NewMapSer[MyIntStreamUnsafe, []SimpleStructStreamUnsafe](MyIntStreamUnsafeMUS, slice4JrZ808sg28u396h2wj3PAΞΞ)
 	ptrAΔt28sCfGLΔUiT2SaΔLeΣAΞΞ   = ord.NewPtrSer[string](unsafe.String)

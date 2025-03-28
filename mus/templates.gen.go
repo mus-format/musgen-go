@@ -29,7 +29,7 @@ func init() {
 				{{- else }}
 					{{- $constructorName = "NewArraySer" }}
 				{{- end }}
-				{{ $ad.Name }} = ord.{{ $constructorName }}[{{ $ad.Type }}, {{ $ad.ElemType }}]({{ $ad.ArrLength }}, {{ $elemSer }}, {{ MakeArrayOps $ad }})
+				{{ $ad.Name }} = ord.{{ $constructorName }}[{{ $ad.Type }}, {{ $ad.ElemType }}]({{ $elemSer }}, {{ MakeArrayOps $ad }})
 			{{- end }}
 {{- /* byte slice type */}}
 			{{- if eq $ad.Kind "byte_slice" }}
