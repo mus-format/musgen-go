@@ -28,19 +28,7 @@ func MakeInterfaceDesc(t reflect.Type, iops introps.Options,
 	if err = checkOneof(iops); err != nil {
 		return
 	}
-	td.Oneof = buildOneof(t, iops)
-	return
-}
-
-func buildOneof(t reflect.Type, iops introps.Options) (oneof []string) {
-	oneof = make([]string, len(iops.ImplTypes))
-	for i, oneOf := range iops.ImplTypes {
-		if t.PkgPath() != oneOf.PkgPath() {
-			oneof[i] = oneOf.String()
-		} else {
-			oneof[i] = oneOf.Name()
-		}
-	}
+	td.Iops = iops
 	return
 }
 

@@ -538,6 +538,12 @@ func TestGeneratedCode(t *testing.T) {
 			testSerializability(v, pkg1.InterfaceMUS, nil, t)
 		})
 
+		t.Run("We should be able to serialize interface WithMarshaller option",
+			func(t *testing.T) {
+				var v pkg1.InterfaceMarshaller = pkg1.InterfaceImpl1{Str: "hello world"}
+				testSerializability(v, pkg1.InterfaceMarshallerMUS, nil, t)
+			})
+
 		t.Run("We sohuld be able to serialize AnotherInterface", func(t *testing.T) {
 			var v pkg1.AnotherInterface = pkg1.InterfaceImpl2(1)
 			testSerializability(v, pkg1.AnotherInterfaceMUS, nil, t)

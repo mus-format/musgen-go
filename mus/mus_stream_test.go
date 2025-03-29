@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	genops "github.com/mus-format/musgen-go/options/generate"
+	introps "github.com/mus-format/musgen-go/options/interface"
 	typeops "github.com/mus-format/musgen-go/options/type"
 	"github.com/mus-format/musgen-go/testdata/pkg1"
 	"github.com/mus-format/musgen-go/testdata/pkg2"
@@ -79,6 +80,15 @@ func TestStreamFileGenerator(t *testing.T) {
 			reflect.TypeFor[pkg1.InterfaceImpl1Stream](),
 			reflect.TypeFor[pkg1.InterfaceImpl2Stream](),
 			g)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = g.AddInterface(reflect.TypeFor[pkg1.InterfaceMarshallerStream](),
+			introps.WithImplType(reflect.TypeFor[pkg1.InterfaceImpl1Stream]()),
+			introps.WithImplType(reflect.TypeFor[pkg1.InterfaceImpl2Stream]()),
+			introps.WithMarshaller(),
+		)
 		if err != nil {
 			t.Fatal(err)
 		}

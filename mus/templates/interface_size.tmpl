@@ -1,10 +1,20 @@
 {{/* tdesc.TypeDesc */}}
 {{- $v := VarName .Name }}
-switch t := {{ $v }}.(type) {
-{{- range $index, $oneOf := .Oneof }}
-	case {{ $oneOf }}:
-		return {{ $oneOf }}DTS.Size(t)
+{{- $iops := .Iops }}
+{{- if $iops.Marshaller }}
+	{{- $ext := .Gops.ExtPackageName }}
+	if m, ok := {{ $v }}.({{ $ext }}.MarshallerTypedMUS); ok {
+		return m.SizeTypedMUS()
+	}
+	panic(fmt.Sprintf("%v doesn't implement {{ $ext }}.MarshallerTypedMUS interface", reflect.TypeOf({{ $v }})))
+{{- else }}
+	switch t := {{ $v }}.(type) {
+	{{- range $i, $e := $iops.ImplTypes }}
+		{{- $impl := $iops.ImplTypeStr $i }}
+		case {{ $impl }}:
+			return {{ $impl }}DTS.Size(t)
+	{{- end }}
+		default:
+			panic(fmt.Sprintf("unexpected %v type", t))
+	}
 {{- end }}
-	default:
-		panic(fmt.Sprintf("unexpected %v type", t))
-}

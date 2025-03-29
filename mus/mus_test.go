@@ -345,6 +345,15 @@ func TestFileGenerator(t *testing.T) {
 			t.Fatal(err)
 		}
 
+		err = g.AddInterface(reflect.TypeFor[pkg1.InterfaceMarshaller](),
+			introps.WithImplType(reflect.TypeFor[pkg1.InterfaceImpl1]()),
+			introps.WithImplType(reflect.TypeFor[pkg1.InterfaceImpl2]()),
+			introps.WithMarshaller(),
+		)
+		if err != nil {
+			t.Fatal(err)
+		}
+
 		err = g.AddInterface(reflect.TypeFor[pkg1.Interface]())
 		if err != tdesc.ErrNoOneImplTypeSpecified {
 			t.Errorf("unexpected error, want %v actual %v", tdesc.ErrNoOneImplTypeSpecified,
@@ -355,6 +364,8 @@ func TestFileGenerator(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+
+		// unsupported types
 
 		err = g.AddDefinedType(reflect.TypeFor[pkg1.UnsuportedChanType]())
 		assert.EqualError(err,

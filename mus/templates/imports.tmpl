@@ -8,6 +8,7 @@ import (
 		"github.com/mus-format/mus-stream-go/raw"
 		"github.com/mus-format/mus-stream-go/unsafe"
 		"github.com/mus-format/mus-stream-go/varint"
+		exts "github.com/mus-format/ext-mus-stream-go"
 		arrops "github.com/mus-format/mus-stream-go/options/array"
 		bslops "github.com/mus-format/mus-stream-go/options/byte_slice"
 		mapops "github.com/mus-format/mus-stream-go/options/map"
@@ -19,6 +20,7 @@ import (
 		mapops "github.com/mus-format/mus-go/options/map"
 		slops "github.com/mus-format/mus-go/options/slice"
 		strops "github.com/mus-format/mus-go/options/string"
+		ext "github.com/mus-format/ext-mus-go"
 	{{- end }}
 	{{- if .Imports }}
 		{{- range $i, $imp := .Imports }}

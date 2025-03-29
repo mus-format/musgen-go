@@ -32,6 +32,12 @@ func TestGeneratedStreamCode(t *testing.T) {
 			testStreamSerializability(v, pkg2.TimeStructStreamMUS, t)
 		})
 
+		t.Run("We should be able to serialize interface WithMarshaller option",
+			func(t *testing.T) {
+				var v pkg1.InterfaceMarshallerStream = pkg1.InterfaceImpl1Stream{}
+				testStreamSerializability(v, pkg1.InterfaceMarshallerStreamMUS, t)
+			})
+
 	})
 
 }

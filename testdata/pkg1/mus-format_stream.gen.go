@@ -4,8 +4,10 @@ package pkg1
 
 import (
 	"fmt"
+	"reflect"
 
 	com "github.com/mus-format/common-go"
+	exts "github.com/mus-format/ext-mus-stream-go"
 	dts "github.com/mus-format/mus-stream-dts-go"
 	muss "github.com/mus-format/mus-stream-go"
 	arrops "github.com/mus-format/mus-stream-go/options/array"
@@ -720,6 +722,62 @@ func (s interfaceStreamMUS) Size(v InterfaceStream) (size int) {
 }
 
 func (s interfaceStreamMUS) Skip(r muss.Reader) (n int, err error) {
+	dtm, n, err := dts.DTMSer.Unmarshal(r)
+	if err != nil {
+		return
+	}
+	var n1 int
+	switch dtm {
+	case InterfaceImpl1StreamDTM:
+		n1, err = InterfaceImpl1StreamDTS.SkipData(r)
+	case InterfaceImpl2StreamDTM:
+		n1, err = InterfaceImpl2StreamDTS.SkipData(r)
+	default:
+		err = fmt.Errorf("unexpected %v DTM", dtm)
+		return
+	}
+	n += n1
+	return
+}
+
+var InterfaceMarshallerStreamMUS = interfaceMarshallerStreamMUS{}
+
+type interfaceMarshallerStreamMUS struct{}
+
+func (s interfaceMarshallerStreamMUS) Marshal(v InterfaceMarshallerStream, w muss.Writer) (n int, err error) {
+	if m, ok := v.(exts.MarshallerTypedMUS); ok {
+		return m.MarshalTypedMUS(w)
+	}
+	panic(fmt.Sprintf("%v doesn't implement exts.MarshallerTypedMUS interface", reflect.TypeOf(v)))
+}
+
+func (s interfaceMarshallerStreamMUS) Unmarshal(r muss.Reader) (v InterfaceMarshallerStream, n int, err error) {
+	dtm, n, err := dts.DTMSer.Unmarshal(r)
+	if err != nil {
+		return
+	}
+	var n1 int
+	switch dtm {
+	case InterfaceImpl1StreamDTM:
+		v, n1, err = InterfaceImpl1StreamDTS.UnmarshalData(r)
+	case InterfaceImpl2StreamDTM:
+		v, n1, err = InterfaceImpl2StreamDTS.UnmarshalData(r)
+	default:
+		err = fmt.Errorf("unexpected %v DTM", dtm)
+		return
+	}
+	n += n1
+	return
+}
+
+func (s interfaceMarshallerStreamMUS) Size(v InterfaceMarshallerStream) (size int) {
+	if m, ok := v.(exts.MarshallerTypedMUS); ok {
+		return m.SizeTypedMUS()
+	}
+	panic(fmt.Sprintf("%v doesn't implement exts.MarshallerTypedMUS interface", reflect.TypeOf(v)))
+}
+
+func (s interfaceMarshallerStreamMUS) Skip(r muss.Reader) (n int, err error) {
 	dtm, n, err := dts.DTMSer.Unmarshal(r)
 	if err != nil {
 		return

@@ -185,12 +185,22 @@ type ComplexStruct struct {
 
 // -----------------------------------------------------------------------------
 
+type InterfaceMarshaller Interface
+
 type Interface interface {
 	Print()
 }
 
 type InterfaceImpl1 struct {
 	Str string
+}
+
+func (i InterfaceImpl1) MarshalTypedMUS(bs []byte) (n int) {
+	return InterfaceImpl1DTS.Marshal(i, bs)
+}
+
+func (i InterfaceImpl1) SizeTypedMUS() (n int) {
+	return InterfaceImpl1DTS.Size(i)
 }
 
 func (i InterfaceImpl1) Print() {
@@ -201,6 +211,14 @@ type InterfaceImpl2 int
 
 func (i InterfaceImpl2) Print() {
 	fmt.Println("impl2")
+}
+
+func (i InterfaceImpl2) MarshalTypedMUS(bs []byte) (n int) {
+	return InterfaceImpl2DTS.Marshal(i, bs)
+}
+
+func (i InterfaceImpl2) SizeTypedMUS() (n int) {
+	return InterfaceImpl2DTS.Size(i)
 }
 
 // ----------------------------------------------------------------------------

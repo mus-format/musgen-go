@@ -108,7 +108,7 @@ func (g *FileGenerator) AddDTS(t reflect.Type) (err error) {
 // source type.
 func (g *FileGenerator) AddInterface(t reflect.Type, ops ...introps.SetOption) (
 	err error) {
-	iops := introps.NewOptions()
+	iops := introps.NewOptions(t)
 	if ops != nil {
 		introps.Apply(ops, &iops)
 	}

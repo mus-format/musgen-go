@@ -3,6 +3,7 @@ package pkg1
 import (
 	"fmt"
 
+	muss "github.com/mus-format/mus-stream-go"
 	"github.com/mus-format/musgen-go/testdata/pkg2"
 )
 
@@ -64,6 +65,8 @@ const (
 	// MyIntStreamDTM       = 14
 )
 
+type InterfaceMarshallerStream InterfaceStream
+
 type InterfaceStream interface {
 	Print()
 }
@@ -74,8 +77,24 @@ func (i InterfaceImpl1Stream) Print() {
 	fmt.Println("impl1")
 }
 
+func (i InterfaceImpl1Stream) MarshalTypedMUS(w muss.Writer) (n int, err error) {
+	return InterfaceImpl1StreamDTS.Marshal(i, w)
+}
+
+func (i InterfaceImpl1Stream) SizeTypedMUS() (size int) {
+	return InterfaceImpl1StreamDTS.Size(i)
+}
+
 type InterfaceImpl2Stream int
 
 func (i InterfaceImpl2Stream) Print() {
 	fmt.Println("impl2")
+}
+
+func (i InterfaceImpl2Stream) MarshalTypedMUS(w muss.Writer) (n int, err error) {
+	return InterfaceImpl2StreamDTS.Marshal(i, w)
+}
+
+func (i InterfaceImpl2Stream) SizeTypedMUS() (size int) {
+	return InterfaceImpl2StreamDTS.Size(i)
 }

@@ -68,6 +68,13 @@ func (o Options) SkipLastParam() string {
 	return "bs[n:]"
 }
 
+func (o Options) ExtPackageName() string {
+	if o.Stream {
+		return "exts"
+	}
+	return "ext"
+}
+
 func (o Options) Hash() [16]byte {
 	var bs = []byte{}
 	bs = append(bs, []byte(o.Package)...)

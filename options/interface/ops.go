@@ -2,14 +2,25 @@ package introps
 
 import "reflect"
 
-func NewOptions() Options {
+func NewOptions(t reflect.Type) Options {
 	return Options{
+		t:         t,
 		ImplTypes: []reflect.Type{},
 	}
 }
 
 type Options struct {
-	ImplTypes []reflect.Type
+	t          reflect.Type
+	ImplTypes  []reflect.Type
+	Marshaller bool
+}
+
+func (o Options) ImplTypeStr(i int) string {
+	if o.t.PkgPath() != o.ImplTypes[i].PkgPath() {
+		return o.ImplTypes[i].String()
+	} else {
+		return o.ImplTypes[i].Name()
+	}
 }
 
 type SetOption func(o *Options)
@@ -17,6 +28,12 @@ type SetOption func(o *Options)
 func WithImplType(impl reflect.Type) SetOption {
 	return func(o *Options) {
 		o.ImplTypes = append(o.ImplTypes, impl)
+	}
+}
+
+func WithMarshaller() SetOption {
+	return func(o *Options) {
+		o.Marshaller = true
 	}
 }
 

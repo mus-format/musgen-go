@@ -4,9 +4,11 @@ package pkg1
 
 import (
 	"fmt"
+	"reflect"
 	"time"
 
 	com "github.com/mus-format/common-go"
+	ext "github.com/mus-format/ext-mus-go"
 	dts "github.com/mus-format/mus-dts-go"
 	arrops "github.com/mus-format/mus-go/options/array"
 	bslops "github.com/mus-format/mus-go/options/byte_slice"
@@ -1801,6 +1803,62 @@ func (s anotherInterfaceMUS) Size(v AnotherInterface) (size int) {
 }
 
 func (s anotherInterfaceMUS) Skip(bs []byte) (n int, err error) {
+	dtm, n, err := dts.DTMSer.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	var n1 int
+	switch dtm {
+	case InterfaceImpl1DTM:
+		n1, err = InterfaceImpl1DTS.SkipData(bs[n:])
+	case InterfaceImpl2DTM:
+		n1, err = InterfaceImpl2DTS.SkipData(bs[n:])
+	default:
+		err = fmt.Errorf("unexpected %v DTM", dtm)
+		return
+	}
+	n += n1
+	return
+}
+
+var InterfaceMarshallerMUS = interfaceMarshallerMUS{}
+
+type interfaceMarshallerMUS struct{}
+
+func (s interfaceMarshallerMUS) Marshal(v InterfaceMarshaller, bs []byte) (n int) {
+	if m, ok := v.(ext.MarshallerTypedMUS); ok {
+		return m.MarshalTypedMUS(bs)
+	}
+	panic(fmt.Sprintf("%v doesn't implement ext.MarshallerTypedMUS interface", reflect.TypeOf(v)))
+}
+
+func (s interfaceMarshallerMUS) Unmarshal(bs []byte) (v InterfaceMarshaller, n int, err error) {
+	dtm, n, err := dts.DTMSer.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	var n1 int
+	switch dtm {
+	case InterfaceImpl1DTM:
+		v, n1, err = InterfaceImpl1DTS.UnmarshalData(bs[n:])
+	case InterfaceImpl2DTM:
+		v, n1, err = InterfaceImpl2DTS.UnmarshalData(bs[n:])
+	default:
+		err = fmt.Errorf("unexpected %v DTM", dtm)
+		return
+	}
+	n += n1
+	return
+}
+
+func (s interfaceMarshallerMUS) Size(v InterfaceMarshaller) (size int) {
+	if m, ok := v.(ext.MarshallerTypedMUS); ok {
+		return m.SizeTypedMUS()
+	}
+	panic(fmt.Sprintf("%v doesn't implement ext.MarshallerTypedMUS interface", reflect.TypeOf(v)))
+}
+
+func (s interfaceMarshallerMUS) Skip(bs []byte) (n int, err error) {
 	dtm, n, err := dts.DTMSer.Unmarshal(bs)
 	if err != nil {
 		return

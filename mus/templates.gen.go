@@ -240,6 +240,7 @@ import (
 		"github.com/mus-format/mus-stream-go/raw"
 		"github.com/mus-format/mus-stream-go/unsafe"
 		"github.com/mus-format/mus-stream-go/varint"
+		exts "github.com/mus-format/ext-mus-stream-go"
 		arrops "github.com/mus-format/mus-stream-go/options/array"
 		bslops "github.com/mus-format/mus-stream-go/options/byte_slice"
 		mapops "github.com/mus-format/mus-stream-go/options/map"
@@ -251,6 +252,7 @@ import (
 		mapops "github.com/mus-format/mus-go/options/map"
 		slops "github.com/mus-format/mus-go/options/slice"
 		strops "github.com/mus-format/mus-go/options/string"
+		ext "github.com/mus-format/ext-mus-go"
 	{{- end }}
 	{{- if .Imports }}
 		{{- range $i, $imp := .Imports }}
@@ -262,14 +264,24 @@ import (
 	templates["interface_marshal.tmpl"] = `{{/* tdesc.TypeDesc */}}
 {{- $mlp := .Gops.MarshalLastParam true }}
 {{- $v := VarName .Name }}
-switch t := {{ $v }}.(type) {
-	{{- range $i, $oneOf := .Oneof }}
-		case {{ $oneOf }}:
-			return {{ $oneOf }}DTS.Marshal(t, {{ $mlp }})
-	{{- end }}
-		default:
-			panic(fmt.Sprintf("unexpected %v type", t))
-}`
+{{- $iops := .Iops }}
+{{- if $iops.Marshaller }}
+	{{- $ext := .Gops.ExtPackageName }}
+	if m, ok := {{ $v }}.({{ $ext }}.MarshallerTypedMUS); ok {
+		return m.MarshalTypedMUS({{ $mlp }})
+	}
+	panic(fmt.Sprintf("%v doesn't implement {{ $ext }}.MarshallerTypedMUS interface", reflect.TypeOf({{ $v }})))
+{{- else }}
+	switch t := {{ $v }}.(type) {
+		{{- range $i, $e := $iops.ImplTypes }}
+			{{- $impl := $iops.ImplTypeStr $i }}
+			case {{ $impl }}:
+				return {{ $impl }}DTS.Marshal(t, {{ $mlp }})
+		{{- end }}
+			default:
+				panic(fmt.Sprintf("unexpected %v type", t))
+	}
+{{- end }}`
 	templates["interface_ser.tmpl"] = `{{/* tdesc.TypeDesc */}}
 {{- $serVar := SerVar . }}
 {{- $serType := SerType . }}
@@ -300,27 +312,39 @@ func (s {{ $serType }}) Skip({{ $uslp }}) (n int, err error) {
 }`
 	templates["interface_size.tmpl"] = `{{/* tdesc.TypeDesc */}}
 {{- $v := VarName .Name }}
-switch t := {{ $v }}.(type) {
-{{- range $index, $oneOf := .Oneof }}
-	case {{ $oneOf }}:
-		return {{ $oneOf }}DTS.Size(t)
-{{- end }}
-	default:
-		panic(fmt.Sprintf("unexpected %v type", t))
-}`
+{{- $iops := .Iops }}
+{{- if $iops.Marshaller }}
+	{{- $ext := .Gops.ExtPackageName }}
+	if m, ok := {{ $v }}.({{ $ext }}.MarshallerTypedMUS); ok {
+		return m.SizeTypedMUS()
+	}
+	panic(fmt.Sprintf("%v doesn't implement {{ $ext }}.MarshallerTypedMUS interface", reflect.TypeOf({{ $v }})))
+{{- else }}
+	switch t := {{ $v }}.(type) {
+	{{- range $i, $e := $iops.ImplTypes }}
+		{{- $impl := $iops.ImplTypeStr $i }}
+		case {{ $impl }}:
+			return {{ $impl }}DTS.Size(t)
+	{{- end }}
+		default:
+			panic(fmt.Sprintf("unexpected %v type", t))
+	}
+{{- end }}`
 	templates["interface_skip.tmpl"] = `{{/* tdesc.TypeDesc */}}
 {{- $fulp := .Gops.UnmarshalLastParam true }}
 {{- $ulp := .Gops.UnmarshalLastParam false }}
 {{- $v := VarName .Name }}
+{{- $iops := .Iops }}
 dtm, n, err := dts.DTMSer.Unmarshal({{ $fulp }})
 if err != nil {
 	return
 }
 var n1 int
 switch dtm {
-{{- range $index, $oneOf := .Oneof }}
-	case {{ $oneOf }}DTM:
-		n1, err = {{ $oneOf }}DTS.SkipData({{ $ulp }})
+{{- range $i, $e := $iops.ImplTypes }}
+	{{- $impl := $iops.ImplTypeStr $i }}
+	case {{ $impl }}DTM:
+		n1, err = {{ $impl }}DTS.SkipData({{ $ulp }})
 {{- end }}
 	default:
 		err = fmt.Errorf("unexpected %v DTM", dtm)
@@ -332,15 +356,17 @@ return`
 {{- $fulp := .Gops.UnmarshalLastParam true }}
 {{- $ulp := .Gops.UnmarshalLastParam false }}
 {{- $v := VarName .Name }}
+{{- $iops := .Iops }}
 dtm, n, err := dts.DTMSer.Unmarshal({{ $fulp }})
 if err != nil {
 	return
 }
 var n1 int
 switch dtm {
-{{- range $index, $oneOf := .Oneof }}
-	case {{ $oneOf }}DTM:
-		{{ $v }}, n1, err = {{ $oneOf }}DTS.UnmarshalData({{ $ulp }})
+{{- range $i, $e := $iops.ImplTypes }}
+	{{- $impl := $iops.ImplTypeStr $i }}
+	case {{ $impl }}DTM:
+		{{ $v }}, n1, err = {{ $impl }}DTS.UnmarshalData({{ $ulp }})
 {{- end }}
 	default:
 		err = fmt.Errorf("unexpected %v DTM", dtm)

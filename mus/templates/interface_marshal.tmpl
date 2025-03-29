@@ -1,11 +1,21 @@
 {{/* tdesc.TypeDesc */}}
 {{- $mlp := .Gops.MarshalLastParam true }}
 {{- $v := VarName .Name }}
-switch t := {{ $v }}.(type) {
-	{{- range $i, $oneOf := .Oneof }}
-		case {{ $oneOf }}:
-			return {{ $oneOf }}DTS.Marshal(t, {{ $mlp }})
-	{{- end }}
-		default:
-			panic(fmt.Sprintf("unexpected %v type", t))
-}
+{{- $iops := .Iops }}
+{{- if $iops.Marshaller }}
+	{{- $ext := .Gops.ExtPackageName }}
+	if m, ok := {{ $v }}.({{ $ext }}.MarshallerTypedMUS); ok {
+		return m.MarshalTypedMUS({{ $mlp }})
+	}
+	panic(fmt.Sprintf("%v doesn't implement {{ $ext }}.MarshallerTypedMUS interface", reflect.TypeOf({{ $v }})))
+{{- else }}
+	switch t := {{ $v }}.(type) {
+		{{- range $i, $e := $iops.ImplTypes }}
+			{{- $impl := $iops.ImplTypeStr $i }}
+			case {{ $impl }}:
+				return {{ $impl }}DTS.Marshal(t, {{ $mlp }})
+		{{- end }}
+			default:
+				panic(fmt.Sprintf("unexpected %v type", t))
+	}
+{{- end }}
