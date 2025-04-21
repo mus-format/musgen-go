@@ -1,6 +1,6 @@
-{{- /* {VarName string, FieldsCount int, Field tdesc.FieldDesc, Index int, Gops genops.Options} */}}
-{{- $vf := print .VarName "." .Field.Name }}
-{{- $fieldSer := SerializerOf .Field .Gops }}
+{{- /* {SerReceiver string, FieldsCount int, Field data.FieldData, Index int, Gops genops.Options} */}}
+{{- $vf := print .SerReceiver "." .Field.FieldName }}
+{{- $fieldSer := SerOf .Field.FullName .Tops .Gops }}
 
 {{- $call := print $fieldSer ".Size(" $vf ")" }}
 {{- if eq .FieldsCount 1 }}

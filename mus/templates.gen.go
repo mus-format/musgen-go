@@ -6,125 +6,77 @@ var templates map[string]string
 
 func init() {
 	templates = make(map[string]string)
-	templates["anonymous_definitions.tmpl"] = `{{/* {Map: map[adesc.AnonymousName]adesc.AnonymousDesc, Ops: genops.Options} */}}
+	templates["anon_definitions.tmpl"] = `{{/* {Map: map[data.AnonSerName]data.AnonData, Ops: genops.Options} */}}
 {{- if gt (len .Map)  0 }}
 	{{- $gops := .Ops }}
 	var (
 		{{- $constructorName := "" }}
 		{{- range $name, $ad := .Map }}
 {{- /* string type */}}
-			{{- if eq $ad.Kind "string" }}
+			{{- if eq $ad.Kind.String "string" }}
 				{{- if ne $ad.LenVl "nil" }}
 					{{- $constructorName = "NewValidStringSer" }}
 				{{- else }}
 					{{- $constructorName = "NewStringSer" }}
 				{{- end }}
-				{{ $ad.Name }} = ord.{{ $constructorName }}({{ MakeStringOps $ad }})
+				{{ $name }} = ord.{{ $constructorName }}({{ StringOps $ad }})
 			{{- end }}
 {{- /* array type */}}
-			{{- if eq $ad.Kind "array" }}
-				{{- $elemSer := ElemSerializer $ad $gops }}
+			{{- if eq $ad.Kind.String "array" }}
+				{{- $elemSer := AnonElemSer $ad $gops }}
 				{{- if ne $ad.ElemVl "nil" }}
 					{{- $constructorName = "NewValidArraySer" }}
 				{{- else }}
 					{{- $constructorName = "NewArraySer" }}
 				{{- end }}
-				{{ $ad.Name }} = ord.{{ $constructorName }}[{{ $ad.Type }}, {{ $ad.ElemType }}]({{ $elemSer }}, {{ MakeArrayOps $ad }})
+				{{ $name }} = ord.{{ $constructorName }}[{{ RelName $ad.ArrType $gops }}, {{ RelName $ad.ElemType $gops }}]({{ $elemSer }}{{ WithComma (ArrayOps $ad) }})
 			{{- end }}
 {{- /* byte slice type */}}
-			{{- if eq $ad.Kind "byte_slice" }}
+			{{- if eq $ad.Kind.String "byteSlice" }}
 				{{- if ne $ad.LenVl "nil" }}
 					{{- $constructorName = "NewValidByteSliceSer" }}
 				{{- else }}
 					{{- $constructorName = "NewByteSliceSer" }}
 				{{- end }}
-				{{ $ad.Name }} = ord.{{ $constructorName }}({{ MakeByteSliceOps $ad }})
+				{{ $name }} = ord.{{ $constructorName }}({{ ByteSliceOps $ad }})
 			{{- end }}
 {{- /* slice type */}}
-			{{- if eq $ad.Kind "slice" }}
-				{{- $elemSer := ElemSerializer $ad $gops }}
+			{{- if eq $ad.Kind.String "slice" }}
+				{{- $elemSer := AnonElemSer $ad $gops }}
 				{{- if or (ne $ad.LenVl "nil") (ne $ad.ElemVl "nil") }}
 					{{- $constructorName = "NewValidSliceSer" }}
 				{{- else }}
 					{{- $constructorName = "NewSliceSer" }}
 				{{- end }}
-				{{ $ad.Name }} = ord.{{ $constructorName }}[{{ $ad.ElemType }}]({{ $elemSer }}, {{ MakeSliceOps $ad }})
+				{{ $name }} = ord.{{ $constructorName }}[{{ RelName $ad.ElemType $gops }}]({{ $elemSer }}{{ WithComma (SliceOps $ad) }})
 			{{- end }}
 {{- /* map type */}}
-			{{- if eq $ad.Kind "map" }}
-				{{- $keySer := KeySerializer $ad $gops }}
-				{{- $elemSer := ElemSerializer $ad $gops }}
+			{{- if eq $ad.Kind.String "map" }}
+				{{- $keySer := AnonKeySer $ad $gops }}
+				{{- $elemSer := AnonElemSer $ad $gops }}
 				{{- if or (ne $ad.LenVl "nil") (ne $ad.KeyVl "nil") (ne $ad.ElemVl "nil") }}
 					{{- $constructorName = "NewValidMapSer" }}
 				{{- else}}
 					{{- $constructorName = "NewMapSer" }}
 				{{- end }}
-				{{ $ad.Name }} = ord.{{ $constructorName }}[{{ $ad.KeyType }}, {{ $ad.ElemType }}]({{ $keySer}}, {{ $elemSer }}, {{ MakeMapOps $ad }})
+				{{ $name }} = ord.{{ $constructorName }}[{{ RelName $ad.KeyType $gops }}, {{ RelName $ad.ElemType $gops }}]({{ $keySer}}, {{ $elemSer }}{{ WithComma (MapOps $ad) }})
 			{{- end }}
 {{- /* ptr type */}}
-			{{- if eq $ad.Kind "ptr" }}
-				{{- $elemSer := ElemSerializer $ad $gops }}
-				{{ $ad.Name }} = ord.NewPtrSer[{{ $ad.ElemType }}]({{ $elemSer }})
+			{{- if eq $ad.Kind.String "ptr" }}
+				{{- $elemSer := AnonElemSer $ad $gops }}
+				{{ $name }} = ord.NewPtrSer[{{ RelName $ad.ElemType $gops }}]({{ $elemSer }})
 			{{- end }}
 		{{- end }}
 	)
 {{- end }}`
-	templates["defined_type_ser.tmpl"] = `{{/* tdesc.TypeDesc */}}
-{{- $serType := SerType . }}
-{{- $serVar := SerVar . }}
-{{- $f := index .Fields 0 }}
-{{- $fieldSer := SerializerOf $f .Gops }}
-{{- $v := VarName .Name }}
-{{- $Type := .FullName}}
-{{- $tmp := TmpVarName .Name }}
-{{- $mslp := .Gops.MarshalSignatureLastParam }}
-{{- $mlp := .Gops.MarshalLastParam true }}
-{{- $uslp := .Gops.UnmarshalSignatureLastParam }}
-{{- $ulp := .Gops.UnmarshalLastParam true}}
-{{- $gops := .Gops }}
-
-{{- $ft := $f.Type }}
-{{- if PtrType $f.Type }}
-  {{- $ft = print "(" $f.Type ")" }}
-{{- end }}
-
-var {{ $serVar }} = {{ $serType }}{}
-
-type {{ $serType }} struct{}
-
-func (s {{ $serType }}) Marshal({{ $v }} {{ $Type }}, {{ $mslp }}) (n int {{ if $gops.Stream }} , err error {{ end }}) {
-  return {{ $fieldSer }}.Marshal({{ $ft }}({{ $v }}), {{ $mlp }})
-}
-
-func (s {{ $serType }}) Unmarshal({{ $uslp }}) ({{ $v }} {{ $Type }}, n int, err error) {
-  {{ $tmp }}, n, err := {{ $fieldSer }}.Unmarshal({{ $ulp }})
-    if err != nil {
-      return
-    }
-  {{ $v }} = {{ $Type }}({{ $tmp }})
-  {{- if and $f.Tops (ne $f.Tops.Validator "") }}
-    err = {{ $f.Tops.Validator }}({{ $v }})
-  {{- end }}
-  return
-}
-
-func (s {{ $serType }}) Size({{ $v }} {{ $Type }}) (size int) {
-  return {{ $fieldSer }}.Size({{ $ft }}({{ $v }}))
-}
-
-func (s {{ $serType }}) Skip({{ $uslp }}) (n int, err error) {
-  return {{ $fieldSer }}.Skip({{ $ulp }})
-}`
-	templates["dts.tmpl"] = `{{/* Name string, FullName string */}}
-var {{ .Name }}DTS = dts.New[{{ .FullName }}]({{ .Name }}DTM, {{ .Name }}MUS)`
-	templates["field_marshal.tmpl"] = `{{- /* {VarName string, FieldsCount int, Field tdesc.FieldDesc, Index int, Gops genops.Options} */}}
+	templates["field_marshal.tmpl"] = `{{- /* {SerReceiver string, FieldsCount int, Field data.FieldData, Index int, Gops genops.Options} */}}
 {{- $mlp := .Gops.MarshalLastParam false }}
 {{- if eq .Index 0 }}
 	{{- $mlp = .Gops.MarshalLastParam true }}
 {{- end}}
 
-{{- $vf := print .VarName "." .Field.Name }}
-{{- $fieldSer := SerializerOf .Field .Gops }}
+{{- $vf := print .SerReceiver "." .Field.FieldName }}
+{{- $fieldSer := SerOf .Field.FullName .Tops .Gops }}
 
 {{- $nVar := "n" }}
 {{- if gt .Index 0 }}
@@ -160,9 +112,9 @@ var {{ .Name }}DTS = dts.New[{{ .FullName }}]({{ .Name }}DTM, {{ .Name }}MUS)`
 		{{- end }}
 	{{- end }}
 {{- end }}`
-	templates["field_size.tmpl"] = `{{- /* {VarName string, FieldsCount int, Field tdesc.FieldDesc, Index int, Gops genops.Options} */}}
-{{- $vf := print .VarName "." .Field.Name }}
-{{- $fieldSer := SerializerOf .Field .Gops }}
+	templates["field_size.tmpl"] = `{{- /* {SerReceiver string, FieldsCount int, Field data.FieldData, Index int, Gops genops.Options} */}}
+{{- $vf := print .SerReceiver "." .Field.FieldName }}
+{{- $fieldSer := SerOf .Field.FullName .Tops .Gops }}
 
 {{- $call := print $fieldSer ".Size(" $vf ")" }}
 {{- if eq .FieldsCount 1 }}
@@ -176,14 +128,14 @@ var {{ .Name }}DTS = dts.New[{{ .FullName }}]({{ .Name }}DTM, {{ .Name }}MUS)`
 		size += {{ $call }}
 	{{- end }}
 {{- end }}`
-	templates["field_skip.tmpl"] = `{{- /* {VarName string, FieldsCount int, Field tdesc.FieldDesc, Index int, Gops genops.Options} */}}
+	templates["field_skip.tmpl"] = `{{- /* {SerReceiver string, FieldsCount int, Field data.FieldData, Index int, Gops genops.Options} */}}
 {{- $ulp := .Gops.UnmarshalLastParam false }}
 {{- if eq .Index 0 }}
 	{{- $ulp = .Gops.UnmarshalLastParam true }}
 {{- end}}
 
-{{- $vf := print .VarName "." .Field.Name }}
-{{- $fieldSer := SerializerOf .Field .Gops }}
+{{- $vf := print .SerReceiver "." .Field.FieldName }}
+{{- $fieldSer := SerOf .Field.FullName .Tops .Gops }}
 {{- if eq .Index 1 }}
 	var n1 int
 {{- end }}
@@ -200,14 +152,14 @@ var {{ .Name }}DTS = dts.New[{{ .FullName }}]({{ .Name }}DTM, {{ .Name }}MUS)`
 		return
 	}
 {{- end }}`
-	templates["field_unmarshal.tmpl"] = `{{- /* {VarName string, FieldsCount int, Field tdesc.FieldDesc, Index int, Gops genops.Options} */}}
+	templates["field_unmarshal.tmpl"] = `{{- /* {SerReceiver string, FieldsCount int, Field data.FieldData, Index int, Gops genops.Options} */}}
 {{- $ulp := .Gops.UnmarshalLastParam false }}
 {{- if eq .Index 0 }}
 	{{- $ulp = .Gops.UnmarshalLastParam true }}
 {{- end}}
 
-{{- $vf := print .VarName "." .Field.Name }}
-{{- $fieldSer := SerializerOf .Field .Gops }}
+{{- $vf := print .SerReceiver "." .Field.FieldName }}
+{{- $fieldSer := SerOf .Field.FullName .Tops .Gops }}
 {{- if eq .Index 1 }}
 	var n1 int
 {{- end }}
@@ -219,11 +171,11 @@ var {{ .Name }}DTS = dts.New[{{ .FullName }}]({{ .Name }}DTM, {{ .Name }}MUS)`
 {{- if ge .Index 1 }}
 	n += n1
 {{- end }}		
-{{- if and .Field.Tops (ne .Field.Tops.Validator "") }}
+{{- if and .Tops (ne .Tops.Validator "") }}
 	if err != nil {
 		return
 	}
-	err = {{ .Field.Tops.Validator }}({{ $vf }})
+	err = {{ .Tops.Validator }}({{ $vf }})
 {{- end }}
 {{- if and (ne .FieldsCount 1) (ne .Index (minus .FieldsCount 1))}}
 	if err != nil {
@@ -235,11 +187,11 @@ import (
 	com "github.com/mus-format/common-go"
 	{{- if .Stream }}
 		muss "github.com/mus-format/mus-stream-go"
-		dts "github.com/mus-format/mus-stream-dts-go"
 		"github.com/mus-format/mus-stream-go/ord"
 		"github.com/mus-format/mus-stream-go/raw"
 		"github.com/mus-format/mus-stream-go/unsafe"
 		"github.com/mus-format/mus-stream-go/varint"
+		dts "github.com/mus-format/mus-stream-dts-go"
 		exts "github.com/mus-format/ext-mus-stream-go"
 		arrops "github.com/mus-format/mus-stream-go/options/array"
 		bslops "github.com/mus-format/mus-stream-go/options/byte_slice"
@@ -247,46 +199,174 @@ import (
 		slops "github.com/mus-format/mus-stream-go/options/slice"
 		strops "github.com/mus-format/mus-stream-go/options/string"
 	{{- else }}
+	  "github.com/mus-format/mus-go"
+		"github.com/mus-format/mus-go/ord"
+		"github.com/mus-format/mus-go/raw"
+		"github.com/mus-format/mus-go/unsafe"
+		"github.com/mus-format/mus-go/varint"
+		dts "github.com/mus-format/mus-dts-go"
+		ext "github.com/mus-format/ext-mus-go"
 		arrops "github.com/mus-format/mus-go/options/array"
 		bslops "github.com/mus-format/mus-go/options/byte_slice"
 		mapops "github.com/mus-format/mus-go/options/map"
 		slops "github.com/mus-format/mus-go/options/slice"
 		strops "github.com/mus-format/mus-go/options/string"
-		ext "github.com/mus-format/ext-mus-go"
 	{{- end }}
 	{{- if .Imports }}
 		{{- range $i, $imp := .Imports }}
-			"{{ $imp }}"
+			{{ $imp }}
 		{{- end }}
 	{{- end }}
 )
 `
-	templates["interface_marshal.tmpl"] = `{{/* tdesc.TypeDesc */}}
+	templates["interface_marshal.tmpl"] = `{{/* data.TypeData */}}
 {{- $mlp := .Gops.MarshalLastParam true }}
-{{- $v := VarName .Name }}
+{{- $v := SerReceiver . }}
 {{- $iops := .Iops }}
+{{- $gops := .Gops }}
 {{- if $iops.Marshaller }}
 	{{- $ext := .Gops.ExtPackageName }}
 	if m, ok := {{ $v }}.({{ $ext }}.MarshallerTypedMUS); ok {
 		return m.MarshalTypedMUS({{ $mlp }})
 	}
-	panic(fmt.Sprintf("%v doesn't implement {{ $ext }}.MarshallerTypedMUS interface", reflect.TypeOf({{ $v }})))
+	panic(fmt.Sprintf("%v doesn't implement the {{ $ext }}.MarshallerTypedMUS interface", reflect.TypeOf({{ $v }})))
 {{- else }}
 	switch t := {{ $v }}.(type) {
-		{{- range $i, $e := $iops.ImplTypes }}
-			{{- $impl := $iops.ImplTypeStr $i }}
-			case {{ $impl }}:
-				return {{ $impl }}DTS.Marshal(t, {{ $mlp }})
+		{{- range $i, $e := .Impls }}
+			case {{ RelName $e $gops }}:
+				return {{ DTSVar $e }}.Marshal(t, {{ $mlp }})
 		{{- end }}
 			default:
 				panic(fmt.Sprintf("unexpected %v type", t))
 	}
 {{- end }}`
-	templates["interface_ser.tmpl"] = `{{/* tdesc.TypeDesc */}}
-{{- $serVar := SerVar . }}
-{{- $serType := SerType . }}
-{{- $v := VarName .Name }}
-{{- $Type := .FullName}}
+	templates["interface_size.tmpl"] = `{{/* data.TypeData */}}
+{{- $v := SerReceiver . }}
+{{- $iops := .Iops }}
+{{- $gops := .Gops }}
+{{- if $iops.Marshaller }}
+	{{- $ext := .Gops.ExtPackageName }}
+	if m, ok := {{ $v }}.({{ $ext }}.MarshallerTypedMUS); ok {
+		return m.SizeTypedMUS()
+	}
+	panic(fmt.Sprintf("%v doesn't implement the {{ $ext }}.MarshallerTypedMUS interface", reflect.TypeOf({{ $v }})))
+{{- else }}
+	switch t := {{ $v }}.(type) {
+	{{- range $i, $e := .Impls }}
+		case {{ RelName $e $gops }}:
+			return {{ DTSVar $e }}.Size(t)
+	{{- end }}
+		default:
+			panic(fmt.Sprintf("unexpected %v type", t))
+	}
+{{- end }}`
+	templates["interface_skip.tmpl"] = `{{/* data.TypeData */}}
+{{- $fulp := .Gops.UnmarshalLastParam true }}
+{{- $ulp := .Gops.UnmarshalLastParam false }}
+{{- $v := SerReceiver . }}
+{{- $iops := .Iops }}
+{{- $gops := .Gops }}
+dtm, n, err := dts.DTMSer.Unmarshal({{ $fulp }})
+if err != nil {
+	return
+}
+var n1 int
+switch dtm {
+{{- range $i, $e := .Impls }}
+	case {{ DTMVar $e }}:
+		n1, err = {{ DTSVar $e }}.SkipData({{ $ulp }})
+{{- end }}
+	default:
+		err = fmt.Errorf("unexpected %v DTM", dtm)
+		return
+}
+n += n1
+return`
+	templates["interface_unmarshal.tmpl"] = `{{/* data.TypeData */}}
+{{- $fulp := .Gops.UnmarshalLastParam true }}
+{{- $ulp := .Gops.UnmarshalLastParam false }}
+{{- $v := SerReceiver . }}
+{{- $iops := .Iops }}
+{{- $gops := .Gops }}
+dtm, n, err := dts.DTMSer.Unmarshal({{ $fulp }})
+if err != nil {
+	return
+}
+var n1 int
+switch dtm {
+{{- range $i, $e := .Impls }}
+	case {{ DTMVar $e }}:
+		{{ $v }}, n1, err = {{ DTSVar $e }}.UnmarshalData({{ $ulp }})
+{{- end }}
+	default:
+		err = fmt.Errorf("unexpected %v DTM", dtm)
+		return
+}
+n += n1
+return`
+	templates["package.tmpl"] = `{{/* genops.Options */}}
+// Code generated by musgen-go. DO NOT EDIT.
+
+package {{ .Package }}
+`
+	templates["ser_defined_type.tmpl"] = `{{/* data.TypeData */}}
+{{- $serVar := SerVar .FullName }}
+{{- $serType := SerType .FullName }}
+{{- $v := SerReceiver . }}
+{{- $tmp := TmpVar . }}
+{{- $Type := RelName .FullName .Gops }}
+{{- $f := index .Fields 0 }}
+{{- $fieldSer := SerOf $f.FullName .Tops .Gops }}
+{{- $mslp := .Gops.MarshalSignatureLastParam }}
+{{- $mlp := .Gops.MarshalLastParam true }}
+{{- $uslp := .Gops.UnmarshalSignatureLastParam }}
+{{- $ulp := .Gops.UnmarshalLastParam true}}
+{{- $gops := .Gops }}
+
+{{- $ft := RelName $f.FullName .Gops }}
+{{- if PtrType $f.FullName }}
+  {{- $ft = print "(" (RelName $f.FullName .Gops) ")" }}
+{{- end }}
+
+var {{ $serVar }} = {{ $serType }}{}
+
+type {{ $serType }} struct{}
+
+func (s {{ $serType }}) Marshal({{ $v }} {{ $Type }}, {{ $mslp }}) (n int {{ if $gops.Stream }} , err error {{ end }}) {
+  return {{ $fieldSer }}.Marshal({{ $ft }}({{ $v }}), {{ $mlp }})
+}
+
+func (s {{ $serType }}) Unmarshal({{ $uslp }}) ({{ $v }} {{ $Type }}, n int, err error) {
+  {{ $tmp }}, n, err := {{ $fieldSer }}.Unmarshal({{ $ulp }})
+    if err != nil {
+      return
+    }
+  {{ $v }} = {{ $Type }}({{ $tmp }})
+  {{- if and .Tops (ne .Tops.Validator "") }}
+    err = {{ .Tops.Validator }}({{ $v }})
+  {{- end }}
+  return
+}
+
+func (s {{ $serType }}) Size({{ $v }} {{ $Type }}) (size int) {
+  return {{ $fieldSer }}.Size({{ $ft }}({{ $v }}))
+}
+
+func (s {{ $serType }}) Skip({{ $uslp }}) (n int, err error) {
+  return {{ $fieldSer }}.Skip({{ $ulp }})
+}`
+	templates["ser_dts.tmpl"] = `{{/* data.TypeData */}}
+{{- $dtsVar := DTSVar .FullName }}
+{{- $dtmVar := DTMVar .FullName }}
+{{- $serVar := SerVar .FullName }}
+{{- $Type := RelName .FullName .Gops }}
+
+var {{ $dtsVar }} = dts.New[{{ $Type }}]({{ $dtmVar }}, {{ $serVar }})`
+	templates["ser_interface.tmpl"] = `{{/* data.TypeData */}}
+{{- $serVar := SerVar .FullName }}
+{{- $serType := SerType .FullName }}
+{{- $v := SerReceiver . }}
+{{- $Type := RelName .FullName .Gops }}
 {{- $mslp := .Gops.MarshalSignatureLastParam }}
 {{- $uslp := .Gops.UnmarshalSignatureLastParam }}
 {{- $gops := .Gops }}
@@ -310,105 +390,33 @@ func (s {{ $serType }}) Size({{ $v }} {{ $Type }}) (size int) {
 func (s {{ $serType }}) Skip({{ $uslp }}) (n int, err error) {
 	{{- include "interface_skip.tmpl" . }}
 }`
-	templates["interface_size.tmpl"] = `{{/* tdesc.TypeDesc */}}
-{{- $v := VarName .Name }}
-{{- $iops := .Iops }}
-{{- if $iops.Marshaller }}
-	{{- $ext := .Gops.ExtPackageName }}
-	if m, ok := {{ $v }}.({{ $ext }}.MarshallerTypedMUS); ok {
-		return m.SizeTypedMUS()
-	}
-	panic(fmt.Sprintf("%v doesn't implement {{ $ext }}.MarshallerTypedMUS interface", reflect.TypeOf({{ $v }})))
-{{- else }}
-	switch t := {{ $v }}.(type) {
-	{{- range $i, $e := $iops.ImplTypes }}
-		{{- $impl := $iops.ImplTypeStr $i }}
-		case {{ $impl }}:
-			return {{ $impl }}DTS.Size(t)
-	{{- end }}
-		default:
-			panic(fmt.Sprintf("unexpected %v type", t))
-	}
-{{- end }}`
-	templates["interface_skip.tmpl"] = `{{/* tdesc.TypeDesc */}}
-{{- $fulp := .Gops.UnmarshalLastParam true }}
-{{- $ulp := .Gops.UnmarshalLastParam false }}
-{{- $v := VarName .Name }}
-{{- $iops := .Iops }}
-dtm, n, err := dts.DTMSer.Unmarshal({{ $fulp }})
-if err != nil {
-	return
-}
-var n1 int
-switch dtm {
-{{- range $i, $e := $iops.ImplTypes }}
-	{{- $impl := $iops.ImplTypeStr $i }}
-	case {{ $impl }}DTM:
-		n1, err = {{ $impl }}DTS.SkipData({{ $ulp }})
-{{- end }}
-	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
-		return
-}
-n += n1
-return`
-	templates["interface_unmarshal.tmpl"] = `{{/* tdesc.TypeDesc */}}
-{{- $fulp := .Gops.UnmarshalLastParam true }}
-{{- $ulp := .Gops.UnmarshalLastParam false }}
-{{- $v := VarName .Name }}
-{{- $iops := .Iops }}
-dtm, n, err := dts.DTMSer.Unmarshal({{ $fulp }})
-if err != nil {
-	return
-}
-var n1 int
-switch dtm {
-{{- range $i, $e := $iops.ImplTypes }}
-	{{- $impl := $iops.ImplTypeStr $i }}
-	case {{ $impl }}DTM:
-		{{ $v }}, n1, err = {{ $impl }}DTS.UnmarshalData({{ $ulp }})
-{{- end }}
-	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
-		return
-}
-n += n1
-return`
-	templates["package.tmpl"] = `{{/* genops.Options */}}
-// Code generated by musgen-go. DO NOT EDIT.
-
-package {{ .Package }}
-`
-	templates["struct_ser.tmpl"] = `{{/* tdesc.TypeDesc */}}
-{{- $serVar := SerVar . }}
-{{- $serType := SerType . }}
-
-{{- $v := VarName .Name }}
-{{- $Type := .FullName}}
-
+	templates["ser_struct.tmpl"] = `{{/* data.TypeData */}}
+{{- $serVar := SerVar .FullName }}
+{{- $serType := SerType .FullName }}
+{{- $v := SerReceiver . }}
+{{- $Type := RelName .FullName .Gops }}
+{{- $td := . }}
 {{- $mslp := .Gops.MarshalSignatureLastParam }}
 {{- $uslp := .Gops.UnmarshalSignatureLastParam }}
-
 {{- $gops := .Gops }}
-{{- $td := . }}
 
 var {{ $serVar }} = {{ $serType }}{}
 
 type {{ $serType }} struct{}
 
 func (s {{ $serType }}) Marshal({{ $v }} {{ $Type }}, {{ $mslp }}) (n int {{ if $gops.Stream }} , err error {{ end }}) {
-	{{- if eq (len .Fields) 0}}
+	{{- if eq (len .SerializedFields) 0}}
 		return
 	{{- else }}
-		{{- range $i, $f := Fields . }}
-			{{- include "field_marshal.tmpl" (MakeFieldTmplPipe $td $f $i $gops) }}		
+		{{- range $i, $f := .SerializedFields }}
+			{{- include "field_marshal.tmpl" (FieldTmplPipe $td $f $i $gops) }}		
 		{{- end }}
 	{{- end }}
 }
 
 func (s {{ $serType }}) Unmarshal({{ $uslp }}) ({{ $v }} {{ $Type }}, n int, err error) {
-	{{- range $i, $f := Fields . }}
-			{{- include "field_unmarshal.tmpl" (MakeFieldTmplPipe $td $f $i $gops) }}		
+	{{- range $i, $f := .SerializedFields }}
+			{{- include "field_unmarshal.tmpl" (FieldTmplPipe $td $f $i $gops) }}		
 	{{- end }}
 	return
 }
@@ -417,15 +425,15 @@ func (s {{ $serType }}) Size({{ $v }} {{ $Type }}) (size int) {
 	{{- if eq (len .Fields) 0}}
 		return
 	{{- else }}
-		{{- range $i, $f := Fields . }}
-			{{- include "field_size.tmpl" (MakeFieldTmplPipe $td $f $i $gops) }}		
+		{{- range $i, $f := .SerializedFields }}
+			{{- include "field_size.tmpl" (FieldTmplPipe $td $f $i $gops) }}		
 		{{- end }}
 	{{- end }}
 }
 
 func (s {{ $serType }}) Skip({{ $uslp }}) (n int, err error) {
-	{{- range $i, $f := Fields . }}
-		{{- include "field_skip.tmpl" (MakeFieldTmplPipe $td $f $i $gops) }}		
+	{{- range $i, $f := .SerializedFields }}
+		{{- include "field_skip.tmpl" (FieldTmplPipe $td $f $i $gops) }}		
 	{{- end }}
 	return
 }`

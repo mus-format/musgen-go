@@ -20,3 +20,17 @@ func ValidateLength1(l int) (err error) {
 	}
 	return
 }
+
+func ValidateLength3(l int) (err error) {
+	if l > 3 {
+		err = ErrTooLong
+	}
+	return
+}
+
+func ValidateLength20(l int) (err error) {
+	if l > 20 {
+		err = ErrTooLong
+	}
+	return
+}

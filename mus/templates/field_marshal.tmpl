@@ -1,11 +1,11 @@
-{{- /* {VarName string, FieldsCount int, Field tdesc.FieldDesc, Index int, Gops genops.Options} */}}
+{{- /* {SerReceiver string, FieldsCount int, Field data.FieldData, Index int, Gops genops.Options} */}}
 {{- $mlp := .Gops.MarshalLastParam false }}
 {{- if eq .Index 0 }}
 	{{- $mlp = .Gops.MarshalLastParam true }}
 {{- end}}
 
-{{- $vf := print .VarName "." .Field.Name }}
-{{- $fieldSer := SerializerOf .Field .Gops }}
+{{- $vf := print .SerReceiver "." .Field.FieldName }}
+{{- $fieldSer := SerOf .Field.FullName .Tops .Gops }}
 
 {{- $nVar := "n" }}
 {{- if gt .Index 0 }}

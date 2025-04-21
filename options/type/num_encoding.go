@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// TODO Add Unsafe.
 const (
 	UndefinedNumEncoding NumEncoding = iota
 	Varint
