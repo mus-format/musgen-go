@@ -60,8 +60,8 @@ package foo
 type MyInt int
 
 type Foo[T any] struct {
-	s string
-	t T
+  s string
+  t T
 }
 ```
 
@@ -70,40 +70,40 @@ __gen/main.go__
 package main
 
 import (
-	"os"
-	"reflect"
+  "os"
+  "reflect"
 
-	"example.com/foo"
+  "example.com/foo"
 
-	musgen "github.com/mus-format/musgen-go/mus"
-	genops "github.com/mus-format/musgen-go/options/generate"
+  musgen "github.com/mus-format/musgen-go/mus"
+  genops "github.com/mus-format/musgen-go/options/generate"
 )
 
 func main() {
-	g, err := musgen.NewFileGenerator(
-		genops.WithPkgPath("example.com/foo"),
-		// genops.WithPackage("bar"), // Can be used to specify the package name for
+  g, err := musgen.NewFileGenerator(
+    genops.WithPkgPath("example.com/foo"),
+    // genops.WithPackage("bar"), // Can be used to specify the package name for
     // the generated file.
-	)
-	if err != nil {
-		panic(err)
-	}
-	err = g.AddDefinedType(reflect.TypeFor[foo.MyInt]())
-	if err != nil {
-		panic(err)
-	}
-	err = g.AddStruct(reflect.TypeFor[foo.Foo[foo.MyInt]]())
-	if err != nil {
-		panic(err)
-	}
-	bs, err := g.Generate()
-	if err != nil {
-		panic(err)
-	}
-	err = os.WriteFile("./mus-format.gen.go", bs, 0755)
-	if err != nil {
-		panic(err)
-	}
+  )
+  if err != nil {
+    panic(err)
+  }
+  err = g.AddDefinedType(reflect.TypeFor[foo.MyInt]())
+  if err != nil {
+    panic(err)
+  }
+  err = g.AddStruct(reflect.TypeFor[foo.Foo[foo.MyInt]]())
+  if err != nil {
+    panic(err)
+  }
+  bs, err := g.Generate()
+  if err != nil {
+    panic(err)
+  }
+  err = os.WriteFile("./mus-format.gen.go", bs, 0755)
+  if err != nil {
+    panic(err)
+  }
 }
 ```
 
@@ -129,27 +129,27 @@ __foo_test.go__
 package foo
 
 import (
-	"reflect"
-	"testing"
+  "reflect"
+  "testing"
 )
 
 func TestFooSerialization(t *testing.T) {
-	var (
-		foo = Foo[MyInt]{
-			s: "hello world",
-			t: MyInt(5),
-		}
-		size = FooMUS.Size(foo)
-		bs   = make([]byte, size)
-	)
-	FooMUS.Marshal(foo, bs)
-	afoo, _, err := FooMUS.Unmarshal(bs)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !reflect.DeepEqual(foo, afoo) {
-		t.Fatal("something went wrong")
-	}
+  var (
+    foo = Foo[MyInt]{
+      s: "hello world",
+      t: MyInt(5),
+    }
+    size = FooMUS.Size(foo)
+    bs   = make([]byte, size)
+  )
+  FooMUS.Marshal(foo, bs)
+  afoo, _, err := FooMUS.Unmarshal(bs)
+  if err != nil {
+    t.Fatal(err)
+  }
+  if !reflect.DeepEqual(foo, afoo) {
+    t.Fatal("something went wrong")
+  }
 }
 ```
 
