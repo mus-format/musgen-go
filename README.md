@@ -37,7 +37,7 @@ musgen-go is a Golang code generator for the mus-go serializer.
   - [Slice](#slice)
   - [Map](#map)
   - [time.Time](#timetime)
-  - [MUS Format](#mus-format)
+- [MUS Format](#mus-format)
 
 
 # Quick Example
@@ -527,7 +527,7 @@ option is specified for a type, it will simply be ignored.
 - `typeops.WithTimeUnit`
 - `typeops.WithValidator`
 
-## MUS Format
+# MUS Format
 Defauls:
 - Varint encoding is used for numbers.
 - Varint without ZigZag encoding is used for the length of variable-length data 
