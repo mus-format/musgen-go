@@ -243,7 +243,7 @@ packages use the same import alias.
 
 ### Serializer Name
 Generated serializers follow the standard naming convention:
-```go
+```
 pkg.YouType[T,V] -> YouTypeMUS  // Serialization format is appended to the type name.
 ```
 
