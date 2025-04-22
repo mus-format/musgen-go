@@ -230,6 +230,10 @@ func Apply(ops []SetOption, o *Options) (err error) {
 	if o.PkgPath == "" {
 		return ErrEmptyPkgPath
 	}
+	// Should check the pkg format here, because WithPackage() is optional.
+	if _, err = typename.StrToPkg(string(o.Package())); err != nil {
+		return
+	}
 	if err = addImportAlias(*o); err != nil {
 		return
 	}
