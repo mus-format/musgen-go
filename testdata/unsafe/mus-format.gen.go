@@ -5,7 +5,7 @@ package testdata
 import (
 	"fmt"
 
-	dts "github.com/mus-format/mus-dts-go"
+	dts "github.com/mus-format/dts-go"
 	"github.com/mus-format/mus-go/ord"
 	"github.com/mus-format/mus-go/unsafe"
 	struct_testdata "github.com/mus-format/musgen-go/testdata/struct"

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"reflect"
 
+	dts "github.com/mus-format/dts-go"
 	ext "github.com/mus-format/ext-mus-go"
-	dts "github.com/mus-format/mus-dts-go"
 )
 
 var Impl1MUS = impl1MUS{}

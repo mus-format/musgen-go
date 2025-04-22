@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"reflect"
 
+	dts "github.com/mus-format/dts-stream-go"
 	exts "github.com/mus-format/ext-mus-stream-go"
-	dts "github.com/mus-format/mus-stream-dts-go"
 	muss "github.com/mus-format/mus-stream-go"
 	"github.com/mus-format/mus-stream-go/ord"
 	"github.com/mus-format/mus-stream-go/raw"

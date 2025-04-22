@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	com "github.com/mus-format/common-go"
-	dts "github.com/mus-format/mus-dts-go"
+	dts "github.com/mus-format/dts-go"
 	arrops "github.com/mus-format/mus-go/options/array"
 	bslops "github.com/mus-format/mus-go/options/byte_slice"
 	mapops "github.com/mus-format/mus-go/options/map"
