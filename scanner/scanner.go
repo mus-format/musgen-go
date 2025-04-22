@@ -25,9 +25,7 @@ func scan[T QualifiedName](name T, op Op[T], tops *typeops.Options, o Options,
 		t.Kind = Defined
 		t.Position = position
 
-		switch t.Position {
-		// case SingleParam, FirstParam, Param, LastParam:
-		case Param:
+		if t.Position == Param {
 			t = fixParamPkgPath(t)
 		}
 
