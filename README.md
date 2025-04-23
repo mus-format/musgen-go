@@ -410,14 +410,14 @@ It can be used as follows:
 ```go
 import ext "github.com/mus-format/ext-mus-go"
 
-type MyInterface interface {...}
-type Impl1 struct {...}
-type Impl2 int
-
 const (
   Impl1DTM com.DTM = iota + 1
   Impl2DTM
 )
+
+type MyInterface interface {...}
+type Impl1 struct {...}
+type Impl2 int
 
 // ...
 
