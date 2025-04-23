@@ -414,8 +414,8 @@ import (
 )
 
 const (
-	Impl1DTM com.DTM = iota + 1
-	Impl2DTM
+  Impl1DTM com.DTM = iota + 1
+  Impl2DTM
 )
 
 type MyInterface interface {...}
