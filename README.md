@@ -98,6 +98,11 @@ func main() {
   }
   bs, err := g.Generate()
   if err != nil {
+    // The error can be inspected for additional details.
+		if engnErr, ok := err.(*musgen.TmplEngineError); ok {
+			fmt.Println(string(engnErr.ByteSlice())) // Generated code that caused the error.
+			fmt.Println(engnErr.Unwrap()) // Underlying error.
+		}
     panic(err)
   }
   err = os.WriteFile("./mus-format.gen.go", bs, 0755)
