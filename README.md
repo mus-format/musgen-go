@@ -408,11 +408,14 @@ type MyAnotherInterface MyInterface
 
 It can be used as follows:
 ```go
-import ext "github.com/mus-format/ext-mus-go"
+import (
+  ext "github.com/mus-format/ext-mus-go"
+  com "github.com/mus-format/common-go"
+)
 
 const (
-  Impl1DTM com.DTM = iota + 1
-  Impl2DTM
+	Impl1DTM com.DTM = iota + 1
+	Impl2DTM
 )
 
 type MyInterface interface {...}
