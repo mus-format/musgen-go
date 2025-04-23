@@ -243,8 +243,8 @@ g := musgen.NewFileGenerator(
 )
 ```
 
-Also `genops.WithImportAlias` will help to prevent name conflicts when multiple 
-packages use the same import alias.
+Also, `genops.WithImportAlias` helps prevent name conflicts when multiple 
+packages are imported with the same alias.
 
 ### Serializer Name
 Generated serializers follow the standard naming convention:
@@ -442,7 +442,7 @@ err = g.AddInterface(reflect.TypeFor[MyInterface](),
 
 # Multi-package support
 By default, musgen-go expects a type’s serializer to reside in the same package 
-as the type itself. For example:
+as the type itself. For example, generating a serializer for the `Foo` type:
 ```go
 package foo
 
