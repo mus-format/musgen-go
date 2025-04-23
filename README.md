@@ -414,6 +414,11 @@ type MyInterface interface {...}
 type Impl1 struct {...}
 type Impl2 int
 
+const (
+  Impl1DTM com.DTM = iota + 1
+  Impl2DTM
+)
+
 // ...
 
 var (
