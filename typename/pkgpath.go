@@ -8,8 +8,8 @@ import (
 
 type PkgPath string
 
-func (p PkgPath) Package() Pkg {
-	return Pkg(filepath.Base(string(p)))
+func (p PkgPath) Base() string {
+	return filepath.Base(string(p))
 }
 
 func StrToPkgPath(str string) (path PkgPath, err error) {

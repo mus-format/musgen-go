@@ -16,8 +16,8 @@ func NewInvalidPkgPathError(str string) error {
 	return fmt.Errorf("invalid '%v' pkg path format", str)
 }
 
-func NewInvalidPkgError(str string) error {
-	return fmt.Errorf("invalid '%v' pkg format", str)
+func NewInvalidPackageError(str string) error {
+	return fmt.Errorf("invalid '%v' package format", str)
 }
 
 func NewMultiPointerError(t reflect.Type) error {

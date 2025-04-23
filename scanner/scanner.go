@@ -91,6 +91,6 @@ func scan[T QualifiedName](name T, op Op[T], tops *typeops.Options, o Options,
 }
 
 func fixParamPkgPath[T QualifiedName](t Type[T]) Type[T] {
-	t.PkgPath = typename.PkgPath(filepath.Join(string(t.PkgPath), string(t.Pkg)))
+	t.PkgPath = typename.PkgPath(filepath.Join(string(t.PkgPath), string(t.Package)))
 	return t
 }

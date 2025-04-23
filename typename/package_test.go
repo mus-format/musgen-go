@@ -9,20 +9,20 @@ import (
 func TestStrToPkg(t *testing.T) {
 	testCases := []struct {
 		str     string
-		wantPkg Pkg
+		wantPkg Package
 		wantErr error
 	}{
 		{
 			str:     "pkg",
-			wantPkg: Pkg("pkg"),
+			wantPkg: Package("pkg"),
 		},
 		{
 			str:     "+++",
-			wantErr: NewInvalidPkgError("+++"),
+			wantErr: NewInvalidPackageError("+++"),
 		},
 	}
 	for _, c := range testCases {
-		pkg, err := StrToPkg(c.str)
+		pkg, err := StrToPackage(c.str)
 		asserterror.EqualError(err, c.wantErr, t)
 		asserterror.Equal(pkg, c.wantPkg, t)
 	}

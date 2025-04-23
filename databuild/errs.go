@@ -47,7 +47,7 @@ func NewNotInterfaceError(t reflect.Type) error {
 }
 
 func NewTwoPathsSameAliasError(pkgPath1, pkgPath2 typename.PkgPath,
-	alias typename.Pkg) error {
+	alias typename.Package) error {
 	return fmt.Errorf("two pkgPath '%v' and '%v' have the same alias '%v'",
 		pkgPath1, pkgPath2, alias)
 }

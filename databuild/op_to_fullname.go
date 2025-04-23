@@ -10,21 +10,21 @@ import (
 	"github.com/mus-format/musgen-go/typename"
 )
 
-func NewToFullNameOp(knownPkgs map[typename.Pkg]typename.PkgPath,
+func NewToFullNameOp(knownPkgs map[typename.Package]typename.PkgPath,
 	gops genops.Options) *ToFullNameOp {
 	return &ToFullNameOp{&strings.Builder{}, knownPkgs, gops}
 }
 
 type ToFullNameOp struct {
 	b         *strings.Builder
-	knownPkgs map[typename.Pkg]typename.PkgPath
+	knownPkgs map[typename.Package]typename.PkgPath
 	gops      genops.Options
 }
 
 func (o *ToFullNameOp) ProcessType(t scanner.Type[typename.CompleteName],
 	tops *typeops.Options) (
 	err error) {
-	var pkg typename.Pkg
+	var pkg typename.Package
 	o.b.WriteString(t.Stars)
 	switch t.Kind {
 	case scanner.Defined:
@@ -67,11 +67,11 @@ func (o *ToFullNameOp) FullName() typename.FullName {
 }
 
 func (o *ToFullNameOp) choosePkg(t scanner.Type[typename.CompleteName]) (
-	pkg typename.Pkg, err error) {
+	pkg typename.Package, err error) {
 	if alias, pst := o.gops.ImportAliases()[genops.ImportPath(t.PkgPath)]; pst {
-		pkg = typename.Pkg(alias)
+		pkg = typename.Package(alias)
 	} else {
-		pkg = t.Pkg
+		pkg = t.Package
 	}
 	if err = o.checkPkg(pkg, t); err != nil {
 		return
@@ -80,7 +80,7 @@ func (o *ToFullNameOp) choosePkg(t scanner.Type[typename.CompleteName]) (
 	return
 }
 
-func (o *ToFullNameOp) checkPkg(pkg typename.Pkg,
+func (o *ToFullNameOp) checkPkg(pkg typename.Package,
 	t scanner.Type[typename.CompleteName]) (err error) {
 	if pkgPath, pst := o.knownPkgs[pkg]; pst && pkgPath != t.PkgPath {
 		err = NewTwoPathsSameAliasError(pkgPath, t.PkgPath, pkg)

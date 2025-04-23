@@ -11,7 +11,7 @@ func TestFullName(t *testing.T) {
 	t.Run("Pkg", func(t *testing.T) {
 		testCases := []struct {
 			name    FullName
-			wantPkg Pkg
+			wantPkg Package
 		}{
 			{name: "pkg.Type", wantPkg: "pkg"},
 			{name: "Type", wantPkg: ""},
@@ -20,7 +20,7 @@ func TestFullName(t *testing.T) {
 			{name: "", wantPkg: ""},
 		}
 		for _, c := range testCases {
-			asserterror.Equal(c.name.Pkg(), c.wantPkg, t)
+			asserterror.Equal(c.name.Package(), c.wantPkg, t)
 		}
 	})
 

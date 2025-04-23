@@ -9,7 +9,7 @@ const pkgTypeNamePattern = `^(\w+)\.(.+)$`
 
 var pkgTypeNameRe = regexp.MustCompile(pkgTypeNamePattern)
 
-func MakeFullName(pkg Pkg, name TypeName) FullName {
+func MakeFullName(pkg Package, name TypeName) FullName {
 	if pkg == "" {
 		return FullName(name)
 	}
@@ -20,12 +20,12 @@ func MakeFullName(pkg Pkg, name TypeName) FullName {
 // "pkg.TypeName[pkg.Typename]".
 type FullName string
 
-func (n FullName) Pkg() Pkg {
+func (n FullName) Package() Package {
 	match := pkgTypeNameRe.FindStringSubmatch(string(n))
 	if len(match) != 3 {
 		return ""
 	}
-	return Pkg(match[1])
+	return Package(match[1])
 }
 
 func (n FullName) TypeName() TypeName {

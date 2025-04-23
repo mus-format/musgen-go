@@ -29,7 +29,7 @@ func TestScan(t *testing.T) {
 					var (
 						wantType = scanner.Type[typename.CompleteName]{
 							PkgPath: "github.com/mus-format/musgen-go/testdata/struct",
-							Pkg:     "testdata",
+							Package: "testdata",
 							Name:    "MyStruct",
 							Kind:    scanner.Defined,
 						}
@@ -60,7 +60,7 @@ func TestScan(t *testing.T) {
 						wantType = scanner.Type[typename.CompleteName]{
 							PkgPath: "github.com/mus-format/musgen-go/testdata/struct",
 							Stars:   "*",
-							Pkg:     "testdata",
+							Package: "testdata",
 							Name:    "MyStruct",
 							Kind:    scanner.Defined,
 						}
@@ -91,7 +91,7 @@ func TestScan(t *testing.T) {
 						wantType = scanner.Type[typename.CompleteName]{
 							PkgPath:  "",
 							Stars:    "",
-							Pkg:      "",
+							Package:  "",
 							Name:     "[]uint8",
 							Kind:     scanner.Slice,
 							ElemType: "uint8",
@@ -108,7 +108,7 @@ func TestScan(t *testing.T) {
 						wantType = scanner.Type[typename.CompleteName]{
 							PkgPath:  "",
 							Stars:    "",
-							Pkg:      "",
+							Package:  "",
 							Name:     "uint8",
 							Kind:     scanner.Prim,
 							Position: scanner.Elem,
@@ -146,7 +146,7 @@ func TestScan(t *testing.T) {
 					var (
 						wantType = scanner.Type[typename.CompleteName]{
 							PkgPath: "github.com/mus-format/musgen-go/testdata/generic",
-							Pkg:     "testdata",
+							Package: "testdata",
 							Name:    "MyTripleParamStruct",
 							Params:  []typename.CompleteName{"int", "string", "uint"},
 							Kind:    scanner.Defined,
@@ -726,7 +726,7 @@ func TestScan(t *testing.T) {
 				var (
 					wantType = scanner.Type[typename.CompleteName]{
 						PkgPath:  "github.com/mus-format/musgen-go/testdata/generic",
-						Pkg:      "testdata",
+						Package:  "testdata",
 						Name:     "MyArray",
 						Params:   []typename.CompleteName{"int"},
 						Kind:     scanner.Defined,
@@ -774,7 +774,7 @@ func TestScan(t *testing.T) {
 					var (
 						wantType = scanner.Type[typename.CompleteName]{
 							PkgPath: "github.com/mus-format/musgen-go/testdata/generic",
-							Pkg:     "testdata",
+							Package: "testdata",
 							Name:    "MyDoubleParamStruct",
 							Params: []typename.CompleteName{
 								"map[github.com/mus-format/musgen-go/testdata/generic.MyInt][3]math/big.Int",
@@ -811,7 +811,7 @@ func TestScan(t *testing.T) {
 					var (
 						wantType = scanner.Type[typename.CompleteName]{
 							PkgPath:  "github.com/mus-format/musgen-go/testdata",
-							Pkg:      "generic",
+							Package:  "generic",
 							Name:     "MyInt",
 							Kind:     scanner.Defined,
 							Position: scanner.Key,
@@ -843,7 +843,7 @@ func TestScan(t *testing.T) {
 					var (
 						wantType = scanner.Type[typename.CompleteName]{
 							PkgPath:  "math",
-							Pkg:      "big",
+							Package:  "big",
 							Name:     "Int",
 							Kind:     scanner.Defined,
 							Position: scanner.Elem,
@@ -860,7 +860,7 @@ func TestScan(t *testing.T) {
 					var (
 						wantType = scanner.Type[typename.CompleteName]{
 							PkgPath:  "github.com/mus-format/musgen-go/testdata/generic",
-							Pkg:      "generic",
+							Package:  "generic",
 							Name:     "MySlice",
 							Params:   []typename.CompleteName{"[]string"},
 							Kind:     scanner.Defined,

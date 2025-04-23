@@ -31,19 +31,19 @@ func TestStrToPkgPath(t *testing.T) {
 func TestPkgPath(t *testing.T) {
 	testCases := []struct {
 		pkgPath PkgPath
-		wantPkg Pkg
+		wantPkg Package
 	}{
 		{
 			pkgPath: PkgPath("github.com/user/project"),
-			wantPkg: Pkg("project"),
+			wantPkg: Package("project"),
 		},
 		{
 			pkgPath: "+++",
-			wantPkg: Pkg("+++"),
+			wantPkg: Package("+++"),
 		},
 	}
 	for _, c := range testCases {
-		pkg := c.pkgPath.Package()
+		pkg := Package(c.pkgPath.Base())
 		asserterror.Equal(pkg, c.wantPkg, t)
 	}
 }

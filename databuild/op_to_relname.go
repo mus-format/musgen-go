@@ -22,7 +22,7 @@ type ToRelNameOp struct {
 func (o *ToRelNameOp) ProcessType(t scanner.Type[typename.FullName],
 	tops *typeops.Options) (
 	err error) {
-	var pkg typename.Pkg
+	var pkg typename.Package
 	o.b.WriteString(t.Stars)
 	switch t.Kind {
 	case scanner.Defined:
@@ -67,11 +67,11 @@ func (o *ToRelNameOp) RelName() typename.RelName {
 }
 
 func (o *ToRelNameOp) choosePkg(t scanner.Type[typename.FullName]) (
-	pkg typename.Pkg, err error) {
-	if t.Pkg == o.gops.Package() {
+	pkg typename.Package, err error) {
+	if t.Package == o.gops.Package {
 		pkg = ""
 	} else {
-		pkg = t.Pkg
+		pkg = t.Package
 	}
 	return
 }

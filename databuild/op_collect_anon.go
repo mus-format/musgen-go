@@ -79,7 +79,7 @@ func (o *CollectAnonOp) processPtrType(t scanner.Type[typename.FullName],
 
 func (o *CollectAnonOp) makePtrData(t scanner.Type[typename.FullName],
 	tops *typeops.Options) (d data.AnonData, ok bool) {
-	str := t.Stars + string(typename.MakeFullName(t.Pkg, t.Name))
+	str := t.Stars + string(typename.MakeFullName(t.Package, t.Name))
 	return data.AnonData{
 		AnonSerName: anonSerName(data.AnonPtr, typename.TypeName(str), tops, o.gops),
 		ElemType:    typename.FullName(trimOneStar(str)),
@@ -134,7 +134,7 @@ func (o *CollectAnonOp) makeArrayData(t scanner.Type[typename.FullName],
 	return data.AnonData{
 		AnonSerName: anonSerName(data.AnonArray, t.Name, tops, o.gops),
 		Kind:        data.AnonArray,
-		ArrType:     typename.MakeFullName(t.Pkg, t.Name),
+		ArrType:     typename.MakeFullName(t.Package, t.Name),
 		ArrLength:   t.ArrLength,
 		LenSer:      lenSer,
 		ElemType:    t.ElemType,

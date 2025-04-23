@@ -5,7 +5,7 @@ import "github.com/mus-format/musgen-go/typename"
 type Type[T QualifiedName] struct {
 	PkgPath   typename.PkgPath
 	Stars     string
-	Pkg       typename.Pkg
+	Package   typename.Package
 	Name      typename.TypeName
 	Params    []T
 	ArrLength string

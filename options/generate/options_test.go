@@ -234,7 +234,7 @@ func TestOptions(t *testing.T) {
 			wantPackage = "exts"
 		)
 		Apply([]SetOption{WithPackage(wantPackage)}, &o)
-		asserterror.Equal(o.Package(), typename.Pkg(wantPackage), t)
+		asserterror.Equal(o.Package, typename.Package(wantPackage), t)
 	})
 
 }

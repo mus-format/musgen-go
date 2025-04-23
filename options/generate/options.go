@@ -30,7 +30,7 @@ type Options struct {
 	Stream        bool
 	Imports       []string
 	SerNames      map[reflect.Type]string
-	pkg           typename.Pkg
+	Package       typename.Package
 	importAliases map[ImportPath]Alias
 }
 
@@ -82,12 +82,12 @@ func (o Options) SkipLastParam() string {
 	return skLastParam
 }
 
-func (o Options) Package() typename.Pkg {
-	if o.pkg != "" {
-		return o.pkg
-	}
-	return o.PkgPath.Package()
-}
+// func (o Options) Package() string {
+// 	if o.Package == "" {
+// 		return o.PkgPath.Base()
+// 	}
+// 	return o.pkg
+// }
 
 func (o Options) ModImportName() string {
 	if o.Stream {
@@ -130,6 +130,12 @@ type SetOption func(o *Options) error
 func WithPkgPath(str string) SetOption {
 	return func(o *Options) (err error) {
 		o.PkgPath, err = typename.StrToPkgPath(str)
+		if err != nil {
+			return
+		}
+		if o.Package == "" {
+			o.Package = typename.Package(o.PkgPath.Base())
+		}
 		return
 	}
 }
@@ -138,7 +144,7 @@ func WithPkgPath(str string) SetOption {
 // file.
 func WithPackage(str string) SetOption {
 	return func(o *Options) (err error) {
-		o.pkg, err = typename.StrToPkg(str)
+		o.Package = typename.Package(str)
 		return
 	}
 }
@@ -230,8 +236,7 @@ func Apply(ops []SetOption, o *Options) (err error) {
 	if o.PkgPath == "" {
 		return ErrEmptyPkgPath
 	}
-	// Should check the pkg format here, because WithPackage() is optional.
-	if _, err = typename.StrToPkg(string(o.Package())); err != nil {
+	if _, err = typename.StrToPackage(string(o.Package)); err != nil {
 		return
 	}
 	if err = addImportAlias(*o); err != nil {
@@ -258,7 +263,7 @@ func uniqImportAlias(importPath ImportPath, alias Alias, o Options) (
 func addImportAlias(o Options) (err error) {
 	var (
 		p = ImportPath(o.PkgPath)
-		a = Alias(o.Package())
+		a = Alias(o.Package)
 	)
 	if err = uniqImportAlias(p, a, o); err != nil {
 		return

@@ -10,7 +10,7 @@ import (
 const (
 	// Works for strings like "*github.com/user-name/project/some/some.Type" and
 	// "foo.Type" (when module name is just foo).
-	FullNamePattern = `^(\**)(?:([.\w/-]+)/)*(?:(\w+)\.)([\w]+)(?:·\d+)*(?:\[(.+)\](?:·\d+)*)?$`
+	FullNamePattern = `^(\**)(?:([.\w/-]+)/)*(?:([\w-]+)\.)([\w]+)(?:·\d+)*(?:\[(.+)\](?:·\d+)*)?$`
 )
 
 func ParseDefinedType[T QualifiedName](name T) (t Type[T], ok bool) {
@@ -31,7 +31,7 @@ func (s DefinedType[T]) Parse() (t Type[T], ok bool) {
 func (s DefinedType[T]) makeDefinedType(match []string) (t Type[T]) {
 	t.PkgPath = typename.PkgPath(match[2])
 	t.Stars = match[1]
-	t.Pkg = typename.Pkg(match[3])
+	t.Package = typename.Package(match[3])
 	t.Name = typename.TypeName(match[4])
 	t.Params = s.splitTypeParams(match[5])
 	return

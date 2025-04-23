@@ -13,12 +13,12 @@ type TypeNameConvertor interface {
 
 func NewConverter(gops genops.Options) Converter {
 	return Converter{
-		knownPkgs: map[typename.Pkg]typename.PkgPath{gops.Package(): gops.PkgPath},
+		knownPkgs: map[typename.Package]typename.PkgPath{gops.Package: gops.PkgPath},
 		gops:      gops}
 }
 
 type Converter struct {
-	knownPkgs map[typename.Pkg]typename.PkgPath
+	knownPkgs map[typename.Package]typename.PkgPath
 	gops      genops.Options
 }
 
