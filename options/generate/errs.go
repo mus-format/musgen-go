@@ -8,17 +8,18 @@ import (
 var ErrEmptyPkgPath = errors.New("option PkgPath is not set")
 
 func NewInvalidImportPathError(val string) error {
-	return fmt.Errorf("invalid '%v' import path format", val)
+	return fmt.Errorf("invalid '%v' import path", val)
 }
 
 func NewInvalidAliasError(val string) error {
-	return fmt.Errorf("invalid '%v' alias format", val)
+	return fmt.Errorf("invalid '%v' package alias", val)
 }
 
 func NewDuplicateImportPath(path ImportPath) error {
-	return fmt.Errorf("duplicate '%v' import path in ImportAlias option", path)
+	return fmt.Errorf("duplicate '%v' import path in FileGenerator options", path)
 }
 
 func NewDuplicateImportAlias(alias Alias) error {
-	return fmt.Errorf("duplicate '%v' alias in ImportAlias option", alias)
+	return fmt.Errorf("duplicate '%v' package alias in FileGenerator options",
+		alias)
 }
