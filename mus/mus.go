@@ -3,6 +3,8 @@ package musgen
 
 import (
 	"bytes"
+	"go/parser"
+	"go/token"
 	"reflect"
 	"text/template"
 
@@ -149,8 +151,8 @@ func (g *FileGenerator) AddInterface(t reflect.Type, ops ...introps.SetOption) (
 	return
 }
 
-// Generate produces the serialization code. The result should then be saved to
-// a file.
+// Generate produces the serialization code. The output is intended to be saved
+// to a file.
 func (g *FileGenerator) Generate() (bs []byte, err error) {
 	tmp := g.generatePackage()
 	tmp = append(tmp, g.generateImports()...)
@@ -158,7 +160,13 @@ func (g *FileGenerator) Generate() (bs []byte, err error) {
 	tmp = append(tmp, g.generateSerializers()...)
 	bs, err = imports.Process("", tmp, nil)
 	if err != nil {
-		err = NewTmplEngineError(tmp, err)
+		err = NewFileGeneratorError(err)
+		return tmp, err
+	}
+	err = g.checkSyntax(bs)
+	if err != nil {
+		err = NewFileGeneratorError(err)
+		return tmp, err
 	}
 	return
 }
@@ -206,6 +214,15 @@ func (g *FileGenerator) fillCrossgen(t reflect.Type, fullName typename.FullName)
 
 func (g *FileGenerator) crossGeneration(t reflect.Type) bool {
 	return t.PkgPath() != string(g.gops.PkgPath)
+}
+
+func (g *FileGenerator) checkSyntax(bs []byte) (err error) {
+	var (
+		fs  = token.NewFileSet()
+		src = string(bs)
+	)
+	_, err = parser.ParseFile(fs, "", src, parser.AllErrors)
+	return
 }
 
 type fileData struct {

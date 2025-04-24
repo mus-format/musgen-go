@@ -74,7 +74,7 @@ func (o *ToFullNameOp) choosePkg(t scanner.Type[typename.CompleteName]) (
 	} else {
 		pkg = t.Package
 		if t.Position == scanner.Param {
-			log.Printf("WARNING: no alias for '%v' in FileGenerator options\n", t.PkgPath)
+			log.Printf("WARNING: no alias for '%v' in musgen.FileGenerator options\n", t.PkgPath)
 		}
 	}
 	if err = o.checkPkg(pkg, t); err != nil {
