@@ -270,7 +270,7 @@ g := musgen.NewFileGenerator(
 ## Methods
 ### AddDefinedType()
 Supports types defined with the following source types:
-- Number (`uint`, `int`, `float64`, ...)
+- Number (`uint`, `int`, `float64`, `float32`, ...)
 - String
 - Array
 - Slice
