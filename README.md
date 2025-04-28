@@ -1,4 +1,9 @@
 # musgen-go
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/mus-format/mus-go.svg)](https://pkg.go.dev/github.com/mus-format/musgen-go)
+[![GoReportCard](https://goreportcard.com/badge/mus-format/mus-go)](https://goreportcard.com/report/github.com/mus-format/musgen-go)
+[![codecov](https://codecov.io/github/mus-format/mus-go/graph/badge.svg?token=WLLZ1MMQDX)](https://codecov.io/github/mus-format/musgen-go)
+
 musgen-go is a Golang code generator for the mus-go serializer.
 
 ## Capabilities
