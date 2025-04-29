@@ -13,7 +13,7 @@ musgen-go is a Golang code generator for the mus-go serializer.
 - Can generate code for parameterized types and interfaces.
 - Provides multi-package support.
 - Enables cross-package code generation.
-- Can be extended to support additional serialization formats beyond MUS.
+- Can be extended to support additional binary serialization formats beyond MUS.
 
 # Contents
 - [musgen-go](#musgen-go)
