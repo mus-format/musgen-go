@@ -104,7 +104,6 @@ func main() {
   bs, err := g.Generate()
   if err != nil {
     // In case of an error, bs can be checked for additional details.
-    fmt.Println(string(bs))
     panic(err)
   }
   err = os.WriteFile("./mus-format.gen.go", bs, 0755)
