@@ -4,7 +4,7 @@
 [![GoReportCard](https://goreportcard.com/badge/mus-format/mus-go)](https://goreportcard.com/report/github.com/mus-format/musgen-go)
 [![codecov](https://codecov.io/gh/mus-format/musgen-go/graph/badge.svg?token=J1JN0CEY9S)](https://codecov.io/gh/mus-format/musgen-go)
 
-musgen-go is a Golang code generator for the mus-go serializer.
+musgen-go is a Golang code generator for the [mus-go](https://github.com/mus-format/mus-go) serializer.
 
 ## Capabilities
 - Generates high-performance serialization code with optional unsafe 
@@ -396,9 +396,12 @@ type MyInt int
 t := reflect.TypeFor[MyInt]()
 err := g.AddDefinedType(t)
 // ...
-err = g.AddDTS(t)  // The DTS definition will be generated for the specified 
-// type.
+err = g.AddDTS(t)
 ```
+
+The [DTS](https://github.com/mus-format/dts-go) definition will be generated for 
+the specified type.
+
 
 ### AddInterface()
 Supports types defined with the `interface` source type, such as:
