@@ -160,12 +160,12 @@ func (g *FileGenerator) Generate() (bs []byte, err error) {
 	tmp = append(tmp, g.generateSerializers()...)
 	bs, err = imports.Process("", tmp, nil)
 	if err != nil {
-		err = NewFileGeneratorError(err)
+		err = ErrCodeGenFailed
 		return tmp, err
 	}
 	err = g.checkSyntax(bs)
 	if err != nil {
-		err = NewFileGeneratorError(err)
+		err = ErrCodeGenFailed
 		return tmp, err
 	}
 	return
