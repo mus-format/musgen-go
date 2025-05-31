@@ -9,7 +9,7 @@ import (
 	"text/template"
 
 	"github.com/mus-format/musgen-go/data"
-	"github.com/mus-format/musgen-go/databuild"
+	"github.com/mus-format/musgen-go/data/builders"
 	genops "github.com/mus-format/musgen-go/options/generate"
 	introps "github.com/mus-format/musgen-go/options/interface"
 	structops "github.com/mus-format/musgen-go/options/struct"
@@ -18,17 +18,17 @@ import (
 	"golang.org/x/tools/imports"
 )
 
-// NewFileGenerator creates a new FileGenerator.
-func NewFileGenerator(ops ...genops.SetOption) (g *FileGenerator, err error) {
+// NewCodeGenerator creates a new CodeGenerator.
+func NewCodeGenerator(ops ...genops.SetOption) (g *CodeGenerator, err error) {
 	gops := genops.New()
 	if err = genops.Apply(ops, &gops); err != nil {
 		return
 	}
 	var (
 		crossgenTypes = map[typename.FullName]struct{}{}
-		typeBuilder   = databuild.NewTypeDataBuilder(databuild.NewConverter(gops),
+		typeBuilder   = builders.NewTypeDataBuilder(builders.NewConverter(gops),
 			gops)
-		anonBuilder = databuild.NewAnonDataBuilder(typeBuilder, gops)
+		anonBuilder = builders.NewAnonDataBuilder(typeBuilder, gops)
 	)
 	baseTmpl := template.New("base")
 	registerFuncs(typeBuilder, anonBuilder, crossgenTypes, baseTmpl, gops)
@@ -36,7 +36,7 @@ func NewFileGenerator(ops ...genops.SetOption) (g *FileGenerator, err error) {
 	if err != nil {
 		panic(err)
 	}
-	g = &FileGenerator{
+	g = &CodeGenerator{
 		baseTmpl:      baseTmpl,
 		typeBuilder:   typeBuilder,
 		anonBuilder:   anonBuilder,
@@ -49,8 +49,8 @@ func NewFileGenerator(ops ...genops.SetOption) (g *FileGenerator, err error) {
 	return
 }
 
-// FileGenerator is responsible for generating MUS serialization code.
-type FileGenerator struct {
+// CodeGenerator is responsible for generating MUS serialization code.
+type CodeGenerator struct {
 	baseTmpl      *template.Template
 	typeBuilder   TypeDataBuilder
 	anonBuilder   AnonSerDataBuilder
@@ -61,10 +61,10 @@ type FileGenerator struct {
 	gops          genops.Options
 }
 
-// AddDefinedType adds the specified type to the FileGenerator to produce a
+// AddDefinedType adds the specified type to the CodeGenerator to produce a
 // serializer for it. This method supports types defined with the following
 // source types: number, string, array, slice, map, pointer.
-func (g *FileGenerator) AddDefinedType(t reflect.Type, ops ...typeops.SetOption) (
+func (g *CodeGenerator) AddDefinedType(t reflect.Type, ops ...typeops.SetOption) (
 	err error) {
 	var tops *typeops.Options
 	if len(ops) > 0 {
@@ -81,10 +81,10 @@ func (g *FileGenerator) AddDefinedType(t reflect.Type, ops ...typeops.SetOption)
 	return
 }
 
-// AddStruct adds the specified type to the FileGenerator to produce a
+// AddStruct adds the specified type to the CodeGenerator to produce a
 // serializer for it. This method supports types definined with the struct
 // source type.
-func (g *FileGenerator) AddStruct(t reflect.Type, ops ...structops.SetOption) (
+func (g *CodeGenerator) AddStruct(t reflect.Type, ops ...structops.SetOption) (
 	err error) {
 	sops := structops.New()
 	if len(ops) > 0 {
@@ -116,10 +116,10 @@ func (g *FileGenerator) AddStruct(t reflect.Type, ops ...structops.SetOption) (
 	return
 }
 
-// AddDTS adds the specified type to the FileGenerator to produce a DTS
+// AddDTS adds the specified type to the CodeGenerator to produce a DTS
 // definition for it. This method supports all types acceptable by the
 // AddDefinedType, AddStruct, and AddInterface methods.
-func (g *FileGenerator) AddDTS(t reflect.Type, ops ...typeops.SetOption) (
+func (g *CodeGenerator) AddDTS(t reflect.Type, ops ...typeops.SetOption) (
 	err error) {
 	tops := typeops.Options{}
 	if len(ops) > 0 {
@@ -133,10 +133,10 @@ func (g *FileGenerator) AddDTS(t reflect.Type, ops ...typeops.SetOption) (
 	return
 }
 
-// AddInterface adds the specified type to the FileGenerator to produce a
+// AddInterface adds the specified type to the CodeGenerator to produce a
 // serializer for it. This method supports types definined with the interface
 // source type.
-func (g *FileGenerator) AddInterface(t reflect.Type, ops ...introps.SetOption) (
+func (g *CodeGenerator) AddInterface(t reflect.Type, ops ...introps.SetOption) (
 	err error) {
 	iops := introps.Options{}
 	if ops != nil {
@@ -153,7 +153,7 @@ func (g *FileGenerator) AddInterface(t reflect.Type, ops ...introps.SetOption) (
 
 // Generate produces the serialization code. The output is intended to be saved
 // to a file.
-func (g *FileGenerator) Generate() (bs []byte, err error) {
+func (g *CodeGenerator) Generate() (bs []byte, err error) {
 	tmp := g.generatePackage()
 	tmp = append(tmp, g.generateImports()...)
 	tmp = append(tmp, g.generateAnonymosDefinitions()...)
@@ -171,15 +171,15 @@ func (g *FileGenerator) Generate() (bs []byte, err error) {
 	return
 }
 
-func (g *FileGenerator) generatePackage() (bs []byte) {
+func (g *CodeGenerator) generatePackage() (bs []byte) {
 	return g.generatePart(packageTmpl, g.gops)
 }
 
-func (g *FileGenerator) generateImports() (bs []byte) {
+func (g *CodeGenerator) generateImports() (bs []byte) {
 	return g.generatePart(importsTmpl, g.gops)
 }
 
-func (g *FileGenerator) generateAnonymosDefinitions() (bs []byte) {
+func (g *CodeGenerator) generateAnonymosDefinitions() (bs []byte) {
 	return g.generatePart(anonDefinitionsTmpl, struct {
 		Map map[data.AnonSerName]data.AnonData
 		Ops genops.Options
@@ -189,14 +189,14 @@ func (g *FileGenerator) generateAnonymosDefinitions() (bs []byte) {
 	})
 }
 
-func (g *FileGenerator) generateSerializers() (bs []byte) {
+func (g *CodeGenerator) generateSerializers() (bs []byte) {
 	for _, item := range g.genSl {
 		bs = append(bs, g.generatePart(item.fileName, item.typeData)...)
 	}
 	return
 }
 
-func (g *FileGenerator) generatePart(tmplName string, a any) (bs []byte) {
+func (g *CodeGenerator) generatePart(tmplName string, a any) (bs []byte) {
 	buf := bytes.NewBuffer(make([]byte, 0))
 	err := g.baseTmpl.ExecuteTemplate(buf, tmplName, a)
 	if err != nil {
@@ -206,17 +206,17 @@ func (g *FileGenerator) generatePart(tmplName string, a any) (bs []byte) {
 	return
 }
 
-func (g *FileGenerator) fillCrossgen(t reflect.Type, fullName typename.FullName) {
+func (g *CodeGenerator) fillCrossgen(t reflect.Type, fullName typename.FullName) {
 	if g.crossGeneration(t) {
 		g.crossgenTypes[fullName] = struct{}{}
 	}
 }
 
-func (g *FileGenerator) crossGeneration(t reflect.Type) bool {
+func (g *CodeGenerator) crossGeneration(t reflect.Type) bool {
 	return t.PkgPath() != string(g.gops.PkgPath)
 }
 
-func (g *FileGenerator) checkSyntax(bs []byte) (err error) {
+func (g *CodeGenerator) checkSyntax(bs []byte) (err error) {
 	var (
 		fs  = token.NewFileSet()
 		src = string(bs)

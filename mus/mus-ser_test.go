@@ -21,7 +21,7 @@ func TestWithSerGeneration(t *testing.T) {
 	)
 
 	t.Run("Another pkg", func(t *testing.T) {
-		g, err := NewFileGenerator(
+		g, err := NewCodeGenerator(
 			genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/ser/pkg"),
 			genops.WithPackage("another"),
 			genops.WithSerName(myIntType, "MyAwesomeInt"),
@@ -56,7 +56,7 @@ func TestWithSerGeneration(t *testing.T) {
 	})
 
 	t.Run("Testdata pkg", func(t *testing.T) {
-		g, err := NewFileGenerator(
+		g, err := NewCodeGenerator(
 			genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/ser"),
 			genops.WithPackage("testdata"),
 			genops.WithImportAlias("github.com/mus-format/musgen-go/testdata/ser/pkg",

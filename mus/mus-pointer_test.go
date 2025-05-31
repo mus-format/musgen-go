@@ -12,7 +12,7 @@ import (
 )
 
 func TestPointerGeneration(t *testing.T) {
-	g, err := NewFileGenerator(
+	g, err := NewCodeGenerator(
 		genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/pointer"),
 		genops.WithPackage("testdata"),
 	)

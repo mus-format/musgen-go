@@ -12,7 +12,7 @@ import (
 )
 
 func TestInterfaceTypeGeneration(t *testing.T) {
-	g, err := NewFileGenerator(
+	g, err := NewCodeGenerator(
 		genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/interface"),
 		genops.WithPackage("testdata"),
 	)

@@ -13,7 +13,7 @@ import (
 )
 
 func TestGenericTypeGeneration(t *testing.T) {
-	g, err := NewFileGenerator(
+	g, err := NewCodeGenerator(
 		genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/generic"),
 		genops.WithPackage("testdata"),
 		genops.WithImportAlias("github.com/mus-format/musgen-go/testdata",

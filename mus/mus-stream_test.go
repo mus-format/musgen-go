@@ -14,7 +14,7 @@ import (
 
 func TestWithStreamGeneration(t *testing.T) {
 
-	g, err := NewFileGenerator(
+	g, err := NewCodeGenerator(
 		genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/stream"),
 		genops.WithPackage("testdata"),
 		genops.WithImportAlias("github.com/mus-format/musgen-go/testdata/struct",

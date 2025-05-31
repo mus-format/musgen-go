@@ -1,4 +1,4 @@
-package databuild
+package builders
 
 import (
 	"fmt"
@@ -8,23 +8,23 @@ import (
 )
 
 // NewUnexpectedDefinedTypeError returns an error indicating that the specified
-// type t should be added using the FileGenerator.AddDefinedType method.
+// type t should be added using the CodeGenerator.AddDefinedType method.
 func NewUnexpectedDefinedTypeError(t reflect.Type) error {
-	return fmt.Errorf("use the FileGenerator.AddDefinedType method for the %v type ",
+	return fmt.Errorf("use the CodeGenerator.AddDefinedType method for the %v type ",
 		t)
 }
 
 // NewUnexpectedStructTypeError returns an error indicating that the specified
-// struct type t should be added using the FileGenerator.AddStruct method.
+// struct type t should be added using the CodeGenerator.AddStruct method.
 func NewUnexpectedStructTypeError(t reflect.Type) error {
-	return fmt.Errorf("use the FileGenerator.AddStruct method for the %v type", t)
+	return fmt.Errorf("use the CodeGenerator.AddStruct method for the %v type", t)
 }
 
 // NewUnexpectedInterfaceTypeError returns an error indicating that the
 // specified interface type t should be added using the
-// FileGenerator.AddInterface method.
+// CodeGenerator.AddInterface method.
 func NewUnexpectedInterfaceTypeError(t reflect.Type) error {
-	return fmt.Errorf("use the FileGenerator.AddInterface method for the %v type",
+	return fmt.Errorf("use the CodeGenerator.AddInterface method for the %v type",
 		t)
 }
 

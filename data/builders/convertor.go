@@ -1,4 +1,4 @@
-package databuild
+package builders
 
 import (
 	genops "github.com/mus-format/musgen-go/options/generate"

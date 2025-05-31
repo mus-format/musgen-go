@@ -15,7 +15,7 @@ func TestTwoPkgGeneration(t *testing.T) {
 
 	t.Run("First pkg", func(t *testing.T) {
 		tp := reflect.TypeFor[pkg.MyIntSerName]()
-		g, err := NewFileGenerator(
+		g, err := NewCodeGenerator(
 			genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/two_pkg/pkg"),
 			genops.WithSerName(tp, "MyAwesomeInt"),
 		)
@@ -40,7 +40,7 @@ func TestTwoPkgGeneration(t *testing.T) {
 
 	t.Run("Second pkg", func(t *testing.T) {
 		tp := reflect.TypeFor[pkg.MyIntSerName]()
-		g, err := NewFileGenerator(
+		g, err := NewCodeGenerator(
 			genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/two_pkg"),
 			genops.WithPackage("testdata"),
 			genops.WithImport("github.com/mus-format/musgen-go/testdata/two_pkg/pkg"),

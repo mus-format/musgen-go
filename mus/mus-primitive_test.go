@@ -12,7 +12,7 @@ import (
 )
 
 func TestPrimitiveTypesGeneration(t *testing.T) {
-	g, err := NewFileGenerator(
+	g, err := NewCodeGenerator(
 		genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/primitive"),
 		genops.WithPackage("testdata"),
 		genops.WithImport("github.com/mus-format/musgen-go/testdata"),

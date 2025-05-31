@@ -1,10 +1,10 @@
-package databuild
+package builders
 
 import (
 	"testing"
 
 	"github.com/mus-format/musgen-go/data"
-	"github.com/mus-format/musgen-go/databuild/testdata/mock"
+	"github.com/mus-format/musgen-go/data/builders/testdata/mock"
 	genops "github.com/mus-format/musgen-go/options/generate"
 	typeops "github.com/mus-format/musgen-go/options/type"
 	"github.com/mus-format/musgen-go/typename"

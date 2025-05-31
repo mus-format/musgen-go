@@ -12,7 +12,7 @@ import (
 )
 
 func TestInterfaceTypeWithMarshallerGeneration(t *testing.T) {
-	g, err := NewFileGenerator(
+	g, err := NewCodeGenerator(
 		genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/interface_marshaller"),
 		genops.WithPackage("testdata"),
 	)

@@ -12,7 +12,7 @@ import (
 )
 
 func TestWithStreamNotUnsafeGeneration(t *testing.T) {
-	g, err := NewFileGenerator(
+	g, err := NewCodeGenerator(
 		genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/stream_notunsafe"),
 		genops.WithPackage("testdata"),
 		genops.WithImportAlias("github.com/mus-format/musgen-go/testdata/struct",

@@ -1,4 +1,4 @@
-package databuild
+package builders
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/mus-format/musgen-go/data"
-	"github.com/mus-format/musgen-go/databuild/testdata/mock"
+	"github.com/mus-format/musgen-go/data/builders/testdata/mock"
 	genops "github.com/mus-format/musgen-go/options/generate"
 	introps "github.com/mus-format/musgen-go/options/interface"
 	structops "github.com/mus-format/musgen-go/options/struct"

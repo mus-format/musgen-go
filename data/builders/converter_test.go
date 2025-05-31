@@ -1,4 +1,4 @@
-package databuild
+package builders
 
 import (
 	"reflect"

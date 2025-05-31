@@ -13,7 +13,7 @@ import (
 )
 
 func TestStructTimeGeneration(t *testing.T) {
-	g, err := NewFileGenerator(
+	g, err := NewCodeGenerator(
 		genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/struct_time"),
 		genops.WithPackage("testdata"),
 	)

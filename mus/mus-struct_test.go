@@ -14,7 +14,7 @@ import (
 )
 
 func TestStructTypeGeneration(t *testing.T) {
-	g, err := NewFileGenerator(
+	g, err := NewCodeGenerator(
 		genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/struct"),
 		genops.WithPackage("testdata"),
 		genops.WithImportAlias("github.com/mus-format/musgen-go/testdata", "common_testdata"),

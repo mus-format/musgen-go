@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/mus-format/musgen-go/databuild"
+	"github.com/mus-format/musgen-go/data/builders"
 	genops "github.com/mus-format/musgen-go/options/generate"
 	testdata "github.com/mus-format/musgen-go/testdata/any"
 	"github.com/mus-format/musgen-go/typename"
@@ -13,14 +13,14 @@ import (
 )
 
 func TestAnyGeneration(t *testing.T) {
-	g, err := NewFileGenerator(
+	g, err := NewCodeGenerator(
 		genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/any"),
 		genops.WithPackage("testdata"))
 	assertfatal.EqualError(err, nil, t)
 
 	tp := reflect.TypeFor[testdata.MyAny]()
 	err = g.AddDefinedType(tp)
-	assertfatal.EqualError(err, databuild.NewUnsupportedTypeError(tp), t)
+	assertfatal.EqualError(err, builders.NewUnsupportedTypeError(tp), t)
 
 	anyType := reflect.TypeFor[any]()
 

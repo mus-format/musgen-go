@@ -12,7 +12,7 @@ import (
 )
 
 func TestContainerTypeGeneration(t *testing.T) {
-	g, err := NewFileGenerator(
+	g, err := NewCodeGenerator(
 		genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/container"),
 		genops.WithPackage("testdata"),
 		genops.WithImport("github.com/mus-format/musgen-go/testdata"),

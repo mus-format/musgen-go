@@ -16,10 +16,10 @@ func NewInvalidAliasError(val string) error {
 }
 
 func NewDuplicateImportPath(path ImportPath) error {
-	return fmt.Errorf("duplicate '%v' import path in musgen.FileGenerator options", path)
+	return fmt.Errorf("duplicate '%v' import path in musgen.CodeGenerator options", path)
 }
 
 func NewDuplicateImportAlias(alias Alias) error {
-	return fmt.Errorf("duplicate '%v' package alias in musgen.FileGenerator options",
+	return fmt.Errorf("duplicate '%v' package alias in musgen.CodeGenerator options",
 		alias)
 }

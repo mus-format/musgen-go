@@ -20,7 +20,7 @@ musgen-go is a Golang code generator for the [mus-go](https://github.com/mus-for
   - [Capabilities](#capabilities)
 - [Contents](#contents)
 - [Quick Example](#quick-example)
-- [FileGenerator](#filegenerator)
+- [CodeGenerator](#codegenerator)
   - [Configuration](#configuration)
     - [Required Options](#required-options)
     - [Streaming](#streaming)
@@ -85,7 +85,7 @@ import (
 )
 
 func main() {
-  g, err := musgen.NewFileGenerator(
+  g, err := musgen.NewCodeGenerator(
     genops.WithPkgPath("example.com/foo"),
     // genops.WithPackage("bar"), // Can be used to specify the package name for
     // the generated file.
@@ -103,7 +103,8 @@ func main() {
   }
   bs, err := g.Generate()
   if err != nil {
-    // In case of an error, generated code can be checked for additional details.
+  // In case of an error (e.g., if you forget to add an import path), the 
+  // generated code can be inspected for additional details.
     log.Println(err)
   }
   err = os.WriteFile("./mus-format.gen.go", bs, 0755)
@@ -159,8 +160,8 @@ func TestFooSerialization(t *testing.T) {
 }
 ```
 
-# FileGenerator
-The `FileGenerator` is responsible for generating serialization code.
+# CodeGenerator
+The `CodeGenerator` is responsible for generating serialization code.
 
 ## Configuration
 ### Required Options
@@ -171,8 +172,8 @@ import (
   genops "github.com/mus-format/musgen-go/options/generate"
 )
 
-g, err := musgen.NewFileGenerator(
-  genops.WithPkgPath("pkgPath"),  // Sets the package path for the generated 
+g, err := musgen.NewCodeGenerator(
+  genops.WithPkgPath("pkg path"),  // Sets the package path for the generated 
   // file. The path must match the standard Go package path format (e.g., 
   // github.com/user/project/pkg) and can be obtained using:
   //
@@ -189,7 +190,7 @@ import (
   genops "github.com/mus-format/musgen-go/options/generate"
 )
 
-g := musgen.NewFileGenerator(
+g := musgen.NewCodeGenerator(
   // ...
   genops.WithStream(),
 )
@@ -206,7 +207,7 @@ import (
   genops "github.com/mus-format/musgen-go/options/generate"
 )
 
-g := musgen.NewFileGenerator(
+g := musgen.NewCodeGenerator(
   // ...
   genops.WithUnsafe(),
 )
@@ -220,7 +221,7 @@ import (
   genops "github.com/mus-format/musgen-go/options/generate"
 )
 
-g := musgen.NewFileGenerator(
+g := musgen.NewCodeGenerator(
   // ...  
   genops.WithNotUnsafe(),
 )
@@ -237,10 +238,10 @@ import (
   genops "github.com/mus-format/musgen-go/options/generate"
 )
 
-g := musgen.NewFileGenerator(
+g := musgen.NewCodeGenerator(
   // ...
-  genops.WithImport("pkgPath"),
-  genops.WithImportAlias("pkgPath", "alias"),
+  genops.WithImport("import path"),
+  genops.WithImportAlias("import path", "alias"),
 )
 ```
 
@@ -260,7 +261,7 @@ import (
   genops "github.com/mus-format/musgen-go/options/generate"
 )
 
-g := musgen.NewFileGenerator(
+g := musgen.NewCodeGenerator(
   // ...
   genops.WithSerName(reflect.TypeFor[pkg.YourType](), "CustomSerName"),
 )
@@ -485,7 +486,7 @@ import (
   genops "github.com/mus-format/musgen-go/options/generate"
 )
 
-g := musgen.NewFileGenerator(
+g := musgen.NewCodeGenerator(
   // ...
   genops.WithSerName(reflect.TypeFor[bar.Bar](), "another.AwesomeBar"),
   // If only the name is non-standard:

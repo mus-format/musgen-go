@@ -15,7 +15,7 @@ import (
 func TestCrossGeneration(t *testing.T) {
 
 	t.Run("pkg", func(t *testing.T) {
-		g, err := NewFileGenerator(
+		g, err := NewCodeGenerator(
 			genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/crossgen/pkg"),
 		)
 		assertfatal.EqualError(err, nil, t)
@@ -35,7 +35,7 @@ func TestCrossGeneration(t *testing.T) {
 		assertfatal.EqualError(err, nil, t)
 	})
 
-	g, err := NewFileGenerator(
+	g, err := NewCodeGenerator(
 		genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/crossgen"),
 		genops.WithPackage("testdata"),
 		genops.WithImport("github.com/mus-format/musgen-go/testdata/crossgen/pkg"),

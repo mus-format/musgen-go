@@ -18,7 +18,7 @@ func TestWithNotUnsafeGeneration(t *testing.T) {
 		complexStructType = reflect.TypeFor[struct_testdata.ComplexStruct]()
 	)
 
-	g, err := NewFileGenerator(
+	g, err := NewCodeGenerator(
 		genops.WithPkgPath("github.com/mus-format/musgen-go/testdata/notunsafe"),
 		genops.WithPackage("testdata"),
 		genops.WithImportAlias("github.com/mus-format/musgen-go/testdata/struct",
