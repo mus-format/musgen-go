@@ -103,8 +103,9 @@ func main() {
   }
   bs, err := g.Generate()
   if err != nil {
-  // In case of an error (e.g., if you forget to add an import path), the 
-  // generated code can be inspected for additional details.
+    // In case of an error (e.g., if you forget to specify an import path using 
+    // genops.WithImport), the generated code can be inspected for additional 
+    // details.
     log.Println(err)
   }
   err = os.WriteFile("./mus-format.gen.go", bs, 0755)
