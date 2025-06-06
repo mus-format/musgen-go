@@ -284,7 +284,7 @@ func TestTypeDataBuilder(t *testing.T) {
 					gops = genops.New()
 
 					wantTypeData = data.TypeData{}
-					wantErr      = NewWrongFieldsCountError(1)
+					wantErr      = NewWrongFieldsCountError(2)
 				)
 				structops.Apply([]structops.SetOption{structops.WithField(nil)}, &sops)
 				testBuildStructData(tp, nil, sops, gops, wantTypeData, wantErr, nil, t)

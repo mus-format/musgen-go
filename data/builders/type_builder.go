@@ -159,8 +159,8 @@ func (b TypeDataBuilder) checkFields(t reflect.Type, sops structops.Options) (
 		return
 	}
 	var (
-		actual = t.NumField()
-		want   = len(sops.Fields)
+		want   = t.NumField()
+		actual = len(sops.Fields)
 	)
 	if actual != want {
 		err = NewWrongFieldsCountError(want)
