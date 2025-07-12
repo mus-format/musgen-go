@@ -4,7 +4,7 @@
 [![GoReportCard](https://goreportcard.com/badge/mus-format/musgen-go)](https://goreportcard.com/report/github.com/mus-format/musgen-go)
 [![codecov](https://codecov.io/gh/mus-format/musgen-go/graph/badge.svg?token=J1JN0CEY9S)](https://codecov.io/gh/mus-format/musgen-go)
 
-musgen-go is a code generator for the [mus-go](https://github.com/mus-format/mus-go) serializer.
+**musgen-go** is a code generator for the [mus-go](https://github.com/mus-format/mus-go) serializer.
 
 ## Capabilities
 - Generates high-performance serialization code with optional unsafe 
