@@ -135,8 +135,7 @@ func TestClassifier(t *testing.T) {
 			{tp: doubleDefinedInterfaceType, want: true},
 		}
 		for _, c := range testCases {
-			asserterror.Equal(DefinedInterface(c.tp), c.want, t)
+			asserterror.Equal(DefinedNonEmptyInterface(c.tp), c.want, t)
 		}
 	})
-
 }
