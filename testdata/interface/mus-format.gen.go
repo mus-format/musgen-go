@@ -124,3 +124,67 @@ func (s myInterfaceMUS) Skip(bs []byte) (n int, err error) {
 	n += n1
 	return
 }
+
+var MyAnyInterfaceMUS = myAnyInterfaceMUS{}
+
+type myAnyInterfaceMUS struct{}
+
+func (s myAnyInterfaceMUS) Marshal(v MyAnyInterface, bs []byte) (n int) {
+	switch t := v.(type) {
+	case Impl1:
+		return Impl1DTS.Marshal(t, bs)
+	case Impl2:
+		return Impl2DTS.Marshal(t, bs)
+	default:
+		panic(fmt.Sprintf("unexpected %v type", t))
+	}
+}
+
+func (s myAnyInterfaceMUS) Unmarshal(bs []byte) (v MyAnyInterface, n int, err error) {
+	dtm, n, err := dts.DTMSer.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	var n1 int
+	switch dtm {
+	case Impl1DTM:
+		v, n1, err = Impl1DTS.UnmarshalData(bs[n:])
+	case Impl2DTM:
+		v, n1, err = Impl2DTS.UnmarshalData(bs[n:])
+	default:
+		err = fmt.Errorf("unexpected %v DTM", dtm)
+		return
+	}
+	n += n1
+	return
+}
+
+func (s myAnyInterfaceMUS) Size(v MyAnyInterface) (size int) {
+	switch t := v.(type) {
+	case Impl1:
+		return Impl1DTS.Size(t)
+	case Impl2:
+		return Impl2DTS.Size(t)
+	default:
+		panic(fmt.Sprintf("unexpected %v type", t))
+	}
+}
+
+func (s myAnyInterfaceMUS) Skip(bs []byte) (n int, err error) {
+	dtm, n, err := dts.DTMSer.Unmarshal(bs)
+	if err != nil {
+		return
+	}
+	var n1 int
+	switch dtm {
+	case Impl1DTM:
+		n1, err = Impl1DTS.SkipData(bs[n:])
+	case Impl2DTM:
+		n1, err = Impl2DTS.SkipData(bs[n:])
+	default:
+		err = fmt.Errorf("unexpected %v DTM", dtm)
+		return
+	}
+	n += n1
+	return
+}

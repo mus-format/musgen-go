@@ -4,6 +4,14 @@ import (
 	"reflect"
 )
 
+func DefinedNonEmptyInterface(t reflect.Type) (ok bool) {
+	return DefinedType(t) && InterfaceType(t) && t.NumMethod() > 0
+}
+
+func DefinedInterface(t reflect.Type) (ok bool) {
+	return DefinedType(t) && InterfaceType(t)
+}
+
 func DefinedBasicType(t reflect.Type) (ok bool) {
 	return DefinedType(t) && BasicType(t)
 }
@@ -12,16 +20,16 @@ func DefinedStruct(t reflect.Type) (ok bool) {
 	return DefinedType(t) && t.Kind() == reflect.Struct
 }
 
-func DefinedInterface(t reflect.Type) (ok bool) {
-	return DefinedType(t) && t.Kind() == reflect.Interface && t.NumMethod() > 0
+func DefinedType(t reflect.Type) (ok bool) {
+	return t.PkgPath() != ""
+}
+
+func InterfaceType(t reflect.Type) (ok bool) {
+	return t.Kind() == reflect.Interface
 }
 
 func BasicType(t reflect.Type) (ok bool) {
 	return PrimitiveType(t) || ContainerType(t) || PtrType(t)
-}
-
-func DefinedType(t reflect.Type) (ok bool) {
-	return t.PkgPath() != ""
 }
 
 func PtrType(t reflect.Type) bool {

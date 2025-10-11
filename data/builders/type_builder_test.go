@@ -22,9 +22,7 @@ import (
 )
 
 func TestTypeDataBuilder(t *testing.T) {
-
 	t.Run("BuildDefinedTypeData", func(t *testing.T) {
-
 		testBuildDefinedTypeData := func(tp reflect.Type, conv TypeNameConvertor,
 			tops *typeops.Options,
 			gops genops.Options,
@@ -152,11 +150,9 @@ func TestTypeDataBuilder(t *testing.T) {
 			testBuildDefinedTypeData(tp, nil, nil, gops, wantTypeData, wantErr, nil,
 				t)
 		})
-
 	})
 
 	t.Run("BuildStructData", func(t *testing.T) {
-
 		testBuildStructData := func(tp reflect.Type, conv TypeNameConvertor,
 			sops structops.Options,
 			gops genops.Options,
@@ -289,11 +285,9 @@ func TestTypeDataBuilder(t *testing.T) {
 				structops.Apply([]structops.SetOption{structops.WithField(nil)}, &sops)
 				testBuildStructData(tp, nil, sops, gops, wantTypeData, wantErr, nil, t)
 			})
-
 	})
 
 	t.Run("BuildInterfaceData", func(t *testing.T) {
-
 		testBuildInterfaceData := func(tp reflect.Type, conv TypeNameConvertor,
 			iops introps.Options,
 			gops genops.Options,
@@ -336,6 +330,45 @@ func TestTypeDataBuilder(t *testing.T) {
 				conv = mock.NewTypeNameConvertor().RegisterConvertToFullName(
 					func(cname typename.CompleteName) (fname typename.FullName, err error) {
 						asserterror.Equal(cname, "github.com/mus-format/musgen-go/testdata/interface/testdata.MyInterface", t)
+						return wantTypeData.FullName, nil
+					}).RegisterConvertToFullName(
+					func(cname typename.CompleteName) (fname typename.FullName, err error) {
+						asserterror.Equal(cname, "github.com/mus-format/musgen-go/testdata/interface/testdata.Impl1", t)
+						return wantTypeData.Impls[0], nil
+					}).RegisterConvertToFullName(
+					func(cname typename.CompleteName) (fname typename.FullName, err error) {
+						asserterror.Equal(cname, "github.com/mus-format/musgen-go/testdata/interface/testdata.Impl2", t)
+						return wantTypeData.Impls[1], nil
+					})
+				mocks = []*mok.Mock{conv.Mock}
+			)
+			testBuildInterfaceData(tp, conv, iops, gops, wantTypeData, wantErr, mocks,
+				t)
+		})
+
+		t.Run("Should work with defined any interface", func(t *testing.T) {
+			var (
+				tp   = reflect.TypeFor[intr_testdata.MyAnyInterface]()
+				iops = introps.New()
+				gops = genops.New()
+			)
+			introps.Apply([]introps.SetOption{
+				introps.WithImpl(reflect.TypeFor[intr_testdata.Impl1]()),
+				introps.WithImpl(reflect.TypeFor[intr_testdata.Impl2]()),
+			}, &iops)
+
+			var (
+				wantTypeData = data.TypeData{
+					FullName: "testdata.MyAnyInterface",
+					Impls:    []typename.FullName{"testdata.Impl1", "testdata.Impl2"},
+					Iops:     iops,
+					Gops:     gops,
+				}
+				wantErr error = nil
+
+				conv = mock.NewTypeNameConvertor().RegisterConvertToFullName(
+					func(cname typename.CompleteName) (fname typename.FullName, err error) {
+						asserterror.Equal(cname, "github.com/mus-format/musgen-go/testdata/interface/testdata.MyAnyInterface", t)
 						return wantTypeData.FullName, nil
 					}).RegisterConvertToFullName(
 					func(cname typename.CompleteName) (fname typename.FullName, err error) {
@@ -420,7 +453,7 @@ func TestTypeDataBuilder(t *testing.T) {
 			testBuildInterfaceData(tp, nil, iops, gops, wantTypeData, wantErr, nil, t)
 		})
 
-		t.Run("Should fail if receives not a not defined interface type", func(t *testing.T) {
+		t.Run("Should fail if receives not a defined interface type", func(t *testing.T) {
 			var (
 				tp   = reflect.TypeFor[any]()
 				iops = introps.New()
@@ -431,11 +464,9 @@ func TestTypeDataBuilder(t *testing.T) {
 			)
 			testBuildInterfaceData(tp, nil, iops, gops, wantTypeData, wantErr, nil, t)
 		})
-
 	})
 
 	t.Run("BuildDTSDesc", func(t *testing.T) {
-
 		t.Run("Should work", func(t *testing.T) {
 			var (
 				gops         = genops.New()
@@ -509,5 +540,4 @@ func TestTypeDataBuilder(t *testing.T) {
 			t.Error(infomap)
 		}
 	})
-
 }

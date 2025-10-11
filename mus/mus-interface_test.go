@@ -35,6 +35,11 @@ func TestInterfaceTypeGeneration(t *testing.T) {
 		introps.WithImpl(tp2))
 	assertfatal.EqualError(err, nil, t)
 
+	err = g.AddInterface(reflect.TypeFor[testdata.MyAnyInterface](),
+		introps.WithImpl(tp1),
+		introps.WithImpl(tp2))
+	assertfatal.EqualError(err, nil, t)
+
 	// generate
 
 	bs, err := g.Generate()

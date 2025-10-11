@@ -13,6 +13,8 @@ const (
 
 type DoubleDefinedMyInterface MyInterface
 
+type MyAnyInterface any
+
 type MyInterface interface {
 	Print()
 }

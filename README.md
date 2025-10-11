@@ -4,10 +4,12 @@
 [![GoReportCard](https://goreportcard.com/badge/mus-format/musgen-go)](https://goreportcard.com/report/github.com/mus-format/musgen-go)
 [![codecov](https://codecov.io/gh/mus-format/musgen-go/graph/badge.svg?token=J1JN0CEY9S)](https://codecov.io/gh/mus-format/musgen-go)
 
-**musgen-go** is a Go code generator for the [mus-go](https://github.com/mus-format/mus-go) serializer.
+**musgen-go** is a Go code generator for the [mus-go](https://github.com/mus-format/mus-go)
+serializer.
 
 ## Capabilities
-- Generates high-performance serialization code with optional unsafe 
+
+- Generates high-performance serialization code with optional unsafe
   optimizations.
 - Supports both in-memory and streaming data processing models.
 - Can generate code for parameterized types and interfaces.
@@ -16,6 +18,7 @@
 - Can be extended to support additional binary serialization formats beyond MUS.
 
 ## Contents
+
 - [musgen-go](#musgen-go)
   - [Capabilities](#capabilities)
   - [Contents](#contents)
@@ -44,12 +47,13 @@
     - [time.Time](#timetime)
   - [MUS Format](#mus-format)
 
-
 ## Getting Started Example
+
 Here, we will generate a MUS serializer for the `Foo` type.
 
-First, download and install Go (version 1.18 or later). Then, create a `foo` 
+First, download and install Go (version 1.18 or later). Then, create a `foo`
 folder with the following structure:
+
 ```
 foo/
  |‒‒‒gen/
@@ -57,7 +61,8 @@ foo/
  |‒‒‒foo.go
 ```
 
-__foo.go__
+**foo.go**
+
 ```go
 //go:generate go run gen/main.go
 package foo
@@ -70,7 +75,8 @@ type Foo[T any] struct {
 }
 ```
 
-__gen/main.go__
+**gen/main.go**
+
 ```go
 package main
 
@@ -116,23 +122,26 @@ func main() {
 ```
 
 Run from the command line:
+
 ```bash
-$ cd ~/foo
-$ go mod init example.com/foo
-$ go mod tidy
-$ go generate
-$ go mod tidy
+cd ~/foo
+go mod init example.com/foo
+go mod tidy
+go generate
+go mod tidy
 ```
 
 Now you can see `mus-format.gen.go` file in the `foo` folder with `MyIntMUS`
 and `FooMUS` serializers. Let's write some tests. Create a `foo_test.go` file:
+
 ```
 foo/
  |‒‒‒...
  |‒‒‒foo_test.go
 ```
 
-__foo_test.go__
+**foo_test.go**
+
 ```go
 package foo
 
@@ -162,11 +171,15 @@ func TestFooSerialization(t *testing.T) {
 ```
 
 ## CodeGenerator
+
 The `CodeGenerator` is responsible for generating serialization code.
 
 ### Configuration
+
 #### Required Options
+
 There is only one required configuration option:
+
 ```go
 import (
   musgen "github.com/mus-format/musgen-go/mus"
@@ -184,7 +197,9 @@ g, err := musgen.NewCodeGenerator(
 ```
 
 #### Streaming
+
 To generate streaming code:
+
 ```go
 import (
   musgen "github.com/mus-format/musgen-go/mus"
@@ -197,11 +212,13 @@ g := musgen.NewCodeGenerator(
 )
 ```
 
-In this case [mus-stream-go](https://github.com/mus-format/mus-stream-go) 
+In this case [mus-stream-go](https://github.com/mus-format/mus-stream-go)
 library will be used instead of mus-go.
 
 #### Unsafe Code
+
 To generate unsafe code:
+
 ```go
 import (
   musgen "github.com/mus-format/musgen-go/mus"
@@ -215,7 +232,9 @@ g := musgen.NewCodeGenerator(
 ```
 
 #### NotUnsafe Code
+
 In this mode, the unsafe package will be used for all types except string:
+
 ```go
 import (
   musgen "github.com/mus-format/musgen-go/mus"
@@ -231,8 +250,10 @@ g := musgen.NewCodeGenerator(
 It produces the fastest serialization code without unsafe side effects.
 
 #### Imports
+
 In some cases import statement of the generated file can miss one or more
 packages. To fix this:
+
 ```go
 import (
   musgen "github.com/mus-format/musgen-go/mus"
@@ -246,16 +267,19 @@ g := musgen.NewCodeGenerator(
 )
 ```
 
-Also, `genops.WithImportAlias` helps prevent name conflicts when multiple 
+Also, `genops.WithImportAlias` helps prevent name conflicts when multiple
 packages are imported with the same alias.
 
 #### Serializer Name
+
 Generated serializers follow the standard naming convention:
+
 ```
 pkg.YouType[T,V] -> YouTypeMUS  // Serialization format is appended to the type name.
 ```
 
 To override this behavior, use `genops.WithSerName()`:
+
 ```go
 import (
   musgen "github.com/mus-format/musgen-go/mus"
@@ -269,8 +293,11 @@ g := musgen.NewCodeGenerator(
 ```
 
 ### Methods
+
 #### AddDefinedType()
+
 Supports types defined with the following source types:
+
 - Number (`uint`, `int`, `float64`, `float32`, ...)
 - String
 - Array
@@ -279,6 +306,7 @@ Supports types defined with the following source types:
 - Pointer
 
 For example:
+
 ```go
 type MyInt int
 type MyStringSlice []string
@@ -287,6 +315,7 @@ type MyUintPtr *uint
 ```
 
 It can be used as follows:
+
 ```go
 import (
   "reflect"
@@ -302,6 +331,7 @@ err := g.AddDefinedType(reflect.TypeFor[MyInt]())
 ```
 
 Or with serialization options, for example:
+
 ```go
 err := g.AddDefinedType(reflect.TypeFor[MyInt](),
   typeops.WithNumEncoding(typeops.Raw), // The raw.Int serializer will be used
@@ -316,13 +346,16 @@ err := g.AddDefinedType(reflect.TypeFor[MyInt](),
 ```
 
 #### AddStruct()
+
 Supports types defined with the `struct` source type, such as:
+
 ```go
 type MyStruct struct { ... }
 type MyAnotherStruct MyStruct
 ```
 
 It can be used as follows:
+
 ```go
 import (
   "reflect"
@@ -346,6 +379,7 @@ err := g.AddStruct(reflect.TypeFor[MyStruct]())
 ```
 
 Or with serialization options, for example:
+
 ```go
 // The number of options should be equal to the number of fields. If you don't
 // want to specify options for some field, use structops.WithField() without
@@ -371,21 +405,24 @@ err := g.AddStruct(reflect.TypeFor[MyStruct](),
 ```
 
 A special case for the `time.Time` source type:
+
 ```go
 type MyTime time.Time
 // ...
 err = g.AddStruct(reflect.TypeFor[MyTime](),
-  structops.WithSourceType(structops.Time, typeops.WithTimeUnit(typeops.Milli)), 
+  structops.WithSourceType(structops.Time, typeops.WithTimeUnit(typeops.Milli)),
   // The raw.TimeUnixMilli serializer will be used  to serialize a time.Time 
   // value.
 )
 ```
 
 #### AddDTS()
-Supports all types acceptable by the `AddDefinedType`, `AddStruct`, and 
+
+Supports all types acceptable by the `AddDefinedType`, `AddStruct`, and
 `AddInterface` methods.
 
 It can be used as follows:
+
 ```go
 import (
   "reflect"
@@ -401,18 +438,21 @@ err := g.AddDefinedType(t)
 err = g.AddDTS(t)
 ```
 
-The [DTS](https://github.com/mus-format/dts-go) definition will be generated for 
+The [DTS](https://github.com/mus-format/dts-go) definition will be generated for
 the specified type.
 
-
 #### AddInterface()
+
 Supports types defined with the `interface` source type, such as:
+
 ```go
 type MyInterface interface { ... }
+type MyAnyInterface any
 type MyAnotherInterface MyInterface
 ```
 
 It can be used as follows:
+
 ```go
 import (
   ext "github.com/mus-format/ext-mus-go"
@@ -455,8 +495,10 @@ err = g.AddInterface(reflect.TypeFor[MyInterface](),
 ```
 
 ## Multi-package support
-By default, musgen-go expects a type’s serializer to reside in the same package 
+
+By default, musgen-go expects a type’s serializer to reside in the same package
 as the type itself. For example, generating a serializer for the `Foo` type:
+
 ```go
 package foo
 
@@ -466,6 +508,7 @@ type Foo struct{
 ```
 
 will result in:
+
 ```go
 package foo
 
@@ -479,8 +522,10 @@ func (s fooMUS) Marshal(v Foo, bs []byte) (n int) {
 
 // ...
 ```
-To reference a `Bar` serializer defined in a different package or with a 
+
+To reference a `Bar` serializer defined in a different package or with a
 non-standard name, use the `genops.WithSerName` option:
+
 ```go
 import (
   musgen "github.com/mus-format/musgen-go/mus"
@@ -495,8 +540,9 @@ g := musgen.NewCodeGenerator(
 )
 ```
 
-The string `another.AwesomeBar` will be used as-is, with the serialization 
+The string `another.AwesomeBar` will be used as-is, with the serialization
 format appended:
+
 ```go
 // ...
 
@@ -508,34 +554,41 @@ func (s fooMUS) Marshal(v Foo, bs []byte) (n int) {
 ```
 
 ## Cross-Package Code Generation
-musgen-go allows to generate a serializer for a type from an external package, 
+
+musgen-go allows to generate a serializer for a type from an external package,
 for example, `foo.BarMUS` for the `bar.Bar` type.
 
 ## Serialization Options
-Different types support different serialization options. If an unsupported 
+
+Different types support different serialization options. If an unsupported
 option is specified for a type, it will simply be ignored.
 
 ### Numbers
+
 - `typeops.WithNumEncoding`
 - `typeops.WithValidator`
 
 ### String
+
 - `typeops.WithLenEncoding`
 - `typeops.WithLenValidator`
 - `typeops.WithValidator`
 
 ### Array
+
 - `typeops.WithLenEncoding`
 - `typeops.WithElem`
 - `typeops.WithValidator`
 
 ### Slice
+
 - `typeops.WithLenEncoding`
 - `typeops.WithLenValidator`
 - `typeops.WithElem`
 - `typeops.WithValidator`
 
 ### Map
+
 - `typeops.WithLenEncoding`
 - `typeops.WithLenValidator`
 - `typeops.WithKey`
@@ -543,13 +596,16 @@ option is specified for a type, it will simply be ignored.
 - `typeops.WithValidator`
 
 ### time.Time
+
 - `typeops.WithTimeUnit`
 - `typeops.WithValidator`
 
 ## MUS Format
+
 Defauls:
+
 - Varint encoding is used for numbers.
-- Varint without ZigZag encoding is used for the length of variable-length data 
+- Varint without ZigZag encoding is used for the length of variable-length data
   types, such as `string`, `array`, `slice`, or `map`.
 - Varint without ZigZag encoding is used for DTM (Data Type Metadata).
 - `raw.TimeUnix` is used for `time.Time`.
