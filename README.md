@@ -455,7 +455,7 @@ It can be used as follows:
 
 ```go
 import (
-  ext "github.com/mus-format/ext-mus-go"
+  ext "github.com/mus-format/ext-go"
   com "github.com/mus-format/common-go"
 )
 
