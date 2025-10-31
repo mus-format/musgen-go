@@ -57,6 +57,7 @@ type CodeGenerator struct {
 	crossgenTypes map[typename.FullName]struct{}
 	anonMap       map[data.AnonSerName]data.AnonData
 	genSl         []fileData
+	dtmTypes      [][]string
 	bs            []byte
 	gops          genops.Options
 }
@@ -65,7 +66,8 @@ type CodeGenerator struct {
 // serializer for it. This method supports types defined with the following
 // source types: number, string, array, slice, map, pointer.
 func (g *CodeGenerator) AddDefinedType(t reflect.Type, ops ...typeops.SetOption) (
-	err error) {
+	err error,
+) {
 	var tops *typeops.Options
 	if len(ops) > 0 {
 		tops = &typeops.Options{}
@@ -85,7 +87,8 @@ func (g *CodeGenerator) AddDefinedType(t reflect.Type, ops ...typeops.SetOption)
 // serializer for it. This method supports types definined with the struct
 // source type.
 func (g *CodeGenerator) AddStruct(t reflect.Type, ops ...structops.SetOption) (
-	err error) {
+	err error,
+) {
 	sops := structops.New()
 	if len(ops) > 0 {
 		structops.Apply(ops, &sops)
@@ -120,7 +123,8 @@ func (g *CodeGenerator) AddStruct(t reflect.Type, ops ...structops.SetOption) (
 // definition for it. This method supports all types acceptable by the
 // AddDefinedType, AddStruct, and AddInterface methods.
 func (g *CodeGenerator) AddDTS(t reflect.Type, ops ...typeops.SetOption) (
-	err error) {
+	err error,
+) {
 	tops := typeops.Options{}
 	if len(ops) > 0 {
 		typeops.Apply(ops, &tops)
@@ -137,7 +141,8 @@ func (g *CodeGenerator) AddDTS(t reflect.Type, ops ...typeops.SetOption) (
 // serializer for it. This method supports types definined with the interface
 // source type.
 func (g *CodeGenerator) AddInterface(t reflect.Type, ops ...introps.SetOption) (
-	err error) {
+	err error,
+) {
 	iops := introps.Options{}
 	if ops != nil {
 		introps.Apply(ops, &iops)
@@ -151,11 +156,65 @@ func (g *CodeGenerator) AddInterface(t reflect.Type, ops ...introps.SetOption) (
 	return
 }
 
+// RegisterInterface registers an interface type and all of its implementations
+// with the code generator.
+//
+// DTM values are generated automatically, so there is no need to assign them
+// manually.
+//
+// This helper method is equivalent to calling, in order:
+//
+//	AddStruct/AddDefinedType → AddDTS → AddInterface
+func (g *CodeGenerator) RegisterInterface(t reflect.Type,
+	ops ...introps.SetRegisterOption,
+) (err error) {
+	rops := introps.RegisterOptions{}
+	if ops != nil {
+		introps.ApplyRegister(ops, &rops)
+	}
+	var (
+		l     = len(rops.StructImpls) + len(rops.DefinedTypeImpls)
+		iops  = make([]introps.SetOption, 0, l)
+		types = make([]string, 0, l)
+	)
+	for _, impl := range rops.StructImpls {
+		err = g.AddStruct(impl.Type, impl.Ops...)
+		if err != nil {
+			return
+		}
+		err = g.AddDTS(impl.Type)
+		if err != nil {
+			return
+		}
+		iops = append(iops, introps.WithImpl(impl.Type))
+		types = append(types, impl.Type.Name())
+	}
+	for _, impl := range rops.DefinedTypeImpls {
+		err = g.AddDefinedType(impl.Type, impl.Ops...)
+		if err != nil {
+			return
+		}
+		err = g.AddDTS(impl.Type)
+		if err != nil {
+			return
+		}
+		iops = append(iops, introps.WithImpl(impl.Type))
+		types = append(types, impl.Type.Name())
+	}
+	g.addDTM(types)
+	return g.AddInterface(t, iops...)
+}
+
+func (g *CodeGenerator) addDTM(types []string) {
+	g.dtmTypes = append(g.dtmTypes, types)
+}
+
 // Generate produces the serialization code. The output is intended to be saved
 // to a file.
 func (g *CodeGenerator) Generate() (bs []byte, err error) {
 	tmp := g.generatePackage()
 	tmp = append(tmp, g.generateImports()...)
+	tmp = append(tmp, g.generateDTMs()...)
 	tmp = append(tmp, g.generateAnonymosDefinitions()...)
 	tmp = append(tmp, g.generateSerializers()...)
 	bs, err = imports.Process("", tmp, nil)
@@ -201,6 +260,18 @@ func (g *CodeGenerator) generatePart(tmplName string, a any) (bs []byte) {
 	err := g.baseTmpl.ExecuteTemplate(buf, tmplName, a)
 	if err != nil {
 		panic(err)
+	}
+	bs = buf.Bytes()
+	return
+}
+
+func (g *CodeGenerator) generateDTMs() (bs []byte) {
+	buf := bytes.Buffer{}
+	for _, types := range g.dtmTypes {
+		err := g.baseTmpl.ExecuteTemplate(&buf, dtmsDefinitionTmpl, types)
+		if err != nil {
+			panic(err)
+		}
 	}
 	bs = buf.Bytes()
 	return

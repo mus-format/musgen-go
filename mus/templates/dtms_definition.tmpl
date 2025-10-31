@@ -1,0 +1,6 @@
+{{/* []string */}}
+const (
+  {{- range $i, $name := . }}
+    {{ $name }}DTM{{ if eq $i 0 }} com.DTM = iota+1{{ end }}
+  {{- end }}
+)

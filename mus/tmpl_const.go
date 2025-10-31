@@ -8,4 +8,5 @@ const (
 	packageTmpl         = "package.tmpl"
 	importsTmpl         = "imports.tmpl"
 	anonDefinitionsTmpl = "anon_definitions.tmpl"
+	dtmsDefinitionTmpl  = "dtms_definition.tmpl"
 )

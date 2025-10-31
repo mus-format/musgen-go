@@ -16,6 +16,7 @@ import (
 	notunsafe_testdata "github.com/mus-format/musgen-go/testdata/notunsafe"
 	ptr_testdata "github.com/mus-format/musgen-go/testdata/pointer"
 	prim_testdata "github.com/mus-format/musgen-go/testdata/primitive"
+	intrr_testdata "github.com/mus-format/musgen-go/testdata/register_interface"
 	ser_testdata "github.com/mus-format/musgen-go/testdata/ser"
 	ser_pkg "github.com/mus-format/musgen-go/testdata/ser/pkg"
 	stream_testdata "github.com/mus-format/musgen-go/testdata/stream"
@@ -140,6 +141,14 @@ func TestGeneratedCode(t *testing.T) {
 			intrm_testdata.Impl2{},
 		}
 		mus_testdata.Test(cases, intrm_testdata.MyInterfaceMUS, t)
+	})
+
+	t.Run("register interface", func(t *testing.T) {
+		cases := []intrr_testdata.MyInterface{
+			intrr_testdata.Impl1{Str: "abs"},
+			intrr_testdata.Impl2(3),
+		}
+		mus_testdata.Test(cases, intrr_testdata.MyInterfaceMUS, t)
 	})
 
 	t.Run("unsafe", func(t *testing.T) {
