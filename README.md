@@ -36,6 +36,7 @@ serializer.
       - [AddStruct()](#addstruct)
       - [AddDTS()](#adddts)
       - [AddInterface()](#addinterface)
+      - [RegisterInterface()](#registerinterface)
   - [Multi-package support](#multi-package-support)
   - [Cross-Package Code Generation](#cross-package-code-generation)
   - [Serialization Options](#serialization-options)
