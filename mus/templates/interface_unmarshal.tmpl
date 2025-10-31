@@ -15,7 +15,7 @@ switch dtm {
 		{{ $v }}, n1, err = {{ DTSVar $e }}.UnmarshalData({{ $ulp }})
 {{- end }}
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 }
 n += n1

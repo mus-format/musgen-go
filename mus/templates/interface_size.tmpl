@@ -15,6 +15,6 @@
 			return {{ DTSVar $e }}.Size(t)
 	{{- end }}
 		default:
-			panic(fmt.Sprintf("unexpected %v type", t))
+			panic(fmt.Sprintf(com.ErrorPrefix+"unexpected %v type", t))
 	}
 {{- end }}
