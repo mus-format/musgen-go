@@ -494,6 +494,34 @@ err = g.AddInterface(reflect.TypeFor[MyInterface](),
 )
 ```
 
+#### RegisterInterface()
+
+A convenience method that performs the full registration flow for an interface
+and all of its implementations.
+
+Unlike `AddInterface`, `RegisterInterface` does not require you to define DTM
+values or call `AddStruct`,  `AddDefinedType`, `AddDTS` manually:
+
+```go
+import (
+  "reflect"
+  introps "github.com/mus-format/musgen-go/options/interface"
+)
+
+type MyInterface interface { ... }
+type Impl1 struct { ... }
+type Impl2 int
+
+// ...
+
+err := g.RegisterInterface(
+  reflect.TypeFor[MyInterface](),
+  introps.WithStructImpl(reflect.TypeFor[Impl1]()),
+  introps.WithDefinedTypeImpl(reflect.TypeFor[Impl2]()),
+  // introps.WithMarshaller() // optional
+)
+```
+
 ## Multi-package support
 
 By default, musgen-go expects a type’s serializer to reside in the same package
