@@ -5,6 +5,7 @@ package testdata
 import (
 	"fmt"
 
+	com "github.com/mus-format/common-go"
 	dts "github.com/mus-format/dts-go"
 	"github.com/mus-format/mus-go/ord"
 	another "github.com/mus-format/musgen-go/testdata/ser/pkg"
@@ -72,7 +73,7 @@ func (s myAwesomeInterfaceMUS) Marshal(v MyInterface, bs []byte) (n int) {
 	case another.MyInt:
 		return another.MyAwesomeIntDTS.Marshal(t, bs)
 	default:
-		panic(fmt.Sprintf("unexpected %v type", t))
+		panic(fmt.Sprintf(com.ErrorPrefix+"unexpected %v type", t))
 	}
 }
 
@@ -86,7 +87,7 @@ func (s myAwesomeInterfaceMUS) Unmarshal(bs []byte) (v MyInterface, n int, err e
 	case another.MyAwesomeIntDTM:
 		v, n1, err = another.MyAwesomeIntDTS.UnmarshalData(bs[n:])
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 	}
 	n += n1
@@ -98,7 +99,7 @@ func (s myAwesomeInterfaceMUS) Size(v MyInterface) (size int) {
 	case another.MyInt:
 		return another.MyAwesomeIntDTS.Size(t)
 	default:
-		panic(fmt.Sprintf("unexpected %v type", t))
+		panic(fmt.Sprintf(com.ErrorPrefix+"unexpected %v type", t))
 	}
 }
 
@@ -112,7 +113,7 @@ func (s myAwesomeInterfaceMUS) Skip(bs []byte) (n int, err error) {
 	case another.MyAwesomeIntDTM:
 		n1, err = another.MyAwesomeIntDTS.SkipData(bs[n:])
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 	}
 	n += n1

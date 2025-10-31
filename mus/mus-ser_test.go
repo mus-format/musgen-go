@@ -48,7 +48,7 @@ func TestWithSerGeneration(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = os.WriteFile("../testdata/ser/pkg/mus-format.gen.go", bs, 0755)
+		err = os.WriteFile("../testdata/ser/pkg/mus-format.gen.go", bs, 0644)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -100,7 +100,7 @@ func TestWithSerGeneration(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = os.WriteFile("../testdata/ser/mus-format.gen.go", bs, 0755)
+		err = os.WriteFile("../testdata/ser/mus-format.gen.go", bs, 0644)
 		if err != nil {
 			t.Fatal(err)
 		}

@@ -5,6 +5,7 @@ package testdata
 import (
 	"fmt"
 
+	com "github.com/mus-format/common-go"
 	dts "github.com/mus-format/dts-go"
 	"github.com/mus-format/mus-go/ord"
 	"github.com/mus-format/mus-go/varint"
@@ -72,7 +73,7 @@ func (s myInterfaceMUS) Marshal(v MyInterface, bs []byte) (n int) {
 	case Impl2:
 		return Impl2DTS.Marshal(t, bs)
 	default:
-		panic(fmt.Sprintf("unexpected %v type", t))
+		panic(fmt.Sprintf(com.ErrorPrefix+"unexpected %v type", t))
 	}
 }
 
@@ -88,7 +89,7 @@ func (s myInterfaceMUS) Unmarshal(bs []byte) (v MyInterface, n int, err error) {
 	case Impl2DTM:
 		v, n1, err = Impl2DTS.UnmarshalData(bs[n:])
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 	}
 	n += n1
@@ -102,7 +103,7 @@ func (s myInterfaceMUS) Size(v MyInterface) (size int) {
 	case Impl2:
 		return Impl2DTS.Size(t)
 	default:
-		panic(fmt.Sprintf("unexpected %v type", t))
+		panic(fmt.Sprintf(com.ErrorPrefix+"unexpected %v type", t))
 	}
 }
 
@@ -118,7 +119,7 @@ func (s myInterfaceMUS) Skip(bs []byte) (n int, err error) {
 	case Impl2DTM:
 		n1, err = Impl2DTS.SkipData(bs[n:])
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 	}
 	n += n1
@@ -136,7 +137,7 @@ func (s myAnyInterfaceMUS) Marshal(v MyAnyInterface, bs []byte) (n int) {
 	case Impl2:
 		return Impl2DTS.Marshal(t, bs)
 	default:
-		panic(fmt.Sprintf("unexpected %v type", t))
+		panic(fmt.Sprintf(com.ErrorPrefix+"unexpected %v type", t))
 	}
 }
 
@@ -152,7 +153,7 @@ func (s myAnyInterfaceMUS) Unmarshal(bs []byte) (v MyAnyInterface, n int, err er
 	case Impl2DTM:
 		v, n1, err = Impl2DTS.UnmarshalData(bs[n:])
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 	}
 	n += n1
@@ -166,7 +167,7 @@ func (s myAnyInterfaceMUS) Size(v MyAnyInterface) (size int) {
 	case Impl2:
 		return Impl2DTS.Size(t)
 	default:
-		panic(fmt.Sprintf("unexpected %v type", t))
+		panic(fmt.Sprintf(com.ErrorPrefix+"unexpected %v type", t))
 	}
 }
 
@@ -182,7 +183,7 @@ func (s myAnyInterfaceMUS) Skip(bs []byte) (n int, err error) {
 	case Impl2DTM:
 		n1, err = Impl2DTS.SkipData(bs[n:])
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 	}
 	n += n1

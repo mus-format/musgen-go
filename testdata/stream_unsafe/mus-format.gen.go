@@ -5,8 +5,9 @@ package testdata
 import (
 	"fmt"
 
+	com "github.com/mus-format/common-go"
 	dts "github.com/mus-format/dts-stream-go"
-	muss "github.com/mus-format/mus-stream-go"
+	mus "github.com/mus-format/mus-stream-go"
 	"github.com/mus-format/mus-stream-go/ord"
 	"github.com/mus-format/mus-stream-go/unsafe"
 	struct_testdata "github.com/mus-format/musgen-go/testdata/struct"
@@ -27,11 +28,11 @@ var MyIntMUS = myIntMUS{}
 
 type myIntMUS struct{}
 
-func (s myIntMUS) Marshal(v struct_testdata.MyInt, w muss.Writer) (n int, err error) {
+func (s myIntMUS) Marshal(v struct_testdata.MyInt, w mus.Writer) (n int, err error) {
 	return unsafe.Int.Marshal(int(v), w)
 }
 
-func (s myIntMUS) Unmarshal(r muss.Reader) (v struct_testdata.MyInt, n int, err error) {
+func (s myIntMUS) Unmarshal(r mus.Reader) (v struct_testdata.MyInt, n int, err error) {
 	tmp, n, err := unsafe.Int.Unmarshal(r)
 	if err != nil {
 		return
@@ -44,7 +45,7 @@ func (s myIntMUS) Size(v struct_testdata.MyInt) (size int) {
 	return unsafe.Int.Size(int(v))
 }
 
-func (s myIntMUS) Skip(r muss.Reader) (n int, err error) {
+func (s myIntMUS) Skip(r mus.Reader) (n int, err error) {
 	return unsafe.Int.Skip(r)
 }
 
@@ -52,11 +53,11 @@ var MySliceMUS = mySliceMUS{}
 
 type mySliceMUS struct{}
 
-func (s mySliceMUS) Marshal(v struct_testdata.MySlice, w muss.Writer) (n int, err error) {
+func (s mySliceMUS) Marshal(v struct_testdata.MySlice, w mus.Writer) (n int, err error) {
 	return sliceSMNo5ZzYqTΔBopItMhYlOgΞΞ.Marshal([]string(v), w)
 }
 
-func (s mySliceMUS) Unmarshal(r muss.Reader) (v struct_testdata.MySlice, n int, err error) {
+func (s mySliceMUS) Unmarshal(r mus.Reader) (v struct_testdata.MySlice, n int, err error) {
 	tmp, n, err := sliceSMNo5ZzYqTΔBopItMhYlOgΞΞ.Unmarshal(r)
 	if err != nil {
 		return
@@ -69,7 +70,7 @@ func (s mySliceMUS) Size(v struct_testdata.MySlice) (size int) {
 	return sliceSMNo5ZzYqTΔBopItMhYlOgΞΞ.Size([]string(v))
 }
 
-func (s mySliceMUS) Skip(r muss.Reader) (n int, err error) {
+func (s mySliceMUS) Skip(r mus.Reader) (n int, err error) {
 	return sliceSMNo5ZzYqTΔBopItMhYlOgΞΞ.Skip(r)
 }
 
@@ -77,7 +78,7 @@ var MyStructMUS = myStructMUS{}
 
 type myStructMUS struct{}
 
-func (s myStructMUS) Marshal(v struct_testdata.MyStruct, w muss.Writer) (n int, err error) {
+func (s myStructMUS) Marshal(v struct_testdata.MyStruct, w mus.Writer) (n int, err error) {
 	n, err = unsafe.Int.Marshal(v.Int, w)
 	if err != nil {
 		return
@@ -88,7 +89,7 @@ func (s myStructMUS) Marshal(v struct_testdata.MyStruct, w muss.Writer) (n int, 
 	return
 }
 
-func (s myStructMUS) Unmarshal(r muss.Reader) (v struct_testdata.MyStruct, n int, err error) {
+func (s myStructMUS) Unmarshal(r mus.Reader) (v struct_testdata.MyStruct, n int, err error) {
 	v.Int, n, err = unsafe.Int.Unmarshal(r)
 	if err != nil {
 		return
@@ -104,7 +105,7 @@ func (s myStructMUS) Size(v struct_testdata.MyStruct) (size int) {
 	return size + unsafe.String.Size(v.Str)
 }
 
-func (s myStructMUS) Skip(r muss.Reader) (n int, err error) {
+func (s myStructMUS) Skip(r mus.Reader) (n int, err error) {
 	n, err = unsafe.Int.Skip(r)
 	if err != nil {
 		return
@@ -121,16 +122,16 @@ var MyInterfaceMUS = myInterfaceMUS{}
 
 type myInterfaceMUS struct{}
 
-func (s myInterfaceMUS) Marshal(v struct_testdata.MyInterface, w muss.Writer) (n int, err error) {
+func (s myInterfaceMUS) Marshal(v struct_testdata.MyInterface, w mus.Writer) (n int, err error) {
 	switch t := v.(type) {
 	case struct_testdata.MyInt:
 		return MyIntDTS.Marshal(t, w)
 	default:
-		panic(fmt.Sprintf("unexpected %v type", t))
+		panic(fmt.Sprintf(com.ErrorPrefix+"unexpected %v type", t))
 	}
 }
 
-func (s myInterfaceMUS) Unmarshal(r muss.Reader) (v struct_testdata.MyInterface, n int, err error) {
+func (s myInterfaceMUS) Unmarshal(r mus.Reader) (v struct_testdata.MyInterface, n int, err error) {
 	dtm, n, err := dts.DTMSer.Unmarshal(r)
 	if err != nil {
 		return
@@ -140,7 +141,7 @@ func (s myInterfaceMUS) Unmarshal(r muss.Reader) (v struct_testdata.MyInterface,
 	case MyIntDTM:
 		v, n1, err = MyIntDTS.UnmarshalData(r)
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 	}
 	n += n1
@@ -152,11 +153,11 @@ func (s myInterfaceMUS) Size(v struct_testdata.MyInterface) (size int) {
 	case struct_testdata.MyInt:
 		return MyIntDTS.Size(t)
 	default:
-		panic(fmt.Sprintf("unexpected %v type", t))
+		panic(fmt.Sprintf(com.ErrorPrefix+"unexpected %v type", t))
 	}
 }
 
-func (s myInterfaceMUS) Skip(r muss.Reader) (n int, err error) {
+func (s myInterfaceMUS) Skip(r mus.Reader) (n int, err error) {
 	dtm, n, err := dts.DTMSer.Unmarshal(r)
 	if err != nil {
 		return
@@ -166,7 +167,7 @@ func (s myInterfaceMUS) Skip(r muss.Reader) (n int, err error) {
 	case MyIntDTM:
 		n1, err = MyIntDTS.SkipData(r)
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 	}
 	n += n1
@@ -177,7 +178,7 @@ var ComplexStructMUS = complexStructMUS{}
 
 type complexStructMUS struct{}
 
-func (s complexStructMUS) Marshal(v struct_testdata.ComplexStruct, w muss.Writer) (n int, err error) {
+func (s complexStructMUS) Marshal(v struct_testdata.ComplexStruct, w mus.Writer) (n int, err error) {
 	n, err = unsafe.Bool.Marshal(v.Bool, w)
 	if err != nil {
 		return
@@ -298,7 +299,7 @@ func (s complexStructMUS) Marshal(v struct_testdata.ComplexStruct, w muss.Writer
 	return
 }
 
-func (s complexStructMUS) Unmarshal(r muss.Reader) (v struct_testdata.ComplexStruct, n int, err error) {
+func (s complexStructMUS) Unmarshal(r mus.Reader) (v struct_testdata.ComplexStruct, n int, err error) {
 	v.Bool, n, err = unsafe.Bool.Unmarshal(r)
 	if err != nil {
 		return
@@ -446,7 +447,7 @@ func (s complexStructMUS) Size(v struct_testdata.ComplexStruct) (size int) {
 	return size + MyInterfaceMUS.Size(v.Interface)
 }
 
-func (s complexStructMUS) Skip(r muss.Reader) (n int, err error) {
+func (s complexStructMUS) Skip(r mus.Reader) (n int, err error) {
 	n, err = unsafe.Bool.Skip(r)
 	if err != nil {
 		return

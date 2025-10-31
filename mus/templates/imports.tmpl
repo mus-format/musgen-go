@@ -2,13 +2,13 @@
 import (
 	com "github.com/mus-format/common-go"
 	{{- if .Stream }}
-		muss "github.com/mus-format/mus-stream-go"
+		mus "github.com/mus-format/mus-stream-go"
 		"github.com/mus-format/mus-stream-go/ord"
 		"github.com/mus-format/mus-stream-go/raw"
 		"github.com/mus-format/mus-stream-go/unsafe"
 		"github.com/mus-format/mus-stream-go/varint"
 		dts "github.com/mus-format/dts-stream-go"
-		exts "github.com/mus-format/ext-stream-go"
+		ext "github.com/mus-format/ext-stream-go"
 		arrops "github.com/mus-format/mus-stream-go/options/array"
 		bslops "github.com/mus-format/mus-stream-go/options/byte_slice"
 		mapops "github.com/mus-format/mus-stream-go/options/map"

@@ -5,6 +5,7 @@ package testdata
 import (
 	"fmt"
 
+	com "github.com/mus-format/common-go"
 	dts "github.com/mus-format/dts-go"
 	"github.com/mus-format/mus-go/ord"
 	"github.com/mus-format/mus-go/unsafe"
@@ -119,7 +120,7 @@ func (s myInterfaceMUS) Marshal(v struct_testdata.MyInterface, bs []byte) (n int
 	case struct_testdata.MyInt:
 		return MyIntDTS.Marshal(t, bs)
 	default:
-		panic(fmt.Sprintf("unexpected %v type", t))
+		panic(fmt.Sprintf(com.ErrorPrefix+"unexpected %v type", t))
 	}
 }
 
@@ -133,7 +134,7 @@ func (s myInterfaceMUS) Unmarshal(bs []byte) (v struct_testdata.MyInterface, n i
 	case MyIntDTM:
 		v, n1, err = MyIntDTS.UnmarshalData(bs[n:])
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 	}
 	n += n1
@@ -145,7 +146,7 @@ func (s myInterfaceMUS) Size(v struct_testdata.MyInterface) (size int) {
 	case struct_testdata.MyInt:
 		return MyIntDTS.Size(t)
 	default:
-		panic(fmt.Sprintf("unexpected %v type", t))
+		panic(fmt.Sprintf(com.ErrorPrefix+"unexpected %v type", t))
 	}
 }
 
@@ -159,7 +160,7 @@ func (s myInterfaceMUS) Skip(bs []byte) (n int, err error) {
 	case MyIntDTM:
 		n1, err = MyIntDTS.SkipData(bs[n:])
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 	}
 	n += n1

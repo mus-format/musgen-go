@@ -17,7 +17,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	err = os.WriteFile("templates.gen.go", bs, 0755)
+	err = os.WriteFile("templates.gen.go", bs, 0644)
 	if err != nil {
 		panic(err)
 	}

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"reflect"
 
+	com "github.com/mus-format/common-go"
 	dts "github.com/mus-format/dts-go"
 	ext "github.com/mus-format/ext-go"
 )
@@ -77,7 +78,7 @@ func (s myInterfaceMUS) Unmarshal(bs []byte) (v MyInterface, n int, err error) {
 	case Impl2DTM:
 		v, n1, err = Impl2DTS.UnmarshalData(bs[n:])
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 	}
 	n += n1
@@ -103,7 +104,7 @@ func (s myInterfaceMUS) Skip(bs []byte) (n int, err error) {
 	case Impl2DTM:
 		n1, err = Impl2DTS.SkipData(bs[n:])
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 	}
 	n += n1

@@ -77,7 +77,7 @@ func TestGenericTypeGeneration(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = os.WriteFile("../testdata/generic/mus-format.gen.go", bs, 0755)
+	err = os.WriteFile("../testdata/generic/mus-format.gen.go", bs, 0644)
 	if err != nil {
 		t.Fatal(err)
 	}

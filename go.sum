@@ -16,6 +16,8 @@ github.com/mus-format/mus-stream-go v0.7.2 h1:ShFtTIBEHyPSGcE+ilAPn5xd4O5fp1S/Yi
 github.com/mus-format/mus-stream-go v0.7.2/go.mod h1:H7yLSF9JQvwQW7Je1OJxxMIf5csHoZv52SjE1WwF8MM=
 github.com/ymz-ncnk/assert v0.0.0-20250528151733-c41b2fca7933 h1:V48ApBa/TSsGNKnIapVQs1q/5+HAaOk51b24L8yuPpA=
 github.com/ymz-ncnk/assert v0.0.0-20250528151733-c41b2fca7933/go.mod h1:+lSOTrCyOPuvc0xuvK4uKhgQ0Ar3U/HJPpJZg73kvgE=
+github.com/ymz-ncnk/fvar v0.0.0-20241027181210-3a6f93bc969e h1:q2is17SMV5sOEZluJa/Q0sTjZYmhXsPDjD6LPqYzE1Q=
+github.com/ymz-ncnk/fvar v0.0.0-20241027181210-3a6f93bc969e/go.mod h1:epPjlvHUv5z0i742Y5RzB491yIHCrSq7ACd2EK3xJU8=
 github.com/ymz-ncnk/mok v0.2.1 h1:rx/QVO4W2d3s6g1Q2tVeIndD0Yhc66pVJRB2RHpXWSo=
 github.com/ymz-ncnk/mok v0.2.1/go.mod h1:BYggihmf3kEBo7HfDVwDEqZ08gO8og8o5fcd8xuPmu0=
 golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc h1:mCRnTeVUjcrhlRmO0VK8a6k6Rrf6TF9htwo2pJVSjIU=

@@ -1,25 +1,25 @@
 package genops
 
 const (
-	msigLastParamStream = "w muss.Writer"
+	msigLastParamStream = "w mus.Writer"
 	msigLastParam       = "bs []byte"
 	mLastParamStream    = "w"
 	mLastParamFirst     = "bs"
 	mLastParam          = "bs[n:]"
 
-	usigLastParamStream = "r muss.Reader"
+	usigLastParamStream = "r mus.Reader"
 	usigLastParam       = "bs []byte"
 	uLastParamStream    = "r"
 	uLastParamFirst     = "bs"
 	uLastParam          = "bs[n:]"
 
-	sksiqLastParamStream = "r muss.Reader"
+	sksiqLastParamStream = "r mus.Reader"
 	sksiqLastParam       = "bs []byte"
 	skLastParamStream    = "r"
 	skLastParam          = "bs[n:]"
 
-	modImportNameStream  = "muss"
+	modImportNameStream  = "mus"
 	modImportName        = "mus"
-	extPackageNameStream = "exts"
+	extPackageNameStream = "ext"
 	extPackageName       = "ext"
 )

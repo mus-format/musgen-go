@@ -5,6 +5,7 @@ package testdata
 import (
 	"fmt"
 
+	com "github.com/mus-format/common-go"
 	dts "github.com/mus-format/dts-go"
 	"github.com/mus-format/mus-go/ord"
 	"github.com/mus-format/mus-go/varint"
@@ -199,7 +200,7 @@ func (s myInterfaceMUS) Marshal(v pkg.MyInterface, bs []byte) (n int) {
 	case pkg.MyStruct:
 		return MyStructDTS.Marshal(t, bs)
 	default:
-		panic(fmt.Sprintf("unexpected %v type", t))
+		panic(fmt.Sprintf(com.ErrorPrefix+"unexpected %v type", t))
 	}
 }
 
@@ -213,7 +214,7 @@ func (s myInterfaceMUS) Unmarshal(bs []byte) (v pkg.MyInterface, n int, err erro
 	case MyStructDTM:
 		v, n1, err = MyStructDTS.UnmarshalData(bs[n:])
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 	}
 	n += n1
@@ -225,7 +226,7 @@ func (s myInterfaceMUS) Size(v pkg.MyInterface) (size int) {
 	case pkg.MyStruct:
 		return MyStructDTS.Size(t)
 	default:
-		panic(fmt.Sprintf("unexpected %v type", t))
+		panic(fmt.Sprintf(com.ErrorPrefix+"unexpected %v type", t))
 	}
 }
 
@@ -239,7 +240,7 @@ func (s myInterfaceMUS) Skip(bs []byte) (n int, err error) {
 	case MyStructDTM:
 		n1, err = MyStructDTS.SkipData(bs[n:])
 	default:
-		err = fmt.Errorf("unexpected %v DTM", dtm)
+		err = fmt.Errorf(com.ErrorPrefix+"unexpected %v DTM", dtm)
 		return
 	}
 	n += n1

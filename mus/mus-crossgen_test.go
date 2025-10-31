@@ -31,7 +31,7 @@ func TestCrossGeneration(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		err = os.WriteFile("../testdata/crossgen/pkg/mus-format.gen.go", bs, 0755)
+		err = os.WriteFile("../testdata/crossgen/pkg/mus-format.gen.go", bs, 0644)
 		assertfatal.EqualError(err, nil, t)
 	})
 
@@ -87,6 +87,6 @@ func TestCrossGeneration(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = os.WriteFile("../testdata/crossgen/mus-format.gen.go", bs, 0755)
+	err = os.WriteFile("../testdata/crossgen/mus-format.gen.go", bs, 0644)
 	assertfatal.EqualError(err, nil, t)
 }

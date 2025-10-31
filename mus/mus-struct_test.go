@@ -113,6 +113,6 @@ func TestStructTypeGeneration(t *testing.T) {
 
 	bs, err := g.Generate()
 	assertfatal.EqualError(err, nil, t)
-	err = os.WriteFile("../testdata/struct/mus-format.gen.go", bs, 0755)
+	err = os.WriteFile("../testdata/struct/mus-format.gen.go", bs, 0644)
 	assertfatal.EqualError(err, nil, t)
 }
