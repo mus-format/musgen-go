@@ -1,3 +1,5 @@
+// Package typeops provides options for registering defined types in the
+// code generator.
 package typeops
 
 import (
@@ -23,7 +25,7 @@ type Options struct {
 }
 
 func (o Options) Hash() [16]byte {
-	var bs = []byte{}
+	bs := []byte{}
 	bs = append(bs, []byte(strconv.FormatBool(o.Ignore))...)
 	bs = append(bs, []byte(strconv.Itoa(int(o.NumEncoding)))...)
 	bs = append(bs, []byte(o.Validator)...)

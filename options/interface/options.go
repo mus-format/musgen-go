@@ -1,3 +1,5 @@
+// Package introps provides options for registering interface types in the code
+// generator.
 package introps
 
 import "reflect"

@@ -1,3 +1,5 @@
+// Package structops provides options for registering struct types in the
+// code generator.
 package structops
 
 import (

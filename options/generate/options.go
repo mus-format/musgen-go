@@ -1,3 +1,4 @@
+// Package genops  defines configuration options for the code generator.
 package genops
 
 import (
@@ -108,7 +109,7 @@ func (o Options) ImportAliases() map[ImportPath]Alias {
 }
 
 func (o Options) Hash() [16]byte {
-	var bs = []byte{}
+	bs := []byte{}
 	bs = append(bs, []byte(o.PkgPath)...)
 	bs = append(bs, []byte(strconv.FormatBool(o.Stream))...)
 	bs = append(bs, []byte(strconv.FormatBool(o.Unsafe))...)
@@ -246,7 +247,8 @@ func Apply(ops []SetOption, o *Options) (err error) {
 }
 
 func uniqImportAlias(importPath ImportPath, alias Alias, o Options) (
-	err error) {
+	err error,
+) {
 	if _, pst := o.importAliases[importPath]; pst {
 		err = NewDuplicateImportPath(importPath)
 		return
